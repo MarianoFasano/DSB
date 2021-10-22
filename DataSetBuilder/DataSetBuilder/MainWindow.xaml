@@ -5,8 +5,80 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DataSetBuilder"
         mc:Ignorable="d"
-        Title="Data Set Builder" Height="450" Width="800">
+        Title="Data Set Builder" Height="450" Width="800"
+        SizeToContent="WidthAndHeight">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="19"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="19"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="19"/>
+            <ColumnDefinition Width="155"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Button Width="80">Reset Layout</Button>
+            <Button Width="80">Close Tabs</Button>
+        </StackPanel>
         
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan ="2">
+            <Button Width="80" Content="Experiments" HorizontalAlignment="Left" Margin="0.7" Background="WhiteSmoke" ToolTip="Apri e chiudi la lista degli esperimenti">
+                <Button.LayoutTransform>
+                    <RotateTransform Angle="90"></RotateTransform>
+                </Button.LayoutTransform>
+            </Button>
+        </StackPanel> 
+
+        <DockPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MaxWidth="200" LastChildFill="True">
+            <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
+            <TextBox DockPanel.Dock="Bottom" Height="20" TextWrapping="Wrap" Text="Commento"/>
+                    <ComboBox DockPanel.Dock="Bottom">
+                        <ComboBoxItem Content="Directory"/>
+                        <ComboBoxItem Content="Cancella esperimento"/>
+                        <ComboBoxItem Content="Nuovo esperimento"/>
+                    </ComboBox>
+            <ScrollViewer>
+                <ListViewItem Content="Experiment 1"/>
+            </ScrollViewer>
+        </DockPanel>
+                
+        <StackPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
+            <TabControl  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" MinHeight="200">
+                <TabItem Header="Nome exp.">
+                    <Grid Background="Gray">
+                        <Label Content="Dettagli deposizioni e status"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="+"></TabItem>
+            </TabControl>
+        </StackPanel>
+
+
+        <DockPanel Grid.Row="2" Grid.Column="2">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom">
+                    <Button Margin="1">Play</Button>
+                    <Button Margin="1">Pause</Button>
+                    <Label Content="00:00" Margin="1"></Label>
+                    <Slider Width="200"></Slider>
+                    <Label Content="1:23:45" Margin="1"></Label>
+                    <ComboBox>
+                        <ComboBoxItem Content="1x" IsSelected="True"/>
+                        <ComboBoxItem Content="2x"/>
+                        <ComboBoxItem Content="4x"/>
+                    </ComboBox>
+            </StackPanel>
+            <Image Height="162"/>
+        </DockPanel>
+
+
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="3">
+            <Button ToolTip="Qui andranno le eventuali informazioni che si vogliono mostrare">Ev. informazioni varie</Button>
+        </StackPanel>
+
     </Grid>
+
 </Window>
