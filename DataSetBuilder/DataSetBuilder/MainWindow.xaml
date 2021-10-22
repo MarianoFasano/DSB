@@ -19,33 +19,34 @@
             <ColumnDefinition Width="155"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-
+       
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Button Width="80">Reset Layout</Button>
             <Button Width="80">Close Tabs</Button>
         </StackPanel>
         
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan ="2">
-            <Button Width="80" Content="Experiments" HorizontalAlignment="Left" Margin="0.7" Background="WhiteSmoke" ToolTip="Apri e chiudi la lista degli esperimenti">
+            <Button Click="Button_Click" Width="80" Content="Experiments" HorizontalAlignment="Left" Margin="0.7" Background="WhiteSmoke" ToolTip="Apri e chiudi la lista degli esperimenti">
                 <Button.LayoutTransform>
                     <RotateTransform Angle="90"></RotateTransform>
                 </Button.LayoutTransform>
             </Button>
-        </StackPanel> 
+        </StackPanel>
 
-        <DockPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MaxWidth="200" LastChildFill="True">
+        <DockPanel x:Name="ExpDockPanel" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MaxWidth="200" MinWidth="0" LastChildFill="True">
             <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
             <TextBox DockPanel.Dock="Bottom" Height="20" TextWrapping="Wrap" Text="Commento"/>
-                    <ComboBox DockPanel.Dock="Bottom">
-                        <ComboBoxItem Content="Directory"/>
-                        <ComboBoxItem Content="Cancella esperimento"/>
-                        <ComboBoxItem Content="Nuovo esperimento"/>
-                    </ComboBox>
+            <ComboBox DockPanel.Dock="Bottom">
+                <ComboBoxItem Content="Directory"/>
+                <ComboBoxItem Content="Cancella esperimento"/>
+                <ComboBoxItem Content="Nuovo esperimento"/>
+            </ComboBox>
             <ScrollViewer>
                 <ListViewItem Content="Experiment 1"/>
             </ScrollViewer>
         </DockPanel>
-                
+        <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="2" HorizontalAlignment="Right" Background="Black"></GridSplitter>
+
         <StackPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
             <TabControl  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" MinHeight="200">
                 <TabItem Header="Nome exp.">

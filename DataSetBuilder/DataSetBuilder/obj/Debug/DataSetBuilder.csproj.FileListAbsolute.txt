@@ -13,3 +13,18 @@ J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\Dat
 J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.CoreCompileInputs.cache
 J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.exe
 J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.pdb
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe.config
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.pdb
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.AssemblyReference.cache
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\MainWindow.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\App.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.cache
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.lref
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\MainWindow.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.g.resources
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.Properties.Resources.resources
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.GenerateResource.cache
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.CoreCompileInputs.cache
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.exe
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.pdb
