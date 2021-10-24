@@ -20,14 +20,17 @@ namespace DataSetBuilder
     /// </summary>
     public partial class MainWindow : Window
     {
+        DSB_Controller dsb_controller;
         public MainWindow()
         {
             InitializeComponent();
+            this.dsb_controller = new DSB_Controller();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //TODO resizing experiments part
+            Column.Width = dsb_controller.columnWidth(Column);        
         }
     }
 }
