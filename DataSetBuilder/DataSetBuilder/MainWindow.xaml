@@ -10,7 +10,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition x:Name="TabRow" Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="19"/>
         </Grid.RowDefinitions>
@@ -47,10 +47,11 @@
                 <ListViewItem Content="Experiment 1"/>
             </ScrollViewer>
         </DockPanel>
+        
         <GridSplitter x:Name="ExpGridSplitter" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="2" HorizontalAlignment="Right" Background="Black"></GridSplitter>
-        <GridSplitter Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Width="2" VerticalAlignment="Bottom" Background="Black"/>
-        <StackPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
-            <TabControl  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" MinHeight="200">
+        
+        <DockPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
+            <TabControl  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
                 <TabItem Header="Nome exp.">
                     <Grid Background="Gray">
                         <Label Content="Dettagli deposizioni e status"/>
@@ -58,8 +59,9 @@
                 </TabItem>
                 <TabItem Header="+"></TabItem>
             </TabControl>
-        </StackPanel>
+        </DockPanel>
 
+        <GridSplitter Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="Black"/>
 
         <DockPanel Grid.Row="2" Grid.Column="2">
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom">

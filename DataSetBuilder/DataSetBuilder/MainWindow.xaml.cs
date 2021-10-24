@@ -29,7 +29,7 @@ namespace DataSetBuilder
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //TODO resizing experiments part
+            //Resize experiment part
             Column.Width = dsb_controller.columnWidth(Column);        
         }
     }
