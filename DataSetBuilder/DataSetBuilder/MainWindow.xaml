@@ -33,28 +33,58 @@
             </Button>
         </StackPanel>
 
-        <DockPanel x:Name="ExpDockPanel" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MaxWidth="200" MinWidth="0" LastChildFill="True">
+        <DockPanel x:Name="ExpDockPanel" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MinWidth="0" LastChildFill="True">
             <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
-            <TextBox DockPanel.Dock="Bottom" Height="20" TextWrapping="Wrap" Text="Commento"/>
-            <Menu DockPanel.Dock="Bottom" Name="Edit">
-                <MenuItem Header="Edit" Width="{Binding ElementName=Edit,Path=ActualWidth}">
-                    <MenuItem Header="Directory"/>
-                    <MenuItem Header="Cancella esperimento"/>
-                    <MenuItem Header="Nuovo esperimento"/>
+            <Menu DockPanel.Dock="Bottom" Name="Modifica">
+                <MenuItem Header="Edit" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
+                    <MenuItem x:Name="ViewCommentMenu" Click="ViewExpCommentMenu_Click" Header="Vedi commento"/>
+                    <MenuItem x:Name="ExpDirectoryMenu" Header="Directory"/>
+                    <MenuItem x:Name="DeleteExpMenu" Header="Cancella esperimento"/>
+                    <MenuItem Header="Nuovo esperimento">
+                        <MenuItem x:Name="NewEmtpyExpMenu" Header="Esperimento vuoto"/>
+                        <MenuItem x:Name="NewLoadExpMenu" Header="Carica da esistente"/>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
+            <TextBox x:Name="ExpComment" DockPanel.Dock="Bottom" Height="auto" TextWrapping="Wrap" Text="Commento" Visibility="Collapsed"/>
+
             <ScrollViewer DockPanel.Dock="Left">
-                <ListViewItem Content="Experiment 1"/>
+                <StackPanel x:Name="ExperimentViewer">
+                    <ListViewItem Content="Experiment 1 - test"/>
+                </StackPanel>
             </ScrollViewer>
         </DockPanel>
         
         <GridSplitter x:Name="ExpGridSplitter" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="2" HorizontalAlignment="Right" Background="Black"></GridSplitter>
         
         <DockPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
-            <TabControl  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+            <TabControl x:Name="TabsControl"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
                 <TabItem Header="Nome exp.">
                     <Grid Background="Gray">
-                        <Label Content="Dettagli deposizioni e status"/>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <DockPanel Grid.Column="0" MinWidth="0" LastChildFill="True">
+                            <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
+                            <Menu DockPanel.Dock="Bottom" Name="Edit">
+                                <MenuItem Header="Edit" Width="{Binding ElementName=Edit,Path=ActualWidth}">
+                                    <MenuItem Header="Vedi commento"/>
+                                    <MenuItem Header="Directory"/>
+                                    <MenuItem Header="Cancella esperimento"/>
+                                </MenuItem>
+                            </Menu>
+                            <TextBox x:Name="DepComment" DockPanel.Dock="Bottom" Height="auto" TextWrapping="Wrap" Text="Commento" Visibility="Collapsed"/>
+
+                            <ScrollViewer DockPanel.Dock="Left">
+                                <StackPanel>
+                                    <ListViewItem Content="Deposition 1"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </DockPanel>
+                        
                     </Grid>
                 </TabItem>
                 <TabItem Header="+"></TabItem>

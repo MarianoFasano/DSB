@@ -35,5 +35,29 @@ namespace DataSetBuilder
             }
             return new GridLength(width);
         }
+
+        internal System.Windows.Visibility viewComment(TextBox ExpCommentBox)
+        {
+            if(ExpCommentBox.Visibility.Equals(System.Windows.Visibility.Collapsed))
+            {
+                return System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                return System.Windows.Visibility.Collapsed;
+            }            
+        }
+
+        internal string commentText(TextBox ExpCommentBox)
+        {
+            if (ExpCommentBox.Visibility.Equals(System.Windows.Visibility.Collapsed))
+            {
+                return "Vedi Commento";
+            }
+            else
+            {
+                return "Nascondi Commento";
+            }
+        }
     }
 }
