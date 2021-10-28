@@ -49,8 +49,37 @@ namespace DataSetBuilder
             //MessageBox.Show("Hello, ciao", "There is an error", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
 
             var tabItem = new TabItem { Header = listView.Content };
-            
+
             Grid tabGrid = new Grid();
+            tabGrid.Background = Brushes.Gray;
+
+            ColumnDefinition column1 = new ColumnDefinition();
+            column1.Width = new GridLength(1, GridUnitType.Star);
+            tabGrid.ColumnDefinitions.Add(column1);
+
+            ColumnDefinition column2 = new ColumnDefinition();
+            column2.Width = new GridLength(1, GridUnitType.Star);
+            tabGrid.ColumnDefinitions.Add(column2);
+
+            Label colonna1 = new Label();
+            colonna1.Content = "colonnA 1";
+
+            Label colonna2 = new Label();
+            colonna2.Content = "colonna 2";
+
+            Grid.SetColumn(colonna1, 0);
+            Grid.SetRow(colonna1, 0);
+            Grid.SetColumn(colonna2, 1);
+            Grid.SetRow(colonna2, 0);
+
+            tabGrid.Children.Add(colonna1);
+            tabGrid.Children.Add(colonna2);
+
+            tabItem.Content = tabGrid;
+
+            TabsControl.Items.Add(tabItem);
+
+            /*Grid tabGrid = new Grid();
             tabItem.Content = tabGrid;
 
             ColumnDefinition column0 = new ColumnDefinition();
@@ -100,7 +129,7 @@ namespace DataSetBuilder
             tabGrid.Children.Add(itemDock);
             Grid.SetColumn(itemDock, 0);
 
-            TabsControl.Items.Add(tabItem);
+            TabsControl.Items.Add(tabItem);*/
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
