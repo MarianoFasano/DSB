@@ -123,10 +123,7 @@ namespace DataSetBuilder
             // Create a ScrollView with nested StackPanel    
             ScrollViewer depoView = new ScrollViewer();
             StackPanel depoStack = initDepoList((string)listViewItem.Content);
-            //ListViewItem depoItem = new ListViewItem();
 
-            //depoItem.Content = "Deposition 2";
-            //depoStack.Children.Add(depoItem);
             depoView.Content = depoStack;
 
             // Dock ScrollView to left    
