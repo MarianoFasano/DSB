@@ -60,7 +60,7 @@
         <DockPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
             <TabControl x:Name="TabsControl"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
                 <TabItem Header="Nome exp.">
-                    <Grid Background="Gray">
+                    <Grid>
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
