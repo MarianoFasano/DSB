@@ -47,10 +47,7 @@ namespace DataSetBuilder
         private void openExpDeps(object sender, EventArgs e)
         {
             ListViewItem listViewItem = sender as ListViewItem;
-            //MessageBox.Show("Hello, ciao", "There is an error", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
-
             TabsControl.Items.Add(dsb_controller.NewDepTabItem(listViewItem));
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
