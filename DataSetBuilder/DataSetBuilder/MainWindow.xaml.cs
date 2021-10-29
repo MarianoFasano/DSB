@@ -67,34 +67,17 @@ namespace DataSetBuilder
             Label colonna2 = new Label();
             colonna2.Content = "colonna 2";
 
-            Grid.SetColumn(colonna1, 0);
-            Grid.SetRow(colonna1, 0);
-            Grid.SetColumn(colonna2, 1);
-            Grid.SetRow(colonna2, 0);
-
-            tabGrid.Children.Add(colonna1);
-            tabGrid.Children.Add(colonna2);
-
-            tabItem.Content = tabGrid;
-
-            TabsControl.Items.Add(tabItem);
-
-            /*Grid tabGrid = new Grid();
-            tabItem.Content = tabGrid;
-
-            ColumnDefinition column0 = new ColumnDefinition();
-            ColumnDefinition column1 = new ColumnDefinition();
-
-            tabGrid.ColumnDefinitions.Add(column0);
-            tabGrid.ColumnDefinitions.Add(column1);
-
-            DockPanel itemDock = new DockPanel();
-            itemDock.MinWidth = 0;
-            itemDock.LastChildFill = true;
+            //Grid.SetColumn(colonna1, 0);
+            //Grid.SetRow(colonna1, 0);
+            //Grid.SetColumn(colonna2, 1);
+            //Grid.SetRow(colonna2, 0);
+/*
+            //SearchBox
             TextBox searchText = new TextBox();
             searchText.Height = 20;
             searchText.Text = "Cerca...";
 
+            //Menu
             Menu menu = new Menu();
             menu.Name = "Edit";
             MenuItem menuItem = new MenuItem();
@@ -109,10 +92,12 @@ namespace DataSetBuilder
             menuItem2.Header = "Cancella deposizione";
             menu.Items.Add(menuItem2);
 
+            //CommentBox
             TextBox commentText = new TextBox();
             commentText.Visibility = System.Windows.Visibility.Collapsed;
             commentText.Height = Double.NaN;
 
+            //Viewer and panel
             ScrollViewer depoView = new ScrollViewer();
             StackPanel depoStack = new StackPanel();
             ListViewItem depoItem = new ListViewItem();
@@ -120,16 +105,40 @@ namespace DataSetBuilder
             depoItem.Content = "Deposition 2";
             depoStack.Children.Add(depoItem);
             depoView.Content = depoStack;
-           
+
+            DockPanel itemDock = new DockPanel();
+            itemDock.MinWidth = 0;
+            itemDock.LastChildFill = true;
             DockPanel.SetDock(searchText, Dock.Top);
             DockPanel.SetDock(menu, Dock.Bottom);
             DockPanel.SetDock(commentText, Dock.Bottom);
             DockPanel.SetDock(depoView, Dock.Left);
+            DockPanel.SetDock(colonna1, Dock.Top);
 
-            tabGrid.Children.Add(itemDock);
             Grid.SetColumn(itemDock, 0);
+            tabGrid.Children.Add(itemDock);
+*/
+            //tabGrid.Children.Add(colonna1);
+            //tabGrid.Children.Add(colonna2);
 
-            TabsControl.Items.Add(tabItem);*/
+            DockPanel itemDock = new DockPanel();
+            itemDock.Background = Brushes.LightCyan;
+
+            TextBox searchText = new TextBox();
+            searchText.Height = 20;
+            searchText.Text = "Cerca...";
+            searchText.TextWrapping = TextWrapping.Wrap;
+            searchText.Background = Brushes.Black;
+
+            DockPanel.SetDock(searchText, Dock.Left);
+
+            Grid.SetColumn(itemDock, 0);
+            tabGrid.Children.Add(itemDock);
+
+            tabItem.Content = tabGrid;
+
+            TabsControl.Items.Add(tabItem);
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
