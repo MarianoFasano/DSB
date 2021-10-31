@@ -7,74 +7,23 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace DataSetBuilder
+namespace DataSetBuilder.factories
 {
-    class DSB_Controller
+    class TabItemFactory
     {
-        //TODO: refactoring, if needed
-        internal GridLength columnWidth(ColumnDefinition column)
-        {
-            Double width = column.ActualWidth;
-            if (width == 155)
-            {
-                width = 0;
-            }
-            else if (width < 155 && width > 0)
-            {
-                width = 0;
-            }
-            else
-            {
-                width = 155;
-            }
-            return new GridLength(width);
-        }
+        private MenuFactory menuFactory = new MenuFactory();
+        private MenuItemFactory menuItemFactory = new MenuItemFactory();
+        private ColumnFactory columnFactory = new ColumnFactory();
 
-        internal System.Windows.Visibility viewComment(TextBox ExpCommentBox)
-        {
-            if(ExpCommentBox.Visibility.Equals(System.Windows.Visibility.Collapsed))
-            {
-                return System.Windows.Visibility.Visible;
-            }
-            else
-            {
-                return System.Windows.Visibility.Collapsed;
-            }            
-        }
-
-        internal string commentText(TextBox ExpCommentBox)
-        {
-            if (ExpCommentBox.Visibility.Equals(System.Windows.Visibility.Collapsed))
-            {
-                return "Vedi Commento";
-            }
-            else
-            {
-                return "Nascondi Commento";
-            }
-        }
-
-        //Create a new tabItem with TODO: initialization for depo view
-        internal TabItem NewDepTabItem(ListViewItem listViewItem)
+        public TabItem GetTabItem(ListViewItem listViewItem)
         {
             TabItem tabItem = new TabItem { Header = listViewItem.Content };
 
             Grid tabGrid = new Grid();
 
-            ColumnDefinition column1 = new ColumnDefinition();
-            column1.Width = new GridLength(1, GridUnitType.Star);
-            tabGrid.ColumnDefinitions.Add(column1);
-
-            ColumnDefinition column2 = new ColumnDefinition();
-            column2.Width = new GridLength(1, GridUnitType.Star);
-            tabGrid.ColumnDefinitions.Add(column2);
+            tabGrid.ColumnDefinitions.Add(columnFactory.getNewColumn());
+            tabGrid.ColumnDefinitions.Add(columnFactory.getNewColumn());
 
             // Create a DockPanel    
             DockPanel itemDock = new DockPanel();
@@ -90,21 +39,21 @@ namespace DataSetBuilder
 
 
             //Create Menu with MenuItem
-            Menu menu = createMenu("Edit");
+            Menu menu = menuFactory.getNewMenu("Edit");
 
-            MenuItem menuItem = createMenuItem("Edit");
+            MenuItem menuItem = menuItemFactory.getNewMenuItem("Edit");
             var binding = new Binding("ActualWidth");
             binding.Source = menu;
             BindingOperations.SetBinding(menuItem, MenuItem.WidthProperty, binding);
             menu.Items.Add(menuItem);
 
-            MenuItem menuItem1 = createMenuItem("Vedi commento");
+            MenuItem menuItem1 = menuItemFactory.getNewMenuItem("Vedi commento");
             menuItem.Items.Add(menuItem1);
 
-            MenuItem menuItem2 = createMenuItem("Directory");
+            MenuItem menuItem2 = menuItemFactory.getNewMenuItem("Directory");
             menuItem.Items.Add(menuItem2);
 
-            MenuItem menuItem3 = createMenuItem("Cancella deposizione");
+            MenuItem menuItem3 = menuItemFactory.getNewMenuItem("Cancella deposizione");
             menuItem.Items.Add(menuItem3);
             //Dock Menu to bottom
             DockPanel.SetDock(menu, Dock.Bottom);
@@ -139,24 +88,11 @@ namespace DataSetBuilder
             return tabItem;
         }
 
-        private Menu createMenu(String name)
-        {
-            Menu menu = new Menu();
-            menu.Name = name;
-            return menu;
-        }
-
-        private MenuItem createMenuItem(String name)
-        {
-            MenuItem menuItem = new MenuItem();
-            menuItem.Header = name;
-            return menuItem;
-        }
-
         private StackPanel initDepoList(String subPath)
         {
             StackPanel depoList = new StackPanel();
-            string depoPath = @"D:\_DSB" + @"\" + subPath;
+            string depoPath = @"J:\DTI\_DSB" + @"\" + subPath;
+            //string depoPath = @"D:\_DSB" + @"\" + subPath;
             string[] depoDirectories = Directory.GetDirectories(depoPath);
             for (int i = 0; i < depoDirectories.Length; i++)
             {

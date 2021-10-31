@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DataSetBuilder
+namespace DataSetBuilder.view
 {
     /// <summary>
     /// Logica di interazione per MainWindow.xaml
@@ -32,8 +32,8 @@ namespace DataSetBuilder
         private void Init()
         {
             //TODO extra initialize
-            //string expPath = @"J:\DTI\_DSB";
-            string expPath = @"D:\_DSB";
+            string expPath = @"J:\DTI\_DSB";
+            //string expPath = @"D:\_DSB";
             string[] expDirectories = Directory.GetDirectories(expPath);
             for(int i = 0; i < expDirectories.Length; i++)
             {

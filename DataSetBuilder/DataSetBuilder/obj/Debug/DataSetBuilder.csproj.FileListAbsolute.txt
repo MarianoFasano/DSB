@@ -1,18 +1,3 @@
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe.config
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.pdb
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.AssemblyReference.cache
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\MainWindow.g.cs
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\App.g.cs
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.cache
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.lref
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\MainWindow.baml
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.g.resources
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.Properties.Resources.resources
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.GenerateResource.cache
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.CoreCompileInputs.cache
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.exe
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.pdb
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe.config
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.pdb
@@ -28,3 +13,17 @@ C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSe
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.CoreCompileInputs.cache
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.exe
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.pdb
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe.config
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.pdb
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\view\MainWindow.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\App.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.cache
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.lref
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\view\MainWindow.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.g.resources
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.Properties.Resources.resources
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.GenerateResource.cache
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.CoreCompileInputs.cache
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.exe
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.pdb
