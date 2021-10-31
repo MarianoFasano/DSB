@@ -6,10 +6,8 @@
         xmlns:local="clr-namespace:cSharpeTest"
         mc:Ignorable="d"
         Title="Saluti test" Height="450" Width="800">
-    <Grid>
+    <Grid x:Name="gridMain">
         <TextBlock HorizontalAlignment="Center" Margin="0,109,0,0" Text="Seleziona un'opzione e clicca il bottone sul display" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.413,-1.695"/>
-        <RadioButton x:Name="HelloButton" Content="Benvenuto/a" IsChecked="True" HorizontalAlignment="Left" Margin="180,217,0,0" VerticalAlignment="Top"/>
-        <RadioButton x:Name="GoodByeButton" Content="Arrivederci" HorizontalAlignment="Left" Margin="500,217,0,0" VerticalAlignment="Top"/>
         <Button Content="Mostra" HorizontalAlignment="Center" Margin="0,306,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.437,1.295" Click="Button_Click_1"/>
         <Button Content="StartTask" HorizontalAlignment="Center" Margin="0,214,0,0" VerticalAlignment="Top" Click="Button_Click"/>
 

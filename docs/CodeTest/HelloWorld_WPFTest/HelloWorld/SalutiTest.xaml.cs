@@ -22,19 +22,22 @@ namespace cSharpeTest
     public partial class MainWindow : Window
     {
         ThreadTest taskTest = new ThreadTest();
+        RadioButtons radioButtons;
         public MainWindow()
         {
             taskTest.ErrorEvent += ManageError;
             InitializeComponent();
+            this.radioButtons = new RadioButtons();
+            this.gridMain.Children.Add(radioButtons);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (HelloButton.IsChecked == true)
+            if (radioButtons.HelloButton.IsChecked == true)
             {
                 MessageBox.Show("Benvenuto/a!");
             }
-            else if (GoodByeButton.IsChecked == true)
+            else if (radioButtons.GoodByeButton.IsChecked == true)
             {
                 MessageBox.Show("Arrivederci!!");
             }

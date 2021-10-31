@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "J:\\ProgettiScuola\\DataSetBuilder\\DSB\\docs\\CodeTest\\HelloWorld_WPFTest\\HelloWorld\\HelloWorld.csproj": {}
+    "J:\\ProgettiScuola\\DataSetBuilder\\DSB\\docs\\CodeTest\\HelloWorld_WPFTest\\HelloWorld\\cSharpeTest.csproj": {}
   },
   "projects": {
-    "J:\\ProgettiScuola\\DataSetBuilder\\DSB\\docs\\CodeTest\\HelloWorld_WPFTest\\HelloWorld\\HelloWorld.csproj": {
+    "J:\\ProgettiScuola\\DataSetBuilder\\DSB\\docs\\CodeTest\\HelloWorld_WPFTest\\HelloWorld\\cSharpeTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "J:\\ProgettiScuola\\DataSetBuilder\\DSB\\docs\\CodeTest\\HelloWorld_WPFTest\\HelloWorld\\HelloWorld.csproj",
+        "projectUniqueName": "J:\\ProgettiScuola\\DataSetBuilder\\DSB\\docs\\CodeTest\\HelloWorld_WPFTest\\HelloWorld\\cSharpeTest.csproj",
         "projectName": "cSharpeTest",
-        "projectPath": "J:\\ProgettiScuola\\DataSetBuilder\\DSB\\docs\\CodeTest\\HelloWorld_WPFTest\\HelloWorld\\HelloWorld.csproj",
+        "projectPath": "J:\\ProgettiScuola\\DataSetBuilder\\DSB\\docs\\CodeTest\\HelloWorld_WPFTest\\HelloWorld\\cSharpeTest.csproj",
         "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
         "outputPath": "J:\\ProgettiScuola\\DataSetBuilder\\DSB\\docs\\CodeTest\\HelloWorld_WPFTest\\HelloWorld\\obj\\",
         "projectStyle": "PackageReference",

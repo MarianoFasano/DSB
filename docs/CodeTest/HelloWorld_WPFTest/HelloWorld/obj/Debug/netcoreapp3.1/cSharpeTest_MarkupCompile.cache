@@ -1,20 +1,20 @@
-﻿HelloWorld
-1.0.0.0
+﻿cSharpeTest
+
 
 winexe
 C#
 .cs
 J:\ProgettiScuola\DataSetBuilder\DSB\docs\CodeTest\HelloWorld_WPFTest\HelloWorld\obj\Debug\netcoreapp3.1\
-HelloWorld
+cSharpeTest
 none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1;
 J:\ProgettiScuola\DataSetBuilder\DSB\docs\CodeTest\HelloWorld_WPFTest\HelloWorld\App.xaml
-1-944716464
+22063212052
 
-61127595698
+5-1102360904
 192-1533232326
-SalutiTest.xaml;
+RadioButtons.xaml;SalutiTest.xaml;
 
 False
 
