@@ -10,15 +10,16 @@ using System.Windows.Data;
 
 namespace DataSetBuilder.factories
 {
-    class TabItemFactory
+    class MyTabItemFactory
     {
         private MenuFactory menuFactory = new MenuFactory();
         private MenuItemFactory menuItemFactory = new MenuItemFactory();
         private ColumnFactory columnFactory = new ColumnFactory();
+        private TabItem tabItem;
 
         public TabItem GetTabItem(ListViewItem listViewItem)
         {
-            TabItem tabItem = new TabItem { Header = listViewItem.Content };
+            this.tabItem = new TabItem { Header = listViewItem.Content };
 
             Grid tabGrid = new Grid();
 
@@ -83,16 +84,16 @@ namespace DataSetBuilder.factories
             Grid.SetColumn(itemDock, 0);
             tabGrid.Children.Add(itemDock);
 
-            tabItem.Content = tabGrid;
+            this.tabItem.Content = tabGrid;
 
-            return tabItem;
+            return this.tabItem;
         }
 
         private StackPanel initDepoList(String subPath)
         {
             StackPanel depoList = new StackPanel();
-            string depoPath = @"J:\DTI\_DSB" + @"\" + subPath;
-            //string depoPath = @"D:\_DSB" + @"\" + subPath;
+            //string depoPath = @"J:\DTI\_DSB" + @"\" + subPath;
+            string depoPath = @"D:\_DSB" + @"\" + subPath;
             string[] depoDirectories = Directory.GetDirectories(depoPath);
             for (int i = 0; i < depoDirectories.Length; i++)
             {

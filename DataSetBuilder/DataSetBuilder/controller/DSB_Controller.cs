@@ -1,4 +1,5 @@
-﻿using DataSetBuilder.factories;
+﻿using DataSetBuilder.controller;
+using DataSetBuilder.factories;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,16 @@ namespace DataSetBuilder
 {
     class DSB_Controller
     {
-        private TabItemFactory tabItemFactory = new TabItemFactory();
+        private MyTabItemFactory myTabItemFactory;
+        private MyTabControlController myTabControlController;
+        private MyTabItemController myTabItemController;
+
+        public DSB_Controller(TabControl tabControl)
+        {
+            this.myTabItemFactory = new MyTabItemFactory();
+            this.myTabControlController = new MyTabControlController(tabControl);
+            this.myTabItemController = new MyTabItemController();
+        }
 
         //TODO: refactoring, if needed
         internal GridLength columnWidth(ColumnDefinition column)
@@ -65,9 +75,12 @@ namespace DataSetBuilder
         }
 
         //Create a new tabItem with TODO: initialization for depo view
-        internal TabItem NewDepTabItem(ListViewItem listViewItem)
+        internal TabControl NewDepTabItem(ListViewItem listViewItem)
         {
-            return tabItemFactory.GetTabItem(listViewItem);
+            //TabControl
+            //return myTabItemFactory.GetTabItem(listViewItem);
+            return myTabControlController.addItem(listViewItem.Content, myTabItemController.createTabItem(listViewItem));
+
         }
     }
 }

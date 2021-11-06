@@ -64,11 +64,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="controller\DSB_Controller.cs" />
+    <Compile Include="controller\MyTabControlController.cs" />
+    <Compile Include="controller\MyTabItemController.cs" />
     <Compile Include="factories\ColumnFactory.cs" />
-    <Compile Include="factories\TabItemFactory.cs" />
+    <Compile Include="factories\MyTabItemFactory.cs" />
     <Compile Include="factories\MenuFactory.cs" />
     <Compile Include="factories\MenuItemFactory.cs" />
     <Compile Include="model\DSB_Model.cs" />
+    <Compile Include="model\MyTabControlModel.cs" />
+    <Compile Include="model\MyTabItemModel.cs" />
     <Compile Include="view\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

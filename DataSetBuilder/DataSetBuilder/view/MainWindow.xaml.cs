@@ -26,14 +26,14 @@ namespace DataSetBuilder.view
         {
             InitializeComponent();
             Init();
-            this.dsb_controller = new DSB_Controller();
+            this.dsb_controller = new DSB_Controller(TabsControl);
         }
 
         private void Init()
         {
             //TODO extra initialize
-            string expPath = @"J:\DTI\_DSB";
-            //string expPath = @"D:\_DSB";
+            //string expPath = @"J:\DTI\_DSB";
+            string expPath = @"D:\_DSB";
             string[] expDirectories = Directory.GetDirectories(expPath);
             for(int i = 0; i < expDirectories.Length; i++)
             {
@@ -47,7 +47,8 @@ namespace DataSetBuilder.view
         private void openExpDeps(object sender, EventArgs e)
         {
             ListViewItem listViewItem = sender as ListViewItem;
-            TabsControl.Items.Add(dsb_controller.NewDepTabItem(listViewItem));
+            //TabsControl.Items.Add(dsb_controller.NewDepTabItem(listViewItem));
+            TabsControl = dsb_controller.NewDepTabItem(listViewItem);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -63,4 +64,30 @@ namespace DataSetBuilder.view
             ViewCommentMenu.Header = dsb_controller.commentText(ExpComment);
         }
     }
+
+    //add from stackoverflow
+    /*class ContentVM
+    {
+        public ContentVM(string name, int index)
+        {
+            Name = name;
+            Index = index;
+        }
+        public string Name { get; set; }
+        public int Index { get; set; }
+    }
+
+    private void OnTabCloseClick(object sender, RoutedEventArgs e)
+    {
+        var tab = (sender as Button).DataContext as TabVM;
+        if (Tabs.Count > 2)
+        {
+            var index = Tabs.IndexOf(tab);
+            if (index == Tabs.Count - 2)//last tab before [+]
+            {
+                MyTabControl.SelectedIndex--;
+            }
+            Tabs.RemoveAt(index);
+        }
+    }*/
 }
