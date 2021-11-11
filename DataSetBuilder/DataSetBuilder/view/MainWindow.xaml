@@ -7,20 +7,19 @@
         mc:Ignorable="d"
         Title="Data Set Builder" Height="450" Width="800"
         SizeToContent="WidthAndHeight">
-    <Grid>
+    <Grid x:Name="DSB_MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition x:Name="TabRow" Height="*"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="19"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="19" MaxWidth="19"/>
-            <ColumnDefinition Width="155" x:Name="Column"/>
+            <ColumnDefinition Width="Auto" x:Name="Column"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         
-        <WrapPanel Grid.Row="0" Grid.ColumnSpan="3" Orientation="Horizontal">
+        <WrapPanel Grid.Row="0" Grid.ColumnSpan="4" Orientation="Horizontal">
             <Button Width="80">Reset Layout</Button>
             <Button Width="80">Close Tabs</Button>
         </WrapPanel>
@@ -50,68 +49,15 @@
 
             <ScrollViewer DockPanel.Dock="Left">
                 <StackPanel x:Name="ExperimentViewer">
-                    <ListViewItem Content="Experiment 1 - test"/>
+
                 </StackPanel>
             </ScrollViewer>
         </DockPanel>
         
         <GridSplitter x:Name="ExpGridSplitter" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="2" HorizontalAlignment="Right" Background="Black"></GridSplitter>
         
-        <DockPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
-            <TabControl x:Name="TabsControl"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
-                <TabItem Header="Nome exp.">
-                    
-                    <Grid>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        
-                        <DockPanel Grid.Column="0" MinWidth="0" LastChildFill="True">
-                            <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
-                            <Menu DockPanel.Dock="Bottom" Name="Edit">
-                                <MenuItem Header="Edit" Width="{Binding ElementName=Edit,Path=ActualWidth}">
-                                    <MenuItem Header="Vedi commento"/>
-                                    <MenuItem Header="Directory"/>
-                                    <MenuItem Header="Cancella esperimento"/>
-                                </MenuItem>
-                            </Menu>
-                            <TextBox x:Name="DepComment" DockPanel.Dock="Bottom" Height="auto" TextWrapping="Wrap" Text="Commento" Visibility="Collapsed"/>
-
-                            <ScrollViewer DockPanel.Dock="Left">
-                                <StackPanel>
-                                    <ListViewItem Content="Deposition 1"/>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </DockPanel>
-                        
-                    </Grid>
-                </TabItem>
-                <TabItem Header="+"></TabItem>
-            </TabControl>
-        </DockPanel>
-
-        <GridSplitter Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="Black"/>
-
-        <DockPanel Grid.Row="2" Grid.Column="2">
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom">
-                    <Button Margin="1">Play</Button>
-                    <Button Margin="1">Pause</Button>
-                    <Label Content="00:00" Margin="1"></Label>
-                    <Slider Width="200"></Slider>
-                    <Label Content="1:23:45" Margin="1"></Label>
-                    <ComboBox>
-                        <ComboBoxItem Content="1x" IsSelected="True"/>
-                        <ComboBoxItem Content="2x"/>
-                        <ComboBoxItem Content="4x"/>
-                    </ComboBox>
-            </StackPanel>
-            <Image Height="162"/>
-        </DockPanel>
-
-
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="3">
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="5">
             <Button ToolTip="Qui andranno le eventuali informazioni che si vogliono mostrare">Ev. informazioni varie</Button>
         </StackPanel>
 

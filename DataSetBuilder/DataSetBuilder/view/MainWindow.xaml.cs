@@ -1,18 +1,9 @@
-﻿using System;
+﻿using DataSetBuilder.user_controls;
+using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DataSetBuilder.view
 {
@@ -22,18 +13,23 @@ namespace DataSetBuilder.view
     public partial class MainWindow : Window
     {
         DSB_Controller dsb_controller;
+        string expPath = @"J:\DTI\_DSB";
+        //string expPath = @"D:\_DSB";
+
+        private TabsBody tabBody;
+        private DepoItemBody depoItemBody = new DepoItemBody();
+        
         public MainWindow()
         {
             InitializeComponent();
             Init();
-            this.dsb_controller = new DSB_Controller(TabsControl);
+            initTabControl();
+            this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, depoItemBody.PlayImage, depoItemBody.getPauseButton(), depoItemBody.getPrevButton(), depoItemBody.getNextButton(), depoItemBody.getSpeed(), depoItemBody.getImage(), expPath);
         }
 
         private void Init()
         {
             //TODO extra initialize
-            //string expPath = @"J:\DTI\_DSB";
-            string expPath = @"D:\_DSB";
             string[] expDirectories = Directory.GetDirectories(expPath);
             for(int i = 0; i < expDirectories.Length; i++)
             {
@@ -43,12 +39,31 @@ namespace DataSetBuilder.view
                 ExperimentViewer.Children.Add(listItem);
             }
         }
-
+        private void initTabControl()
+        {
+            this.tabBody = new TabsBody();
+            Grid.SetRow(tabBody, 1);
+            Grid.SetColumn(tabBody, 2);
+            DSB_MainGrid.Children.Add(tabBody);
+        }
         private void openExpDeps(object sender, EventArgs e)
         {
             ListViewItem listViewItem = sender as ListViewItem;
-            //TabsControl.Items.Add(dsb_controller.NewDepTabItem(listViewItem));
-            TabsControl = dsb_controller.NewDepTabItem(listViewItem);
+            ExpItem expItem = new ExpItem();
+            TabItem tabItem = dsb_controller.NewDepTabItem(listViewItem, expItem.DepositionViewer);
+            DepoTabItem depodataTabItem = new DepoTabItem();
+            Grid.SetRow(depodataTabItem, 1);
+            Grid.SetColumn(depodataTabItem, 0);
+            Grid.SetColumnSpan(depodataTabItem, 2);
+            expItem.ExpGrid.Children.Add(depodataTabItem);
+            tabItem.Header = listViewItem.Content;
+            tabItem.Content = expItem;
+
+            this.tabBody.TabsControl.Items.Add(tabItem);
+            DepoTabItem depoTabItem = new DepoTabItem();
+            Grid.SetRow(depoTabItem, 1);
+            Grid.SetColumn(depoTabItem, 0);            
+            tabBody.TabBody_Grid.Children.Add(depoTabItem);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -63,31 +78,6 @@ namespace DataSetBuilder.view
             ExpComment.Visibility = dsb_controller.viewComment(ExpComment);
             ViewCommentMenu.Header = dsb_controller.commentText(ExpComment);
         }
-    }
 
-    //add from stackoverflow
-    /*class ContentVM
-    {
-        public ContentVM(string name, int index)
-        {
-            Name = name;
-            Index = index;
-        }
-        public string Name { get; set; }
-        public int Index { get; set; }
     }
-
-    private void OnTabCloseClick(object sender, RoutedEventArgs e)
-    {
-        var tab = (sender as Button).DataContext as TabVM;
-        if (Tabs.Count > 2)
-        {
-            var index = Tabs.IndexOf(tab);
-            if (index == Tabs.Count - 2)//last tab before [+]
-            {
-                MyTabControl.SelectedIndex--;
-            }
-            Tabs.RemoveAt(index);
-        }
-    }*/
 }

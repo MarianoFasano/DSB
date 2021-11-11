@@ -20,10 +20,7 @@ namespace DataSetBuilder.model
 
         public void addItem(Object itemID, TabItem tabItem)
         {
-            if (items.Contains(itemID))
-            {
-
-            } else if (!items.Contains(itemID))
+            if (!items.Contains(itemID))
             {
                 items.Add(itemID, tabItem);
                 tabControl.Items.Add(tabItem);

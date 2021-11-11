@@ -27,3 +27,13 @@ J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\Dat
 J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.pdb
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\view\MainWindow.g.cs
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\view\MainWindow.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.AssemblyReference.cache
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoItemBody.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoTabItem.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\TabsBody.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoItemBody.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoTabItem.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\TabsBody.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\GeneratedInternalTypeHelper.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.baml

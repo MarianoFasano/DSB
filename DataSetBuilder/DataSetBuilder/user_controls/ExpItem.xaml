@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="DataSetBuilder.user_controls.ExpItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DataSetBuilder.user_controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="ExpGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel x:Name="DepoDockPanel" Grid.Column="0" MinWidth="0" LastChildFill="True">
+            <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
+            <Menu DockPanel.Dock="Bottom" Name="Modifica">
+                <MenuItem Header="Edit" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
+                    <MenuItem x:Name="ViewCommentMenu" Click="ViewCommentMenu_Click" Header="Vedi commento"/>
+                    <MenuItem x:Name="DepoDirectoryMenu" Header="Directory"/>
+                    <MenuItem x:Name="DeleteDepoMenu" Header="Cancella deposizione"/>
+                </MenuItem>
+            </Menu>
+            <TextBox x:Name="DepoComment" DockPanel.Dock="Bottom" Height="auto" TextWrapping="Wrap" Text="Commento" Visibility="Collapsed"/>
+
+            <ScrollViewer DockPanel.Dock="Left">
+                <StackPanel x:Name="DepositionViewer">
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+        
+        <GridSplitter Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="2" Background="DarkGray"/>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="2" Background="DarkGray"/>
+    </Grid>
+</UserControl>

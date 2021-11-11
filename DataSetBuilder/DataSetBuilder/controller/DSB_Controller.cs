@@ -1,34 +1,22 @@
 ﻿using DataSetBuilder.controller;
-using DataSetBuilder.factories;
+using DataSetBuilder.user_controls;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DataSetBuilder
 {
     class DSB_Controller
     {
-        private MyTabItemFactory myTabItemFactory;
         private MyTabControlController myTabControlController;
         private MyTabItemController myTabItemController;
+        private DepositionController depositionController;
 
-        public DSB_Controller(TabControl tabControl)
+        public DSB_Controller(TabControl tabControl, Button play, Button pause, Button prev, Button next, ComboBox speed, Image image, String basePath)
         {
-            this.myTabItemFactory = new MyTabItemFactory();
+            this.depositionController = new DepositionController(play, pause, prev, next, speed, image);
             this.myTabControlController = new MyTabControlController(tabControl);
-            this.myTabItemController = new MyTabItemController();
+            this.myTabItemController = new MyTabItemController(depositionController, basePath);
         }
 
         //TODO: refactoring, if needed
@@ -75,12 +63,18 @@ namespace DataSetBuilder
         }
 
         //Create a new tabItem with TODO: initialization for depo view
-        internal TabControl NewDepTabItem(ListViewItem listViewItem)
+        /*internal TabControl NewDepTabItem(ListViewItem listViewItem)
         {
-            //TabControl
-            //return myTabItemFactory.GetTabItem(listViewItem);
             return myTabControlController.addItem(listViewItem.Content, myTabItemController.createTabItem(listViewItem));
+        }*/
+        internal TabItem NewDepTabItem(ListViewItem listViewItem, StackPanel stackPanel)
+        {
+            return myTabItemController.createTabItem(listViewItem, stackPanel);
+        }
 
+        public DepositionController getdepoController()
+        {
+            return this.depositionController;
         }
     }
 }

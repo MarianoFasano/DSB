@@ -55,6 +55,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="user_controls\DepoItemBody.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="user_controls\DepoTabItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="user_controls\ExpItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="user_controls\TabsBody.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="view\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,6 +79,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="controller\DepositionController.cs" />
     <Compile Include="controller\DSB_Controller.cs" />
     <Compile Include="controller\MyTabControlController.cs" />
     <Compile Include="controller\MyTabItemController.cs" />
@@ -71,8 +88,21 @@
     <Compile Include="factories\MenuFactory.cs" />
     <Compile Include="factories\MenuItemFactory.cs" />
     <Compile Include="model\DSB_Model.cs" />
+    <Compile Include="model\MyDepoData.cs" />
     <Compile Include="model\MyTabControlModel.cs" />
     <Compile Include="model\MyTabItemModel.cs" />
+    <Compile Include="user_controls\DepoItemBody.xaml.cs">
+      <DependentUpon>DepoItemBody.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="user_controls\DepoTabItem.xaml.cs">
+      <DependentUpon>DepoTabItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="user_controls\ExpItem.xaml.cs">
+      <DependentUpon>ExpItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="user_controls\TabsBody.xaml.cs">
+      <DependentUpon>TabsBody.xaml</DependentUpon>
+    </Compile>
     <Compile Include="view\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

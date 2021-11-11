@@ -19,3 +19,4 @@ J:\ProgettiScuola\DataSetBuilder\DSB\docs\CodeTest\HelloWorld_WPFTest\HelloWorld
 J:\ProgettiScuola\DataSetBuilder\DSB\docs\CodeTest\HelloWorld_WPFTest\HelloWorld\obj\Debug\netcoreapp3.1\cSharpeTest.dll
 J:\ProgettiScuola\DataSetBuilder\DSB\docs\CodeTest\HelloWorld_WPFTest\HelloWorld\obj\Debug\netcoreapp3.1\cSharpeTest.pdb
 J:\ProgettiScuola\DataSetBuilder\DSB\docs\CodeTest\HelloWorld_WPFTest\HelloWorld\obj\Debug\netcoreapp3.1\cSharpeTest.genruntimeconfig.cache
+J:\ProgettiScuola\DataSetBuilder\DSB\docs\CodeTest\HelloWorld_WPFTest\HelloWorld\obj\Debug\netcoreapp3.1\cSharpeTest.csproj.AssemblyReference.cache
