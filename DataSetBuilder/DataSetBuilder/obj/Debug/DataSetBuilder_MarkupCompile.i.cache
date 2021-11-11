@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\
 DataSetBuilder
 none
 false
 DEBUG;TRACE
-J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\App.xaml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\App.xaml
 5641075505
 
-221423445225
+23-1316797078
 13-1505183044
 user_controls\DepoItemBody.xaml;user_controls\DepoTabItem.xaml;user_controls\ExpItem.xaml;user_controls\TabsBody.xaml;view\MainWindow.xaml;
 
-True
+False
 

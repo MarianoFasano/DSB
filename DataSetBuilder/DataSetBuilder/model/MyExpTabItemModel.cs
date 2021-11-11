@@ -8,11 +8,11 @@ using System.Windows.Controls;
 namespace DataSetBuilder.model
 {
     
-    class MyTabItemModel
+    class MyExpTabItemModel
     {
         private TabItem tabItem;
 
-        public MyTabItemModel(TabItem tabitem)
+        public MyExpTabItemModel(TabItem tabitem)
         {
             this.tabItem = tabItem;
         }

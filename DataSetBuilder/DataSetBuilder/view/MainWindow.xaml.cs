@@ -13,8 +13,8 @@ namespace DataSetBuilder.view
     public partial class MainWindow : Window
     {
         DSB_Controller dsb_controller;
-        string expPath = @"J:\DTI\_DSB";
-        //string expPath = @"D:\_DSB";
+        //string expPath = @"J:\DTI\_DSB";
+        string expPath = @"D:\_DSB";
 
         private TabsBody tabBody;
         private DepoItemBody depoItemBody = new DepoItemBody();
@@ -49,21 +49,7 @@ namespace DataSetBuilder.view
         private void openExpDeps(object sender, EventArgs e)
         {
             ListViewItem listViewItem = sender as ListViewItem;
-            ExpItem expItem = new ExpItem();
-            TabItem tabItem = dsb_controller.NewDepTabItem(listViewItem, expItem.DepositionViewer);
-            DepoTabItem depodataTabItem = new DepoTabItem();
-            Grid.SetRow(depodataTabItem, 1);
-            Grid.SetColumn(depodataTabItem, 0);
-            Grid.SetColumnSpan(depodataTabItem, 2);
-            expItem.ExpGrid.Children.Add(depodataTabItem);
-            tabItem.Header = listViewItem.Content;
-            tabItem.Content = expItem;
-
-            this.tabBody.TabsControl.Items.Add(tabItem);
-            DepoTabItem depoTabItem = new DepoTabItem();
-            Grid.SetRow(depoTabItem, 1);
-            Grid.SetColumn(depoTabItem, 0);            
-            tabBody.TabBody_Grid.Children.Add(depoTabItem);
+            tabBody = dsb_controller.NewDepTabItem(tabBody, listViewItem);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

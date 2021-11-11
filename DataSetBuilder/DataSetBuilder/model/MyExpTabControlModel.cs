@@ -8,23 +8,25 @@ using System.Windows.Controls;
 
 namespace DataSetBuilder.model
 {
-    class MyTabControlModel
+    class MyExpTabControlModel
     {
         private TabControl tabControl;
         private IDictionary items = new Dictionary<Object, TabItem>();
 
-        public MyTabControlModel(TabControl tabControl)
+        public MyExpTabControlModel(TabControl tabControl)
         {
             this.tabControl = tabControl;
         }
 
-        public void addItem(Object itemID, TabItem tabItem)
+        public Boolean addItem(Object itemID, TabItem tabItem)
         {
             if (!items.Contains(itemID))
             {
                 items.Add(itemID, tabItem);
-                tabControl.Items.Add(tabItem);
+                //tabControl.Items.Add(tabItem);
+                return true;
             }
+            return false;
 
         }
         public TabControl GetTabControl()

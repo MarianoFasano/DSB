@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 
 namespace DataSetBuilder.controller
 {
-    class DepositionController
+    class DepoTabItemController
     {
         //Object from graphical interface
         private Button playButton;
@@ -28,7 +28,7 @@ namespace DataSetBuilder.controller
         private IDictionary<String, MyDepoData> depoDatas = new Dictionary<String, MyDepoData>();
         private Boolean isAutomatic = false;
 
-        public DepositionController(Button play, Button pause, Button prev, Button next, ComboBox speed, Image image)
+        public DepoTabItemController(Button play, Button pause, Button prev, Button next, ComboBox speed, Image image)
         {
             this.playButton = play;
             this.pauseButton = pause;

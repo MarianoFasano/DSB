@@ -8,15 +8,15 @@ namespace DataSetBuilder
 {
     class DSB_Controller
     {
-        private MyTabControlController myTabControlController;
-        private MyTabItemController myTabItemController;
-        private DepositionController depositionController;
-
+        private MyExpTabControlController myTabControlController;
+        private DepoTabItemController depositionController;
+        private MyExpTabItemController myTabItemController;
         public DSB_Controller(TabControl tabControl, Button play, Button pause, Button prev, Button next, ComboBox speed, Image image, String basePath)
         {
-            this.depositionController = new DepositionController(play, pause, prev, next, speed, image);
-            this.myTabControlController = new MyTabControlController(tabControl);
-            this.myTabItemController = new MyTabItemController(depositionController, basePath);
+            this.depositionController = new DepoTabItemController(play, pause, prev, next, speed, image);
+            MyExpTabItemController myTabItemController = new MyExpTabItemController(depositionController, basePath);
+            this.myTabItemController = myTabItemController;
+            this.myTabControlController = new MyExpTabControlController(tabControl, myTabItemController);
         }
 
         //TODO: refactoring, if needed
@@ -62,17 +62,12 @@ namespace DataSetBuilder
             }
         }
 
-        //Create a new tabItem with TODO: initialization for depo view
-        /*internal TabControl NewDepTabItem(ListViewItem listViewItem)
+        internal TabsBody NewDepTabItem(TabsBody tabBody, ListViewItem listViewItem)
         {
-            return myTabControlController.addItem(listViewItem.Content, myTabItemController.createTabItem(listViewItem));
-        }*/
-        internal TabItem NewDepTabItem(ListViewItem listViewItem, StackPanel stackPanel)
-        {
-            return myTabItemController.createTabItem(listViewItem, stackPanel);
+            return myTabControlController.createTabItem(tabBody, listViewItem);
         }
 
-        public DepositionController getdepoController()
+        public DepoTabItemController getdepoController()
         {
             return this.depositionController;
         }

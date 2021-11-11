@@ -37,3 +37,11 @@ J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\use
 J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.g.cs
 J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\GeneratedInternalTypeHelper.g.cs
 J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoItemBody.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoTabItem.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\TabsBody.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoItemBody.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoTabItem.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\TabsBody.baml

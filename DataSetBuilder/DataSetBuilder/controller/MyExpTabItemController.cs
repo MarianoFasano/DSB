@@ -10,14 +10,14 @@ using System.Windows.Controls;
 
 namespace DataSetBuilder.controller
 {
-    class MyTabItemController
+    class MyExpTabItemController
     {
-        private MyTabItemModel myTabItemModel;
-        private MyTabItemFactory myTabItemFactory;
+        private MyExpTabItemModel myTabItemModel;
+        private MyExpTabItemFactory myTabItemFactory;
 
-        public MyTabItemController(DepositionController depositionController, String basePath)
+        public MyExpTabItemController(DepoTabItemController depositionController, String basePath)
         {
-            this.myTabItemFactory = new MyTabItemFactory(depositionController, basePath);
+            this.myTabItemFactory = new MyExpTabItemFactory(depositionController, basePath);
         }
 
         public TabItem getTabItem()
