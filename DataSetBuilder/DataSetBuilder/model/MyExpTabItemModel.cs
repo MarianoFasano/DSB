@@ -10,16 +10,19 @@ namespace DataSetBuilder.model
     
     class MyExpTabItemModel
     {
-        private TabItem tabItem;
+        private IDictionary<String, TabControl> dataItems = new Dictionary<String, TabControl>();
 
-        public MyExpTabItemModel(TabItem tabitem)
+        public void addToDict(String key, TabControl value)
         {
-            this.tabItem = tabItem;
+            if (!this.dataItems.ContainsKey(key))
+            {
+                this.dataItems.Add(key, value);
+            }
         }
 
-        public TabItem GetTabItem()
+        public TabControl getTabControl(String key)
         {
-            return this.tabItem;
+            return this.dataItems[key];
         }
     }
 }

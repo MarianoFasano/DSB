@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -79,15 +80,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="controller\DepoTabControlController.cs" />
     <Compile Include="controller\DepoTabItemController.cs" />
+    <Compile Include="controller\DepoTabControlController.cs" />
     <Compile Include="controller\DSB_Controller.cs" />
     <Compile Include="controller\MyExpTabControlController.cs" />
-    <Compile Include="controller\MyExpTabItemController.cs" />
-    <Compile Include="factories\ColumnFactory.cs" />
     <Compile Include="factories\MyExpTabItemFactory.cs" />
-    <Compile Include="factories\MenuFactory.cs" />
-    <Compile Include="factories\MenuItemFactory.cs" />
     <Compile Include="model\DSB_Model.cs" />
     <Compile Include="model\MyDepoData.cs" />
     <Compile Include="model\MyExpTabControlModel.cs" />

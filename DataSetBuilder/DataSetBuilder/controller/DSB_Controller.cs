@@ -1,4 +1,5 @@
 ﻿using DataSetBuilder.controller;
+using DataSetBuilder.model;
 using DataSetBuilder.user_controls;
 using System;
 using System.Windows;
@@ -8,15 +9,14 @@ namespace DataSetBuilder
 {
     class DSB_Controller
     {
-        private MyExpTabControlController myTabControlController;
-        private DepoTabItemController depositionController;
-        private MyExpTabItemController myTabItemController;
-        public DSB_Controller(TabControl tabControl, Button play, Button pause, Button prev, Button next, ComboBox speed, Image image, String basePath)
-        {
-            this.depositionController = new DepoTabItemController(play, pause, prev, next, speed, image);
-            MyExpTabItemController myTabItemController = new MyExpTabItemController(depositionController, basePath);
-            this.myTabItemController = myTabItemController;
-            this.myTabControlController = new MyExpTabControlController(tabControl, myTabItemController);
+        private MyExpTabControlController myExpTabControlController;
+        private MyExpTabItemModel myExpTabItemModel = new MyExpTabItemModel();
+        private DepoTabControlController depoTabControlController;
+
+        public DSB_Controller(TabControl tabControl, String basePath)
+        {            
+            this.depoTabControlController = new DepoTabControlController(this.myExpTabItemModel, basePath);
+            this.myExpTabControlController = new MyExpTabControlController(tabControl, basePath, this.myExpTabItemModel, this.depoTabControlController);
         }
 
         //TODO: refactoring, if needed
@@ -64,12 +64,7 @@ namespace DataSetBuilder
 
         internal TabsBody NewDepTabItem(TabsBody tabBody, ListViewItem listViewItem)
         {
-            return myTabControlController.createTabItem(tabBody, listViewItem);
-        }
-
-        public DepoTabItemController getdepoController()
-        {
-            return this.depositionController;
+            return myExpTabControlController.createTabItem(tabBody, listViewItem);
         }
     }
 }

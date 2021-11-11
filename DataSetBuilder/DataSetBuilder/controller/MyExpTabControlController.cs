@@ -1,10 +1,15 @@
-﻿using DataSetBuilder.model;
+﻿using DataSetBuilder.factories;
+using DataSetBuilder.model;
 using DataSetBuilder.user_controls;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DataSetBuilder.controller
@@ -12,12 +17,19 @@ namespace DataSetBuilder.controller
     class MyExpTabControlController
     {
         private MyExpTabControlModel myTabControlModel;
-        private MyExpTabItemController myTabItemController;
+        private MyExpTabItemModel myExpTabItemModel;
+        private MyExpTabItemFactory myTabItemFactory;
+        private DepoTabControlController depoTabControlController;
+        private TabControl mainTabControl;
 
-        public MyExpTabControlController(TabControl tabControl, MyExpTabItemController myTabItemController)
+        public MyExpTabControlController(TabControl tabControl, String basePath, MyExpTabItemModel myExpTabItemModel, DepoTabControlController depoTabControlController)
         {
+            this.mainTabControl = tabControl;
             this.myTabControlModel = new MyExpTabControlModel(tabControl);
-            this.myTabItemController = myTabItemController;
+            this.myExpTabItemModel = myExpTabItemModel;
+            this.myTabItemFactory = new MyExpTabItemFactory(basePath, depoTabControlController);
+            this.depoTabControlController = depoTabControlController;
+            this.mainTabControl.SelectionChanged += TabControl_SelectionChanged;
         }
 
         private Boolean addItem(Object itemID, TabItem tabItem)
@@ -30,13 +42,12 @@ namespace DataSetBuilder.controller
             {
                 return false;
             }
-
         }
 
         internal TabsBody createTabItem(TabsBody tabBody, ListViewItem listViewItem)
         {
             ExpItem expItem = new ExpItem();
-            TabItem tabItem = myTabItemController.createTabItem(listViewItem, expItem.DepositionViewer);
+            TabItem tabItem = myTabItemFactory.GetTabItem(listViewItem, expItem.DepositionViewer);
             if (addItem(listViewItem, tabItem))
             {
                 DepoTabItem depodataTabItem = new DepoTabItem();
@@ -48,15 +59,22 @@ namespace DataSetBuilder.controller
                 tabItem.Content = expItem;
 
                 tabBody.TabsControl.Items.Add(tabItem);
-                DepoTabItem depoTabItem = new DepoTabItem();
-                Grid.SetRow(depoTabItem, 1);
-                Grid.SetColumn(depoTabItem, 0);
-                tabBody.TabBody_Grid.Children.Add(depoTabItem);
+
+                this.myExpTabItemModel.addToDict((string)listViewItem.Content, depodataTabItem.DepoTabControl);
                 return tabBody;
             }
             else
             {
                 return tabBody;
+            }
+        }
+
+        void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl)
+            {
+                TabItem tabItem = (TabItem)mainTabControl.SelectedItem;
+                depoTabControlController.setPath((string)tabItem.Header);
             }
         }
     }

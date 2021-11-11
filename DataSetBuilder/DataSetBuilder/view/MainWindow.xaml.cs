@@ -13,8 +13,8 @@ namespace DataSetBuilder.view
     public partial class MainWindow : Window
     {
         DSB_Controller dsb_controller;
-        //string expPath = @"J:\DTI\_DSB";
-        string expPath = @"D:\_DSB";
+        string expPath = @"J:\DTI\_DSB";
+        //string expPath = @"D:\_DSB";
 
         private TabsBody tabBody;
         private DepoItemBody depoItemBody = new DepoItemBody();
@@ -24,7 +24,7 @@ namespace DataSetBuilder.view
             InitializeComponent();
             Init();
             initTabControl();
-            this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, depoItemBody.PlayImage, depoItemBody.getPauseButton(), depoItemBody.getPrevButton(), depoItemBody.getNextButton(), depoItemBody.getSpeed(), depoItemBody.getImage(), expPath);
+            this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, expPath);
         }
 
         private void Init()
