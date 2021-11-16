@@ -32,6 +32,7 @@ namespace DataSetBuilder.controller
 
         private Boolean isAutomatic = false;
         private MyExpTabItemModel myExpTabItemModel;
+        private TabControl actualTabControl;
 
         public DepoTabControlController(MyExpTabItemModel myExpTabItemModel, String basePath)
         {
@@ -58,31 +59,16 @@ namespace DataSetBuilder.controller
             init(listViewItem);
         }
 
-        private void foo(String depoName)
-        {
-            if (!depoDatas.ContainsKey(depoName))
-            {
-                this.dataPath = depoPath + @"\" + depoName;
-                //depoDatas.Add(depoName, new MyDepoData(dataPath));
-            }
-        }
         private void init(ListViewItem listViewItem)
         {
-            foo((string)listViewItem.Content);
             if (allowAdding(listViewItem))
             {
-                TabControl tabControl = myExpTabItemModel.getTabControl(getExpName());
-
-                TabItem tabItem = new TabItem();
-                tabItem.Header = (string)listViewItem.Content;
-                DepoItemBody depoItemBody = new DepoItemBody();
-                tabItem.Content = depoItemBody;
-                tabControl.Items.Add(tabItem);
-                depoStructures.Add((string)listViewItem.Content, depoItemBody);
-            }      
-            //foo((string)listViewItem.Content);
-            //initFirstImage((string)listViewItem.Content);
+                initLists(listViewItem);                
+                initFirstImage((string)listViewItem.Content);
+                initButtonsAction();
+            }
         }
+
         private Boolean allowAdding(ListViewItem listViewItem)
         {
             if (!this.depoStructures.ContainsKey((string)listViewItem.Content))
@@ -91,12 +77,30 @@ namespace DataSetBuilder.controller
             }
             return false;
         }
+
+        private void initLists(ListViewItem listViewItem)
+        {
+            TabControl tabControl = myExpTabItemModel.getTabControl(getExpName());
+
+            TabItem tabItem = new TabItem();
+            tabItem.Header = (string)listViewItem.Content;
+            DepoItemBody depoItemBody = new DepoItemBody();
+            depoItemBody.FileBrowser.Source = new Uri(basePath + @"\" + depoPath + @"\" + (string)listViewItem.Content);
+            tabItem.Content = depoItemBody;
+            tabControl.Items.Add(tabItem);
+            depoStructures.Add((string)listViewItem.Content, depoItemBody);
+            this.dataPath = basePath + @"\" + depoPath + @"\" + (string)listViewItem.Content;
+            assignButtons(depoItemBody);
+            depoDatas.Add((string)listViewItem.Content, new MyDepoData(dataPath));
+            this.actualTabControl = tabControl;
+        }
         private void initFirstImage(String depoName)
         {
             MyDepoData myDepoData = depoDatas[depoName];
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
         }
+
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             nextImage();
@@ -109,7 +113,6 @@ namespace DataSetBuilder.controller
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
         }
-
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
@@ -130,7 +133,7 @@ namespace DataSetBuilder.controller
         }
         private String getDepoName()
         {
-            String removeString = depoPath + @"\";
+            String removeString = basePath + @"\" + depoPath + @"\";
             int index = dataPath.IndexOf(removeString);
             string cleanPath = (index < 0) ? dataPath : dataPath.Remove(index, removeString.Length);
             return cleanPath;
@@ -141,6 +144,23 @@ namespace DataSetBuilder.controller
             int index = depoPath.IndexOf(removeString);
             string cleanPath = (index < 0) ? depoPath : depoPath.Remove(index, removeString.Length);
             return cleanPath;
+        }
+
+        private void assignButtons(DepoItemBody depoItemBody)
+        {
+            this.playButton = depoItemBody.PlayImage;
+            this.pauseButton = depoItemBody.PauseImage;
+            this.prevButton = depoItemBody.PrevImage;
+            this.nextButton = depoItemBody.NextImage;
+            this.imageSpeed = depoItemBody.ImageSpeed;
+            this.depoImage = depoItemBody.DepoImage;
+        }
+
+        public void depoTabSetting(String header)
+        {
+            DepoItemBody depoItemBody = depoStructures[header];
+            assignButtons(depoItemBody);
+            //assignTabControl(depoItemBody);
         }
     }
 }

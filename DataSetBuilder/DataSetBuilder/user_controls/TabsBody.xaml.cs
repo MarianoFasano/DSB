@@ -34,7 +34,7 @@ namespace DataSetBuilder.user_controls
             TabsControl = tabControl;
         }
  
-        //Test
+        //MoveTabItems
         private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (!(e.Source is TabItem tabItem))

@@ -74,7 +74,10 @@ namespace DataSetBuilder.controller
             if (e.Source is TabControl)
             {
                 TabItem tabItem = (TabItem)mainTabControl.SelectedItem;
-                depoTabControlController.setPath((string)tabItem.Header);
+                if(tabItem != null)
+                {
+                    depoTabControlController.setPath((string)tabItem.Header);
+                }
             }
         }
     }

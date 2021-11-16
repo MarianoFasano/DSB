@@ -25,9 +25,9 @@ namespace DataSetBuilder.user_controls
             InitializeComponent();
         }
 
-        public DocumentViewer getDocViewer()
+        public WebBrowser getDocViewer()
         {
-            return DocViewer;
+            return FileBrowser;
         }
         public StackPanel getDataList()
         {
@@ -56,6 +56,22 @@ namespace DataSetBuilder.user_controls
         public Image getImage()
         {
             return DepoImage;
+        }
+
+        private void Previous_Click(object sender, RoutedEventArgs e)
+        {
+            if (FileBrowser.CanGoBack)
+            {
+                FileBrowser.GoBack();
+            }
+        }
+
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+            if (FileBrowser.CanGoForward)
+            {
+                FileBrowser.GoForward();
+            }
         }
     }
 }

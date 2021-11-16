@@ -39,10 +39,16 @@
                 </StackPanel>
             </ScrollViewer>
         </DockPanel>
-        <DocumentViewer x:Name="DocViewer" Grid.Column="3">
-        </DocumentViewer>
+        <DockPanel Grid.Column="3">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" DockPanel.Dock="Bottom">
+                <Button x:Name="Previous" Click="Previous_Click" Content="&lt;&lt;"></Button>
+                <Button x:Name="Next" Click="Next_Click" Content=">>"></Button>
+            </StackPanel>
+            <WebBrowser x:Name="FileBrowser">
+            </WebBrowser>
+        </DockPanel>
 
         <GridSplitter Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="2" Background="DarkGray"/>
-        <GridSplitter Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="2" Background="DarkGray"/>
+        <GridSplitter Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="2" Background="DarkGray"/>
     </Grid>
 </UserControl>
