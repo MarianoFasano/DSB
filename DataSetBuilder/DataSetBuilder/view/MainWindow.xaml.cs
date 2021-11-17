@@ -49,7 +49,7 @@ namespace DataSetBuilder.view
         private void openExpDeps(object sender, EventArgs e)
         {
             ListViewItem listViewItem = sender as ListViewItem;
-            tabBody = dsb_controller.NewDepTabItem(tabBody, listViewItem);
+            tabBody = dsb_controller.NewExpTabItem(tabBody, listViewItem);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

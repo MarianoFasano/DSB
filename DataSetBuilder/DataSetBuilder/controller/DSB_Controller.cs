@@ -62,7 +62,7 @@ namespace DataSetBuilder
             }
         }
 
-        internal TabsBody NewDepTabItem(TabsBody tabBody, ListViewItem listViewItem)
+        internal TabsBody NewExpTabItem(TabsBody tabBody, ListViewItem listViewItem)
         {
             return myExpTabControlController.createTabItem(tabBody, listViewItem);
         }

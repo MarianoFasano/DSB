@@ -43,7 +43,6 @@ namespace DataSetBuilder.model
                     this.images.Add(file.Name);
                 }
             }
-            MessageBox.Show(images.ToString(), "Immagini");
         }
         public List<String> getImages()
         {

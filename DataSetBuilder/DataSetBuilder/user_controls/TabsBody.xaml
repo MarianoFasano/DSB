@@ -16,7 +16,7 @@
                 </Style>
             </TabControl.Resources>
 
-            <TabItem Header="Esperimenti">
+            <TabItem>
                 <Grid x:Name="TabBody_Grid">
                     <Grid.RowDefinitions>
                         <RowDefinition/>

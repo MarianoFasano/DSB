@@ -22,7 +22,11 @@ namespace DataSetBuilder.model
 
         public TabControl getTabControl(String key)
         {
-            return this.dataItems[key];
+            if (dataItems.ContainsKey(key))
+            {
+                return this.dataItems[key];
+            }
+            return null;
         }
     }
 }

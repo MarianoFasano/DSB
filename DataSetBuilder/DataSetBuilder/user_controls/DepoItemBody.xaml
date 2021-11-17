@@ -40,9 +40,13 @@
             </ScrollViewer>
         </DockPanel>
         <DockPanel Grid.Column="3">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" DockPanel.Dock="Bottom">
-                <Button x:Name="Previous" Click="Previous_Click" Content="&lt;&lt;"></Button>
-                <Button x:Name="Next" Click="Next_Click" Content=">>"></Button>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                <StackPanel>
+                    <Button x:Name="Previous" Click="Previous_Click" Content="&lt;&lt;"></Button>
+                </StackPanel>
+                <StackPanel>
+                    <Button x:Name="Next" Click="Next_Click" Content=">>"></Button>
+                </StackPanel>                
             </StackPanel>
             <WebBrowser x:Name="FileBrowser">
             </WebBrowser>

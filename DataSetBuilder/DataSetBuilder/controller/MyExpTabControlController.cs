@@ -18,7 +18,7 @@ namespace DataSetBuilder.controller
     {
         private MyExpTabControlModel myTabControlModel;
         private MyExpTabItemModel myExpTabItemModel;
-        private MyExpTabItemFactory myTabItemFactory;
+        private MyExpTabItemFactory myExpTabItemFactory;
         private DepoTabControlController depoTabControlController;
         private TabControl mainTabControl;
 
@@ -27,7 +27,7 @@ namespace DataSetBuilder.controller
             this.mainTabControl = tabControl;
             this.myTabControlModel = new MyExpTabControlModel(tabControl);
             this.myExpTabItemModel = myExpTabItemModel;
-            this.myTabItemFactory = new MyExpTabItemFactory(basePath, depoTabControlController);
+            this.myExpTabItemFactory = new MyExpTabItemFactory(basePath, depoTabControlController);
             this.depoTabControlController = depoTabControlController;
             this.mainTabControl.SelectionChanged += TabControl_SelectionChanged;
         }
@@ -44,10 +44,11 @@ namespace DataSetBuilder.controller
             }
         }
 
+        //Add experiment item to tabcontrol
         internal TabsBody createTabItem(TabsBody tabBody, ListViewItem listViewItem)
         {
             ExpItem expItem = new ExpItem();
-            TabItem tabItem = myTabItemFactory.GetTabItem(listViewItem, expItem.DepositionViewer);
+            TabItem tabItem = myExpTabItemFactory.GetTabItem(listViewItem, expItem.DepositionViewer);
             if (addItem(listViewItem, tabItem))
             {
                 DepoTabItem depodataTabItem = new DepoTabItem();
@@ -69,14 +70,22 @@ namespace DataSetBuilder.controller
             }
         }
 
+        //
         void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.Source is TabControl)
             {
                 TabItem tabItem = (TabItem)mainTabControl.SelectedItem;
+                //Mandatory check to avoid tabItem=null happened on drag&drop the tabItem
                 if(tabItem != null)
                 {
-                    depoTabControlController.setPath((string)tabItem.Header);
+                    //Mandatory to open the deposition in the correct tabControl
+                    String header = (string)tabItem.Header;
+                    if (header != null)
+                    {
+                        depoTabControlController.setDepoPath((string)tabItem.Header);
+                        depoTabControlController.setActualTabControl((string)tabItem.Header);
+                    }
                 }
             }
         }

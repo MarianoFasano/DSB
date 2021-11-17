@@ -25,39 +25,6 @@ namespace DataSetBuilder.user_controls
             InitializeComponent();
         }
 
-        public WebBrowser getDocViewer()
-        {
-            return FileBrowser;
-        }
-        public StackPanel getDataList()
-        {
-            return DataList;
-        }
-        public Button getPlayButton()
-        {
-            return PlayImage;
-        }
-        public Button getPauseButton()
-        {
-            return PauseImage;
-        }
-        public Button getPrevButton()
-        {
-            return PrevImage;
-        }
-        public Button getNextButton()
-        {
-            return NextImage;
-        }
-        public ComboBox getSpeed()
-        {
-            return ImageSpeed;
-        }
-        public Image getImage()
-        {
-            return DepoImage;
-        }
-
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
             if (FileBrowser.CanGoBack)

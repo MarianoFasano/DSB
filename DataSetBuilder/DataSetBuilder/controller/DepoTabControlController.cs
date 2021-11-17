@@ -40,6 +40,25 @@ namespace DataSetBuilder.controller
             this.basePath = basePath;
         }
 
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl)
+            {
+                TabItem tabItem = (TabItem)actualTabControl.SelectedItem;
+                //Mandatory check to avoid tabItem=null happened on drag&drop the tabItem
+                if (tabItem != null && (string)tabItem.Header != null)
+                {
+                    DepoItemBody depoItemBody = this.depoStructures[(string)tabItem.Header];
+                    
+                    if (depoItemBody != null)
+                    {
+                        assignButtons(depoItemBody);
+                        setDataPath((string)tabItem.Header);
+                    }
+                }
+            }
+        }
+
         private void initButtonsAction()
         {
             this.playButton.Click += PlayButton_Click;
@@ -48,9 +67,13 @@ namespace DataSetBuilder.controller
             this.nextButton.Click += NextButton_Click;
         }
 
-        public void setPath(String path)
+        public void setDepoPath(String path)
         {
             this.depoPath = path;
+        }
+        public void setDataPath(String path)
+        {
+            this.dataPath = basePath + @"\" + depoPath + @"\" + path;
         }
 
         internal void openDepsData(object sender, MouseButtonEventArgs e)
@@ -130,6 +153,8 @@ namespace DataSetBuilder.controller
             myDepoData.upActualImage();
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
+
+            //MessageBox.Show(myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), "Immagine");
         }
         private String getDepoName()
         {
@@ -146,6 +171,7 @@ namespace DataSetBuilder.controller
             return cleanPath;
         }
 
+        //Assign the correct buttons to the controller and re-init the button actions
         private void assignButtons(DepoItemBody depoItemBody)
         {
             this.playButton = depoItemBody.PlayImage;
@@ -154,13 +180,14 @@ namespace DataSetBuilder.controller
             this.nextButton = depoItemBody.NextImage;
             this.imageSpeed = depoItemBody.ImageSpeed;
             this.depoImage = depoItemBody.DepoImage;
+            initButtonsAction();
         }
 
-        public void depoTabSetting(String header)
+        //Set this.tabControl based on a key value
+        public void setActualTabControl(String key)
         {
-            DepoItemBody depoItemBody = depoStructures[header];
-            assignButtons(depoItemBody);
-            //assignTabControl(depoItemBody);
+            this.actualTabControl = this.myExpTabItemModel.getTabControl(key);
+            this.actualTabControl.SelectionChanged += TabControl_SelectionChanged;
         }
     }
 }
