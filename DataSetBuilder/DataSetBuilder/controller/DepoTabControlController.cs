@@ -154,7 +154,7 @@ namespace DataSetBuilder.controller
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
 
-            //MessageBox.Show(myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), "Immagine");
+            MessageBox.Show(myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), "Immagine");
         }
         private String getDepoName()
         {
@@ -180,7 +180,6 @@ namespace DataSetBuilder.controller
             this.nextButton = depoItemBody.NextImage;
             this.imageSpeed = depoItemBody.ImageSpeed;
             this.depoImage = depoItemBody.DepoImage;
-            initButtonsAction();
         }
 
         //Set this.tabControl based on a key value
