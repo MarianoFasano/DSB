@@ -16,17 +16,17 @@
 
         <DockPanel Grid.Column="0" Grid.ColumnSpan="2">
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Button x:Name="PlayImage" Content="Play"></Button>
-                <Button x:Name="PauseImage" Content="Pause"></Button>
+                <Button x:Name="PlayImage" Content="(Play)"></Button>
+                <Button x:Name="PauseImage" Content="(Pause)"></Button>
                 <Button x:Name="PrevImage" Content="&lt;"></Button>
                 <Button x:Name="NextImage" Content=">"></Button>
-                <Label Content="0" Margin="1"></Label>
-                <Slider Width="115"></Slider>
-                <Label Content="500000" Margin="1"></Label>
+                <Label x:Name="MinMs" Content="0" Margin="1"></Label>
+                <Slider x:Name="MsSlider" Width="115"></Slider>
+                <Label x:Name="MaxMs" Content="500000" Margin="1"></Label>
                 <ComboBox x:Name="ImageSpeed" Width="40">
-                    <ComboBoxItem Content="1x" IsSelected="True"/>
-                    <ComboBoxItem Content="2x"/>
-                    <ComboBoxItem Content="4x"/>
+                    <ComboBoxItem Content="(1x)" IsSelected="True"/>
+                    <ComboBoxItem Content="(2x)"/>
+                    <ComboBoxItem Content="(4x)"/>
                 </ComboBox>
             </StackPanel>
             <Image x:Name="DepoImage" Height="Auto" Width="Auto"/>

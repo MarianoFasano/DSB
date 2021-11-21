@@ -20,8 +20,8 @@
         </Grid.ColumnDefinitions>
         
         <WrapPanel Grid.Row="0" Grid.ColumnSpan="4" Orientation="Horizontal">
-            <Button Width="80">Reset Layout</Button>
-            <Button Width="80">Close Tabs</Button>
+            <Button Width="80">(Reset Layout)</Button>
+            <Button Width="80">(Close Tabs)</Button>
         </WrapPanel>
         
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan ="2">
@@ -36,12 +36,12 @@
             <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
             <Menu DockPanel.Dock="Bottom" Name="Modifica">
                 <MenuItem Header="Edit" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
-                    <MenuItem x:Name="ViewCommentMenu" Click="ViewExpCommentMenu_Click" Header="Vedi commento"/>
-                    <MenuItem x:Name="ExpDirectoryMenu" Header="Directory"/>
-                    <MenuItem x:Name="DeleteExpMenu" Header="Cancella esperimento"/>
-                    <MenuItem Header="Nuovo esperimento">
-                        <MenuItem x:Name="NewEmtpyExpMenu" Header="Esperimento vuoto"/>
-                        <MenuItem x:Name="NewLoadExpMenu" Header="Carica da esistente"/>
+                    <MenuItem x:Name="ViewCommentMenu" Click="ViewExpCommentMenu_Click" Header="(Vedi commento)"/>
+                    <MenuItem x:Name="ExpDirectoryMenu" Header="(Directory)"/>
+                    <MenuItem x:Name="DeleteExpMenu" Header="(Cancella esperimento)"/>
+                    <MenuItem Header="(Nuovo esperimento)">
+                        <MenuItem x:Name="NewEmtpyExpMenu" Header="(Esperimento vuoto)"/>
+                        <MenuItem x:Name="NewLoadExpMenu" Header="(Carica da esistente)"/>
                     </MenuItem>
                 </MenuItem>
             </Menu>

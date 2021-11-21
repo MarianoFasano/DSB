@@ -117,10 +117,16 @@ namespace DataSetBuilder.controller
             depoDatas.Add((string)listViewItem.Content, new MyDepoData(dataPath));
             this.actualTabControl = tabControl;
         }
+        /*
+         Initialize the firts image.
+         By the deposition name (the key), listviewitem.Content in the experiment depositions, the method search the myDepoData value in the dictionary and return it.
+         This myDepoData is used to get the followed informations: name of the image directory, the list of images name, the actual image by int index.
+         The informations are used to open a new BitMapImage with the image correct Uri and assign this image to the source of the actual Image container showed by the interface.
+         */
         private void initFirstImage(String depoName)
         {
             MyDepoData myDepoData = depoDatas[depoName];
-            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
         }
 
@@ -133,7 +139,7 @@ namespace DataSetBuilder.controller
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
             myDepoData.downActualImage();
-            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
         }
 
@@ -151,10 +157,10 @@ namespace DataSetBuilder.controller
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
             myDepoData.upActualImage();
-            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\"+ myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
 
-            MessageBox.Show(myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), "Immagine");
+            //MessageBox.Show(myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), "Immagine");
         }
         private String getDepoName()
         {
