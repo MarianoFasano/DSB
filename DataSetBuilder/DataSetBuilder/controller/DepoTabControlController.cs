@@ -22,6 +22,9 @@ namespace DataSetBuilder.controller
         private Button nextButton;
         private ComboBox imageSpeed;
         private Image depoImage;
+        private Label actualMs;
+        private Label maxMs;
+        private Slider SliderMs;
         
         //Other variables
         private String depoPath;
@@ -52,7 +55,7 @@ namespace DataSetBuilder.controller
                     
                     if (depoItemBody != null)
                     {
-                        assignButtons(depoItemBody);
+                        assignIControl(depoItemBody);
                         setDataPath((string)tabItem.Header);
                     }
                 }
@@ -113,7 +116,7 @@ namespace DataSetBuilder.controller
             tabControl.Items.Add(tabItem);
             depoStructures.Add((string)listViewItem.Content, depoItemBody);
             this.dataPath = basePath + @"\" + depoPath + @"\" + (string)listViewItem.Content;
-            assignButtons(depoItemBody);
+            assignIControl(depoItemBody);
             depoDatas.Add((string)listViewItem.Content, new MyDepoData(dataPath));
             this.actualTabControl = tabControl;
         }
@@ -125,9 +128,12 @@ namespace DataSetBuilder.controller
          */
         private void initFirstImage(String depoName)
         {
-            MyDepoData myDepoData = depoDatas[depoName];
+            MyDepoData myDepoData = depoDatas[getDepoName()];
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
+
+            //Extract actual and max ms
+            setMaxMsLabel(myDepoData);
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -159,9 +165,8 @@ namespace DataSetBuilder.controller
             myDepoData.upActualImage();
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\"+ myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
-
-            //MessageBox.Show(myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), "Immagine");
         }
+
         private String getDepoName()
         {
             String removeString = basePath + @"\" + depoPath + @"\";
@@ -178,7 +183,7 @@ namespace DataSetBuilder.controller
         }
 
         //Assign the correct buttons to the controller and re-init the button actions
-        private void assignButtons(DepoItemBody depoItemBody)
+        private void assignIControl(DepoItemBody depoItemBody)
         {
             this.playButton = depoItemBody.PlayImage;
             this.pauseButton = depoItemBody.PauseImage;
@@ -186,6 +191,9 @@ namespace DataSetBuilder.controller
             this.nextButton = depoItemBody.NextImage;
             this.imageSpeed = depoItemBody.ImageSpeed;
             this.depoImage = depoItemBody.DepoImage;
+            this.actualMs = depoItemBody.MinMs;
+            this.maxMs = depoItemBody.MaxMs;
+            this.SliderMs = depoItemBody.MsSlider;
         }
 
         //Set this.tabControl based on a key value
@@ -193,6 +201,22 @@ namespace DataSetBuilder.controller
         {
             this.actualTabControl = this.myExpTabItemModel.getTabControl(key);
             this.actualTabControl.SelectionChanged += TabControl_SelectionChanged;
+        }
+
+
+
+        //responsabilità del controller o del mydepodata? --> spostare in mydepodata
+        private void setMaxMsLabel(MyDepoData myDepoData)
+        {
+            string maxMs = myDepoData.getImages()[myDepoData.getImages().Count - 1];
+            MessageBox.Show(extractMs(maxMs), "Immagine");
+        }
+        private string extractMs(string msString)
+        {
+            string ms = msString;
+            int start = ms.IndexOf("ms") + "ms".Length;
+            ms = ms.Substring(start, ms.IndexOf("_")-2);
+            return ms;
         }
     }
 }
