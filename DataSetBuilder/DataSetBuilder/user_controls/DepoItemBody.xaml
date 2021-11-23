@@ -15,15 +15,17 @@
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Column="0" Grid.ColumnSpan="2">
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Button x:Name="PlayImage" Content="(Play)"></Button>
-                <Button x:Name="PauseImage" Content="(Pause)"></Button>
-                <Button x:Name="PrevImage" Content="&lt;"></Button>
-                <Button x:Name="NextImage" Content=">"></Button>
-                <Label x:Name="MinMs" Content="0" Margin="1"></Label>
-                <Slider x:Name="MsSlider" Width="115"></Slider>
-                <Label x:Name="MaxMs" Content="500000" Margin="1"></Label>
-                <ComboBox x:Name="ImageSpeed" Width="40">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+
+                <Button x:Name="PrevImage" Content="&lt;" Width="20" Margin="2"></Button>
+                <Button x:Name="NextImage" Content=">" Width="20" Margin="2"></Button>
+                <Label x:Name="ActualMs" Content="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" />
+                <Slider x:Name="MsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" TickFrequency="1"></Slider>
+                <Label x:Name="MaxMs" Margin="2"></Label>
+                <TextBox x:Name="SearchMs" Text="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Center" Width="60" Margin="2" />
+                <Button x:Name="PlayImage" Content="(Play)" Margin="2"></Button>
+                <Button x:Name="PauseImage" Content="(Pause)" Margin="2"></Button>
+                <ComboBox x:Name="ImageSpeed" Width="auto" Margin="2">
                     <ComboBoxItem Content="(1x)" IsSelected="True"/>
                     <ComboBoxItem Content="(2x)"/>
                     <ComboBoxItem Content="(4x)"/>

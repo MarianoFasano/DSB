@@ -25,6 +25,7 @@ namespace DataSetBuilder.controller
         private Label actualMs;
         private Label maxMs;
         private Slider SliderMs;
+        private TextBox searchMs;
         
         //Other variables
         private String depoPath;
@@ -62,12 +63,29 @@ namespace DataSetBuilder.controller
             }
         }
 
-        private void initButtonsAction()
+        private void initControlsAction()
         {
             this.playButton.Click += PlayButton_Click;
             this.pauseButton.Click += PauseButton_Click;
             this.prevButton.Click += PrevButton_Click;
             this.nextButton.Click += NextButton_Click;
+            this.searchMs.KeyDown += SearchMs_KeyDown;
+        }
+
+        private void SearchMs_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Return)
+            {
+                MessageBox.Show(this.searchMs.Text, "Sono stato modificato");
+
+                //Valore attuale dei ms
+                int actualValue = (int)Int64.Parse(this.searchMs.Text);
+            }
+        }
+
+        private void binarySearch()
+        {
+            //ALGO IMPLEMENTETION, TWO WAYS
         }
 
         public void setDepoPath(String path)
@@ -91,7 +109,7 @@ namespace DataSetBuilder.controller
             {
                 initLists(listViewItem);                
                 initFirstImage((string)listViewItem.Content);
-                initButtonsAction();
+                initControlsAction();
             }
         }
 
@@ -133,7 +151,7 @@ namespace DataSetBuilder.controller
             this.depoImage.Source = bitmapImage;
 
             //Extract actual and max ms
-            setMaxMsLabel(myDepoData);
+            setMsLabels(myDepoData);
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -147,6 +165,7 @@ namespace DataSetBuilder.controller
             myDepoData.downActualImage();
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
+            setMsLabels(myDepoData);
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
@@ -165,6 +184,7 @@ namespace DataSetBuilder.controller
             myDepoData.upActualImage();
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\"+ myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
+            setMsLabels(myDepoData);
         }
 
         private String getDepoName()
@@ -191,9 +211,10 @@ namespace DataSetBuilder.controller
             this.nextButton = depoItemBody.NextImage;
             this.imageSpeed = depoItemBody.ImageSpeed;
             this.depoImage = depoItemBody.DepoImage;
-            this.actualMs = depoItemBody.MinMs;
+            this.actualMs = depoItemBody.ActualMs;
             this.maxMs = depoItemBody.MaxMs;
             this.SliderMs = depoItemBody.MsSlider;
+            this.searchMs = depoItemBody.SearchMs;
         }
 
         //Set this.tabControl based on a key value
@@ -206,10 +227,20 @@ namespace DataSetBuilder.controller
 
 
         //responsabilità del controller o del mydepodata? --> spostare in mydepodata
-        private void setMaxMsLabel(MyDepoData myDepoData)
+        private void setMsLabels(MyDepoData myDepoData)
         {
             string maxMs = myDepoData.getImages()[myDepoData.getImages().Count - 1];
-            MessageBox.Show(extractMs(maxMs), "Immagine");
+            string actualMs = myDepoData.getImages()[(int)myDepoData.getActualImage()];
+            string minMs = myDepoData.getImages()[0];
+
+
+            int max = (int)Int64.Parse(extractMs(maxMs));
+            int actual = (int)Int64.Parse(extractMs(actualMs));
+            int min = (int)Int64.Parse(extractMs(minMs));
+
+            this.maxMs.Content = (max-min).ToString() + " ms";
+            this.actualMs.Content = (actual - min).ToString();
+            this.SliderMs.Maximum = max - min;
         }
         private string extractMs(string msString)
         {
