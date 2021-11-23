@@ -22,7 +22,7 @@
                 <Label x:Name="ActualMs" Content="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" />
                 <Slider x:Name="MsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" TickFrequency="1"></Slider>
                 <Label x:Name="MaxMs" Margin="2"></Label>
-                <TextBox x:Name="SearchMs" Text="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Center" Width="60" Margin="2" />
+                <TextBox x:Name="SearchMs" DockPanel.Dock="Right" TextAlignment="Center" Width="60" Margin="2" />
                 <Button x:Name="PlayImage" Content="(Play)" Margin="2"></Button>
                 <Button x:Name="PauseImage" Content="(Pause)" Margin="2"></Button>
                 <ComboBox x:Name="ImageSpeed" Width="auto" Margin="2">

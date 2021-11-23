@@ -76,9 +76,23 @@ namespace DataSetBuilder.controller
         {
             if(e.Key == Key.Return)
             {
-                MessageBox.Show(this.searchMs.Text, "Sono stato modificato");
-
+                //MessageBox.Show(this.searchMs.Text, "Sono stato modificato");
+                //max length 13
+                // 0 to label content lentgh
                 //Valore attuale dei ms
+                MyDepoData myDepoData = depoDatas[getDepoName()];
+                if ((int)Int64.Parse(this.searchMs.Text) > 0 && (int)Int64.Parse(this.searchMs.Text) < (int)Int64.Parse(maxMs.Content.ToString()))
+                {
+                    MessageBox.Show(this.searchMs.Text, "Lunghezza maggiore di 0 e valore inferiore al massimo");
+                }
+                else if ((int)Int64.Parse(this.searchMs.Text) > (int)Int64.Parse(maxMs.Content.ToString()) && (int)Int64.Parse(this.searchMs.Text)<(int)Int64.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
+                {
+                    MessageBox.Show(this.searchMs.Text, "Valore maggiore di max ms e inferiore al massimo scrivibile");
+                }
+                else
+                {
+                    MessageBox.Show(((uint)Int64.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1]))).ToString(), "Formato errato");
+                }
                 int actualValue = (int)Int64.Parse(this.searchMs.Text);
             }
         }
@@ -238,7 +252,7 @@ namespace DataSetBuilder.controller
             int actual = (int)Int64.Parse(extractMs(actualMs));
             int min = (int)Int64.Parse(extractMs(minMs));
 
-            this.maxMs.Content = (max-min).ToString() + " ms";
+            this.maxMs.Content = (max-min).ToString();
             this.actualMs.Content = (actual - min).ToString();
             this.SliderMs.Maximum = max - min;
         }
