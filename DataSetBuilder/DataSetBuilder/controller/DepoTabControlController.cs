@@ -81,18 +81,20 @@ namespace DataSetBuilder.controller
                 //max length 13
                 // 0 to label content lentgh
                 //Valore attuale dei ms
-                int searchedValue = (int)Int64.Parse(this.searchMs.Text);
+                long searchedValue = long.Parse(this.searchMs.Text);
                 MyDepoData myDepoData = depoDatas[getDepoName()];
 
                 if (long.Parse(this.searchMs.Text) >= 0 && long.Parse(this.searchMs.Text) <= long.Parse(maxMs.Content.ToString()))
                 {
-                    MessageBox.Show(this.searchMs.Text, "Lunghezza maggiore di 0 e valore inferiore al massimo");
+                    //MessageBox.Show(this.searchMs.Text, "Lunghezza maggiore di 0 e valore inferiore al massimo");
                     string result = binarySearch(searchedValue, myDepoData.getImages());
-                    MessageBox.Show(result, "Risultato binary search");
+                    //MessageBox.Show(result, "Risultato binary search");
                 }
                 else if (long.Parse(this.searchMs.Text) >= long.Parse(extractMs(myDepoData.getImages()[0])) && long.Parse(this.searchMs.Text)<=long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
                 {
-                    MessageBox.Show(this.searchMs.Text, "Valore maggiore di max ms e inferiore al massimo scrivibile");
+                    //MessageBox.Show(this.searchMs.Text, "Valore maggiore di max ms e inferiore al massimo scrivibile");
+                    string result = longBinarySearch(searchedValue, myDepoData.getImages());
+                    //MessageBox.Show(result, "Risultato binary search");
                 }
                 else
                 {
@@ -101,14 +103,14 @@ namespace DataSetBuilder.controller
             }
         }
 
-        private String binarySearch(int searchedMs, List<string> imagesList)
+        private String binarySearch(long searchedMs, List<string> imagesList)
         {
             //ALGO IMPLEMENTETION, TWO WAYS
             return binarySearch(imagesList, searchedMs, 0, imagesList.Count -1);
 
         }
 
-        private string binarySearch(List<string> imagesList, int searchedMs, int left, int right)
+        private string binarySearch(List<string> imagesList, long searchedMs, int left, int right)
         {
             count++;
             if (left > right)
@@ -117,9 +119,9 @@ namespace DataSetBuilder.controller
             }
 
             int middle = (left + right) / 2;
-            string element = imagesList[middle];
+            string originalElement = imagesList[middle];
             string min = imagesList[0];
-            element = extractMs(element);
+            string extractElement = extractMs(originalElement);
             min = extractMs(min);
 
             if(count > 25)
@@ -128,17 +130,57 @@ namespace DataSetBuilder.controller
                 return binarySearch(imagesList, searchedMs-1, 0, imagesList.Count - 1);
             }
 
-            if ((long.Parse(element)-long.Parse(min) == searchedMs))
+            if ((long.Parse(extractElement)-long.Parse(min) == searchedMs))
             {
-                return element;
+                return originalElement;
             }
-            else if ((long.Parse(element) - long.Parse(min) > searchedMs))
+            else if ((long.Parse(extractElement) - long.Parse(min) > searchedMs))
             {
                 return binarySearch(imagesList, searchedMs, left, middle-1);
             }
             else
             {
                 return binarySearch(imagesList, searchedMs, middle+1, right);
+            }
+        }
+
+        private String longBinarySearch(long searchedMs, List<string> imagesList)
+        {
+            //ALGO IMPLEMENTETION, TWO WAYS
+            resetCounter();
+            return longBinarySearch(imagesList, searchedMs, 0, imagesList.Count - 1);
+
+        }
+
+        private string longBinarySearch(List<string> imagesList, long searchedMs, int left, int right)
+        {
+            count++;
+            if (left > right)
+            {
+                //Do nothing!
+            }
+
+            int middle = (left + right) / 2;
+            string originalElement = imagesList[middle];
+            string extractElement = extractMs(originalElement);
+
+            if (count > 25)
+            {
+                resetCounter();
+                return longBinarySearch(imagesList, searchedMs - 1, 0, imagesList.Count - 1);
+            }
+
+            if ((long.Parse(extractElement) == searchedMs))
+            {
+                return originalElement;
+            }
+            else if ((long.Parse(extractElement) > searchedMs))
+            {
+                return longBinarySearch(imagesList, searchedMs, left, middle - 1);
+            }
+            else
+            {
+                return longBinarySearch(imagesList, searchedMs, middle + 1, right);
             }
         }
 
@@ -199,7 +241,7 @@ namespace DataSetBuilder.controller
         }
         /*
          Initialize the firts image.
-         By the deposition name (the key), listviewitem.Content in the experiment depositions, the method search the myDepoData value in the dictionary and return it.
+         By the deposition name (the key), in origin listviewitem.Content in the experiment depositions, the method search the myDepoData value in the dictionary and return it.
          This myDepoData is used to get the followed informations: name of the image directory, the list of images name, the actual image by int index.
          The informations are used to open a new BitMapImage with the image correct Uri and assign this image to the source of the actual Image container showed by the interface.
          */
