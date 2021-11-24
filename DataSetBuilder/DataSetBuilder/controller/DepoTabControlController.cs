@@ -37,6 +37,7 @@ namespace DataSetBuilder.controller
         private Boolean isAutomatic = false;
         private MyExpTabItemModel myExpTabItemModel;
         private TabControl actualTabControl;
+        private short count = 0;
 
         public DepoTabControlController(MyExpTabItemModel myExpTabItemModel, String basePath)
         {
@@ -80,26 +81,70 @@ namespace DataSetBuilder.controller
                 //max length 13
                 // 0 to label content lentgh
                 //Valore attuale dei ms
+                int searchedValue = (int)Int64.Parse(this.searchMs.Text);
                 MyDepoData myDepoData = depoDatas[getDepoName()];
-                if ((int)Int64.Parse(this.searchMs.Text) > 0 && (int)Int64.Parse(this.searchMs.Text) < (int)Int64.Parse(maxMs.Content.ToString()))
+
+                if (long.Parse(this.searchMs.Text) >= 0 && long.Parse(this.searchMs.Text) <= long.Parse(maxMs.Content.ToString()))
                 {
                     MessageBox.Show(this.searchMs.Text, "Lunghezza maggiore di 0 e valore inferiore al massimo");
+                    string result = binarySearch(searchedValue, myDepoData.getImages());
+                    MessageBox.Show(result, "Risultato binary search");
                 }
-                else if ((int)Int64.Parse(this.searchMs.Text) > (int)Int64.Parse(maxMs.Content.ToString()) && (int)Int64.Parse(this.searchMs.Text)<(int)Int64.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
+                else if (long.Parse(this.searchMs.Text) >= long.Parse(extractMs(myDepoData.getImages()[0])) && long.Parse(this.searchMs.Text)<=long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
                 {
                     MessageBox.Show(this.searchMs.Text, "Valore maggiore di max ms e inferiore al massimo scrivibile");
                 }
                 else
                 {
-                    MessageBox.Show(((uint)Int64.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1]))).ToString(), "Formato errato");
+                    MessageBox.Show(long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])).ToString(), "Formato errato");
                 }
-                int actualValue = (int)Int64.Parse(this.searchMs.Text);
             }
         }
 
-        private void binarySearch()
+        private String binarySearch(int searchedMs, List<string> imagesList)
         {
             //ALGO IMPLEMENTETION, TWO WAYS
+            return binarySearch(imagesList, searchedMs, 0, imagesList.Count -1);
+
+        }
+
+        private string binarySearch(List<string> imagesList, int searchedMs, int left, int right)
+        {
+            count++;
+            if (left > right)
+            {
+                //Do nothing!
+            }
+
+            int middle = (left + right) / 2;
+            string element = imagesList[middle];
+            string min = imagesList[0];
+            element = extractMs(element);
+            min = extractMs(min);
+
+            if(count > 25)
+            {
+                resetCounter();
+                return binarySearch(imagesList, searchedMs-1, 0, imagesList.Count - 1);
+            }
+
+            if ((long.Parse(element)-long.Parse(min) == searchedMs))
+            {
+                return element;
+            }
+            else if ((long.Parse(element) - long.Parse(min) > searchedMs))
+            {
+                return binarySearch(imagesList, searchedMs, left, middle-1);
+            }
+            else
+            {
+                return binarySearch(imagesList, searchedMs, middle+1, right);
+            }
+        }
+
+        private void resetCounter()
+        {
+            this.count = 0;
         }
 
         public void setDepoPath(String path)
