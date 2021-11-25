@@ -19,7 +19,7 @@
 
                 <Button x:Name="PrevImage" Content="&lt;" Width="20" Margin="2"></Button>
                 <Button x:Name="NextImage" Content=">" Width="20" Margin="2"></Button>
-                <Label x:Name="ActualMs" Content="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" />
+                <Label x:Name="ActualMs" Content="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" ContentStringFormat="{}{0:#}"/>
                 <Slider x:Name="MsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" TickFrequency="1"></Slider>
                 <Label x:Name="MaxMs" Margin="2"></Label>
                 <TextBox x:Name="SearchMs" DockPanel.Dock="Right" TextAlignment="Center" MinWidth="60" Width="auto" Margin="2" />
@@ -37,7 +37,6 @@
         <DockPanel Grid.Column="2">
             <ScrollViewer>
                 <StackPanel x:Name="DataList">
-                    <ListViewItem Content="Dati"/>
                 </StackPanel>
             </ScrollViewer>
         </DockPanel>

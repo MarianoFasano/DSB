@@ -26,6 +26,7 @@ namespace DataSetBuilder.controller
         private Label maxMs;
         private Slider SliderMs;
         private TextBox searchMs;
+        private StackPanel datasStackPanel;
         
         //Other variables
         private String depoPath;
@@ -73,28 +74,34 @@ namespace DataSetBuilder.controller
             this.searchMs.KeyDown += SearchMs_KeyDown;
         }
 
+        //On Enter down
         private void SearchMs_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Return)
             {
-                //MessageBox.Show(this.searchMs.Text, "Sono stato modificato");
-                //max length 13
-                // 0 to label content lentgh
-                //Valore attuale dei ms
+
                 long searchedValue = long.Parse(this.searchMs.Text);
                 MyDepoData myDepoData = depoDatas[getDepoName()];
 
                 if (long.Parse(this.searchMs.Text) >= 0 && long.Parse(this.searchMs.Text) <= long.Parse(maxMs.Content.ToString()))
                 {
-                    //MessageBox.Show(this.searchMs.Text, "Lunghezza maggiore di 0 e valore inferiore al massimo");
+                    //Lunghezza maggiore di 0 e valore inferiore al massimo
                     string result = binarySearch(searchedValue, myDepoData.getImages());
-                    //MessageBox.Show(result, "Risultato binary search");
+                    List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                    pyroLines = extractFromList(pyroLines);
+                    string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
+                    string temperature = extractTemp(pyroResult);
+                    updateDatas(temperature);
                 }
                 else if (long.Parse(this.searchMs.Text) >= long.Parse(extractMs(myDepoData.getImages()[0])) && long.Parse(this.searchMs.Text)<=long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
                 {
-                    //MessageBox.Show(this.searchMs.Text, "Valore maggiore di max ms e inferiore al massimo scrivibile");
+                    //Valore maggiore di max ms e inferiore al massimo scrivibile
                     string result = longBinarySearch(searchedValue, myDepoData.getImages());
-                    //MessageBox.Show(result, "Risultato binary search");
+                    List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                    pyroLines = extractFromList(pyroLines);
+                    string pyroResult = pyroLongBS(pyroLines, searchedValue);
+                    string temperature = extractTemp(pyroResult);
+                    updateDatas(temperature);
                 }
                 else
                 {
@@ -103,9 +110,142 @@ namespace DataSetBuilder.controller
             }
         }
 
+        //Clear and populate the stackpanel with temperature, laseron TODO, powerfeedback TODO datas
+        private void updateDatas(string temperature)
+        {
+            datasStackPanel.Children.Clear();
+            Label Temperature = new Label();
+            Temperature.Content = "Temperature: " + temperature;
+            datasStackPanel.Children.Add(Temperature);
+        }
+
+        //Extract the temperature value from his line (string)
+        private string extractTemp(string pyroResult)
+        {
+            string temp = pyroResult;
+            int start = temp.IndexOf("Read:.\t") + "Read:.\t".Length;
+            temp = temp.Substring(start);
+            string local = temp.Substring(0, temp.IndexOf("\t"));
+            start = temp.IndexOf(local) + local.Length;
+            temp = temp.Substring(start);
+            return temp;
+
+
+        }
+
+        private List<string> extractFromList(List<string> pyroLines)
+        {
+            //Hard coded, need refactoring
+            pyroLines.RemoveAt(0);
+            pyroLines.RemoveAt(0);
+            pyroLines.RemoveAt(0);
+            pyroLines.RemoveAt(0);
+            pyroLines.RemoveAt(pyroLines.Count-1);
+            pyroLines.RemoveAt(pyroLines.Count - 1);
+            pyroLines.RemoveAt(pyroLines.Count - 1);
+            pyroLines.RemoveAt(pyroLines.Count - 1);
+            pyroLines.RemoveAt(pyroLines.Count - 1);
+            pyroLines.RemoveAt(pyroLines.Count - 1);
+            pyroLines.RemoveAt(pyroLines.Count - 1);
+            pyroLines.RemoveAt(pyroLines.Count - 1);
+            pyroLines.RemoveAt(pyroLines.Count - 1);
+            pyroLines.RemoveAt(pyroLines.Count - 1);
+            return pyroLines;
+        }
+
+        private string pyroShortBS(List<string> pyroLines, long searchedMs, List<string> imagesList)
+        {
+            resetCounter();
+            string min = imagesList[0];
+            min = extractMs(min);
+
+            return pyroShortBS(pyroLines, searchedMs, 0, pyroLines.Count()-1, min);
+        }
+
+        private string pyroShortBS(List<string> pyroLines, long searchedMs, int left, int right, string min)
+        {
+            count++;
+            if (left > right)
+            {
+                //Do nothing!
+            }
+
+            int middle = (left + right) / 2;
+            string originalElement = pyroLines.ElementAt(middle);
+            string element = extractFromPyroLine(originalElement);
+
+            if (count > 25)
+            {
+                resetCounter();
+                return pyroShortBS(pyroLines, searchedMs - 1, 0, pyroLines.Count() - 1, min);
+            }
+
+            if ((long.Parse(element) - long.Parse(min) == searchedMs))
+            {
+                return originalElement;
+            }
+            else if ((long.Parse(element) - long.Parse(min) > searchedMs))
+            {
+                return pyroShortBS(pyroLines, searchedMs, left, middle - 1, min);
+            }
+            else
+            {
+                return pyroShortBS(pyroLines, searchedMs, middle + 1, right, min);
+            }
+        }
+
+
+        private string pyroLongBS(List<string> pyroLines, long searchedMs)
+        {
+            resetCounter();
+            return pyroLongBS(pyroLines, searchedMs, 0, pyroLines.Count() -1);
+        }
+
+        private string pyroLongBS(List<string> pyroLines, long searchedMs, int left, int right)
+        {
+            count++;
+            if (left > right)
+            {
+                //Do nothing!
+            }
+
+            int middle = (left + right) / 2;
+            string originalElement = pyroLines.ElementAt(middle);
+            string element = extractFromPyroLine(originalElement);
+
+            if (count > 25)
+            {
+                resetCounter();
+                return pyroLongBS(pyroLines, searchedMs - 1, 0, pyroLines.Count() - 1);
+            }
+
+            if ((long.Parse(element) == searchedMs))
+            {
+                return originalElement;
+            }
+            else if ((long.Parse(element) > searchedMs))
+            {
+                return pyroLongBS(pyroLines, searchedMs, left, middle - 1);
+            }
+            else
+            {
+                return pyroLongBS(pyroLines, searchedMs, middle + 1, right);
+            }
+        }
+
+        private string extractFromPyroLine(string element)
+        {
+            string local = element;
+            int start = local.IndexOf("Read:.\t") + "Read:.\t".Length;
+            local = local.Substring(start);
+            local = local.Substring(0, local.IndexOf("\t"));
+            return local;
+        }
+
         private String binarySearch(long searchedMs, List<string> imagesList)
         {
             //ALGO IMPLEMENTETION, TWO WAYS
+            resetCounter();
             return binarySearch(imagesList, searchedMs, 0, imagesList.Count -1);
 
         }
@@ -316,6 +456,7 @@ namespace DataSetBuilder.controller
             this.maxMs = depoItemBody.MaxMs;
             this.SliderMs = depoItemBody.MsSlider;
             this.searchMs = depoItemBody.SearchMs;
+            this.datasStackPanel = depoItemBody.DataList;
         }
 
         //Set this.tabControl based on a key value

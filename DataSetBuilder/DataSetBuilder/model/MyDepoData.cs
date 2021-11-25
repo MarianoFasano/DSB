@@ -130,5 +130,10 @@ namespace DataSetBuilder.model
         {
             return (imagePrefix + ending + @"\");
         }
+
+        public string getPyroFileDirectory()
+        {
+            return (this.DepoPath + @"\" + this.DevicePyrometer);
+        }
     }
 }

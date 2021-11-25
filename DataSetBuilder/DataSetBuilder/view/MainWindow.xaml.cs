@@ -13,8 +13,8 @@ namespace DataSetBuilder.view
     public partial class MainWindow : Window
     {
         DSB_Controller dsb_controller;
-        //string expPath = @"J:\DTI\_DSB";    //fisso Mariano
-        string expPath = @"D:\_DSB";      //portatile Mariano
+        string expPath = @"J:\DTI\_DSB";    //fisso Mariano
+        //string expPath = @"D:\_DSB";      //portatile Mariano
 
         private TabsBody tabBody;
         private DepoItemBody depoItemBody = new DepoItemBody();
