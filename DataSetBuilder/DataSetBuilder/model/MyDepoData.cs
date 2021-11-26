@@ -120,6 +120,10 @@ namespace DataSetBuilder.model
         {
             return this.actualImage;
         }
+        public void setActualImage(int number)
+        {
+            this.actualImage = (uint)number;
+        }
         //Get the directory string
         public String getDirectory()
         {
@@ -134,6 +138,11 @@ namespace DataSetBuilder.model
         public string getPyroFileDirectory()
         {
             return (this.DepoPath + @"\" + this.DevicePyrometer);
+        }
+
+        public string getCNCFileDirectory()
+        {
+            return (this.DepoPath + @"\" + this.DeviceCN);
         }
     }
 }
