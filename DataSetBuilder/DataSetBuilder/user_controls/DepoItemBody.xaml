@@ -10,7 +10,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
@@ -19,8 +19,8 @@
 
                 <Button x:Name="PrevImage" Content="&lt;" Width="20" Margin="2"></Button>
                 <Button x:Name="NextImage" Content=">" Width="20" Margin="2"></Button>
-                <Label x:Name="ActualMs" Content="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" ContentStringFormat="{}{0:#}"/>
-                <Slider x:Name="MsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" TickFrequency="100"></Slider>
+                <TextBox x:Name="ActualMs" Text="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" IsReadOnly="True"/>
+                <Slider x:Name="MsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"></Slider>
                 <Label x:Name="MaxMs" Margin="2"></Label>
                 <TextBox x:Name="SearchMs" DockPanel.Dock="Right" TextAlignment="Center" MinWidth="60" Width="auto" Margin="2"/>
                 <Button x:Name="PlayImage" Content="(Play)" Margin="2"></Button>

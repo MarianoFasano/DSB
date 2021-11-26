@@ -23,7 +23,7 @@ namespace DataSetBuilder.controller
         private Button nextButton;
         private ComboBox imageSpeed;
         private Image depoImage;
-        private Label actualMs;
+        private TextBox actualMs;
         private Label maxMs;
         private Slider SliderMs;
         private Thumb sliderThumb;
@@ -75,32 +75,31 @@ namespace DataSetBuilder.controller
             this.prevButton.Click += PrevButton_Click;
             this.nextButton.Click += NextButton_Click;
             this.searchMs.KeyDown += SearchMs_KeyDown;
-            this.SliderMs.MouseLeftButtonUp += SliderMs_MouseLeftButtonUp;
+            this.SliderMs.FocusableChanged += SliderMs_FocusableChanged1; ;
         }
 
-        private void SliderMs_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void SliderMs_FocusableChanged1(object sender, DependencyPropertyChangedEventArgs e)
         {
             long searchedValue = (long)SliderMs.Value;
             MyDepoData myDepoData = depoDatas[getDepoName()];
 
-                string result = binarySearch(searchedValue, myDepoData.getImages());
-                setImage(result);
+            string result = binarySearch(searchedValue, myDepoData.getImages());
+            setImage(result);
 
-                List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
-                List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+            List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+            List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
 
-                pyroLines = extractFromPyroList(pyroLines);
-                CNCLines = extractFromCNCList(CNCLines);
+            pyroLines = extractFromPyroList(pyroLines);
+            CNCLines = extractFromCNCList(CNCLines);
 
-                string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
-                string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
+            string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
+            string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
 
-                string temperature = extractTemp(pyroResult);
-                string laserOn = extractLaserOn(cncResult);
-                string powerFeedback = extractPowerFeedback(cncResult);
+            string temperature = extractTemp(pyroResult);
+            string laserOn = extractLaserOn(cncResult);
+            string powerFeedback = extractPowerFeedback(cncResult);
 
-                updateDatas(temperature, laserOn, powerFeedback);
-            
+            updateDatas(temperature, laserOn, powerFeedback);
         }
 
         //On Enter down
@@ -654,7 +653,7 @@ namespace DataSetBuilder.controller
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\"+ myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
             setMsLabels(myDepoData);
-            littleMsDataSearch(this.actualMs.Content.ToString(), myDepoData);
+            littleMsDataSearch(this.actualMs.Text, myDepoData);
         }
 
         private void littleMsDataSearch(string stringValue, MyDepoData myDepoData)
@@ -739,7 +738,7 @@ namespace DataSetBuilder.controller
             int min = (int)Int64.Parse(extractMs(minMs));
 
             this.maxMs.Content = (max-min).ToString();
-            this.actualMs.Content = (actual - min).ToString();
+            this.actualMs.Text = (actual - min).ToString();
             this.SliderMs.Maximum = max - min;
         }
         private string extractMs(string msString)
