@@ -39,16 +39,16 @@ namespace DataSetBuilder.model
             //this.dsbs = new List<string>();
             //this.visionBoxes = new List<string>();
             this.DepoPath = directoryPath;
-            this.ending = extractEnding(directoryPath);
+            //this.ending = extractEnding(directoryPath);       deprecated, because the folders name won't contain the creation date anymore
             initLists(directoryPath);
         }
 
-        private string extractEnding(string directoryPath)
+  /*      private string extractEnding(string directoryPath)
         {
             String temp = directoryPath;
             int start = temp.IndexOf("Deposition") + "Deposition".Length;
             return temp.Substring(start, temp.Length - start);
-        }
+        }*/
 
         private void initLists(String directoryPath)
         {
@@ -132,7 +132,7 @@ namespace DataSetBuilder.model
         //Get the image directory name
         public string getImageDirectory()
         {
-            return (imagePrefix + ending + @"\");
+            return (imagePrefix + @"\");
         }
 
         public string getPyroFileDirectory()

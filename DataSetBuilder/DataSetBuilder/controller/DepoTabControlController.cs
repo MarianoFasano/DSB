@@ -41,7 +41,9 @@ namespace DataSetBuilder.controller
         private MyExpTabItemModel myExpTabItemModel;
         private TabControl actualTabControl;
         private short count = 0;
-        private short bigO = 20;
+        private ulong counterCount = 0;
+        private short bigO = 25;
+        private short offset = -1;
 
         public DepoTabControlController(MyExpTabItemModel myExpTabItemModel, String basePath)
         {
@@ -80,9 +82,45 @@ namespace DataSetBuilder.controller
 
         private void SliderMs_FocusableChanged1(object sender, DependencyPropertyChangedEventArgs e)
         {
-            long searchedValue = (long)SliderMs.Value;
-            MyDepoData myDepoData = depoDatas[getDepoName()];
+            //TODO
+        }
 
+        //On Enter down
+        private void SearchMs_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Return)
+            {
+
+                if (this.searchMs.Text.All(char.IsDigit))
+                {
+                    long searchedValue = long.Parse(this.searchMs.Text);
+                    MyDepoData myDepoData = depoDatas[getDepoName()];
+
+                    if ((long.Parse(this.searchMs.Text) >= 0) && (long.Parse(this.searchMs.Text) <= long.Parse(maxMs.Content.ToString())))
+                    {
+                        //Lunghezza maggiore di 0 e valore inferiore al massimo
+                        shortMsResearch(searchedValue, myDepoData);
+                    }
+                    else if (long.Parse(this.searchMs.Text) >= long.Parse(extractMs(myDepoData.getImages()[0])) && long.Parse(this.searchMs.Text) <= long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
+                    {
+                        //Valore maggiore di max ms e inferiore al massimo scrivibile
+                        longMsResearch(searchedValue, myDepoData);
+                    }
+                    else
+                    {
+                        MessageBox.Show(long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])).ToString(), "Formato errato");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Nel campo di ricerca devono essere scritti unicamente dei numeri", "Formato errato");
+                }
+                this.searchMs.Clear();
+            }
+        }
+
+        private void shortMsResearch(long searchedValue, MyDepoData myDepoData)
+        {
             string result = binarySearch(searchedValue, myDepoData.getImages());
             setImage(result);
 
@@ -101,80 +139,41 @@ namespace DataSetBuilder.controller
 
             updateDatas(temperature, laserOn, powerFeedback);
         }
-
-        //On Enter down
-        private void SearchMs_KeyDown(object sender, KeyEventArgs e)
+        private void longMsResearch(long searchedValue, MyDepoData myDepoData)
         {
-            if(e.Key == Key.Return)
-            {
+            string result = longBinarySearch(searchedValue, myDepoData.getImages());
+            setImage(result);
 
-                if (this.searchMs.Text.All(char.IsDigit))
-                {
-                    long searchedValue = long.Parse(this.searchMs.Text);
-                    MyDepoData myDepoData = depoDatas[getDepoName()];
+            List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+            List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
 
-                    if ((long.Parse(this.searchMs.Text) >= 0) && (long.Parse(this.searchMs.Text) <= long.Parse(maxMs.Content.ToString())))
-                    {
-                        //Lunghezza maggiore di 0 e valore inferiore al massimo
-                        string result = binarySearch(searchedValue, myDepoData.getImages());
-                        setImage(result);
+            pyroLines = extractFromPyroList(pyroLines);
+            CNCLines = extractFromCNCList(CNCLines);
 
-                        List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
-                        List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+            string pyroResult = pyroLongBS(pyroLines, searchedValue);
+            string cncResult = cncLongBS(CNCLines, searchedValue);
 
-                        pyroLines = extractFromPyroList(pyroLines);
-                        CNCLines = extractFromCNCList(CNCLines);
+            string temperature = extractTemp(pyroResult);
+            string laserOn = extractLaserOn(cncResult);
+            string powerFeedback = extractPowerFeedback(cncResult);
 
-                        string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
-                        string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
-
-                        string temperature = extractTemp(pyroResult);
-                        string laserOn = extractLaserOn(cncResult);
-                        string powerFeedback = extractPowerFeedback(cncResult);
-
-                        updateDatas(temperature, laserOn, powerFeedback);
-                    }
-                    else if (long.Parse(this.searchMs.Text) >= long.Parse(extractMs(myDepoData.getImages()[0])) && long.Parse(this.searchMs.Text) <= long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
-                    {
-                        //Valore maggiore di max ms e inferiore al massimo scrivibile
-                        string result = longBinarySearch(searchedValue, myDepoData.getImages());
-                        setImage(result);
-
-                        List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
-                        List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
-
-                        pyroLines = extractFromPyroList(pyroLines);
-                        CNCLines = extractFromCNCList(CNCLines);
-
-                        string pyroResult = pyroLongBS(pyroLines, searchedValue);
-                        string cncResult = cncLongBS(CNCLines, searchedValue);
-
-                        string temperature = extractTemp(pyroResult);
-                        string laserOn = extractLaserOn(cncResult);
-                        string powerFeedback = extractPowerFeedback(cncResult);
-
-                        updateDatas(temperature, laserOn, powerFeedback);
-                    }
-                    else
-                    {
-                        MessageBox.Show(long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])).ToString(), "Formato errato");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Nel campo di ricerca devono essere scritti unicamente dei numeri", "Formato errato");
-                }
-                this.searchMs.Clear();
-            }
+            updateDatas(temperature, laserOn, powerFeedback);
         }
 
         private string cncShortBS(List<string> cNCLines, long searchedValue, List<string> imagesList)
         {
             resetCounter();
+            resetCounterCount();
+            offset = -1;
             string min = imagesList[0];
             min = extractMs(min);
 
             return cncShortBS(cNCLines, searchedValue, 0, cNCLines.Count() - 1, min);
+        }
+
+        private void resetCounterCount()
+        {
+            this.counterCount = 0;
         }
 
         private string cncShortBS(List<string> cNCLines, long searchedMs, int left, int right, string min)
@@ -191,14 +190,15 @@ namespace DataSetBuilder.controller
 
             if (searchedMs < 0)
             {
+                offset = 1;
                 resetCounter();
-                return cncShortBS(cNCLines, searchedMs + 20, 0, cNCLines.Count() - 1, min);
+                return cncShortBS(cNCLines, searchedMs + offset, 0, cNCLines.Count() - 1, min);
             }
 
             if (count > bigO)
             {
                 resetCounter();
-                return cncShortBS(cNCLines, searchedMs - 1, 0, cNCLines.Count() - 1, min);
+                return cncShortBS(cNCLines, searchedMs + offset, 0, cNCLines.Count() - 1, min);
             }
 
             if ((long.Parse(element) - long.Parse(min) == searchedMs))
@@ -249,6 +249,7 @@ namespace DataSetBuilder.controller
         private string cncLongBS(List<string> cNCLines, long searchedValue)
         {
             resetCounter();
+            offset = -1;
             return cncLongBS(cNCLines, searchedValue, 0, cNCLines.Count() - 1);
         }
 
@@ -266,13 +267,14 @@ namespace DataSetBuilder.controller
 
             if (searchedMs < 0)
             {
+                offset = 1;
                 resetCounter();
-                return cncLongBS(cNCLines, searchedMs + 20, 0, cNCLines.Count() - 1);
+                return cncLongBS(cNCLines, searchedMs + offset, 0, cNCLines.Count() - 1);
             }
             if (count > bigO)
             {
                 resetCounter();
-                return cncLongBS(cNCLines, searchedMs - 1, 0, cNCLines.Count() - 1);
+                return cncLongBS(cNCLines, searchedMs + offset, 0, cNCLines.Count() - 1);
             }
 
             if ((long.Parse(element) == searchedMs))
@@ -359,6 +361,8 @@ namespace DataSetBuilder.controller
         private string pyroShortBS(List<string> pyroLines, long searchedMs, List<string> imagesList)
         {
             resetCounter();
+            resetCounterCount();
+            offset = -1;
             string min = imagesList[0];
             min = extractMs(min);
 
@@ -379,14 +383,15 @@ namespace DataSetBuilder.controller
 
             if (searchedMs<0)
             {
+                offset = 1;
                 resetCounter();
-                return pyroShortBS(pyroLines, searchedMs + 20, 0, pyroLines.Count() - 1, min);
+                return pyroShortBS(pyroLines, searchedMs + offset, 0, pyroLines.Count() - 1, min);
             }
 
             if (count > bigO)
             {
                 resetCounter();
-                return pyroShortBS(pyroLines, searchedMs - 1, 0, pyroLines.Count() - 1, min);
+                return pyroShortBS(pyroLines, searchedMs + offset, 0, pyroLines.Count() - 1, min);
             }
 
             if ((long.Parse(element) - long.Parse(min) == searchedMs))
@@ -406,6 +411,7 @@ namespace DataSetBuilder.controller
         private string pyroLongBS(List<string> pyroLines, long searchedMs)
         {
             resetCounter();
+            offset = -1;
             return pyroLongBS(pyroLines, searchedMs, 0, pyroLines.Count() -1);
         }
 
@@ -423,14 +429,15 @@ namespace DataSetBuilder.controller
 
             if (searchedMs < 0)
             {
+                offset = 1;
                 resetCounter();
-                return pyroLongBS(pyroLines, searchedMs + 20, 0, pyroLines.Count() - 1);
+                return pyroLongBS(pyroLines, searchedMs + offset, 0, pyroLines.Count() - 1);
             }
 
             if (count > bigO)
             {
                 resetCounter();
-                return pyroLongBS(pyroLines, searchedMs - 1, 0, pyroLines.Count() - 1);
+                return pyroLongBS(pyroLines, searchedMs + offset, 0, pyroLines.Count() - 1);
             }
 
             if ((long.Parse(element) == searchedMs))
@@ -450,8 +457,8 @@ namespace DataSetBuilder.controller
         private string extractFromPyroLine(string element)
         {
             string local = element;
-            //int start = local.IndexOf("Read:.\t") + "Read:.\t".Length;
-            int start = "Read:.\t".Length;
+            int start = local.IndexOf("Read:") + "Read:".Length + 2;
+            //int start = "Read:.\t".Length;
             local = local.Substring(start);
             local = local.Substring(0, local.IndexOf("\t"));
             return local;
@@ -461,6 +468,8 @@ namespace DataSetBuilder.controller
         {
             //ALGO IMPLEMENTETION, TWO WAYS
             resetCounter();
+            resetCounterCount();
+            offset = -1;
             return binarySearch(imagesList, searchedMs, 0, imagesList.Count -1);
 
         }
@@ -481,14 +490,15 @@ namespace DataSetBuilder.controller
 
             if (searchedMs < 0)
             {
+                offset = 1;
                 resetCounter();
-                return binarySearch(imagesList, searchedMs + 20, 0, imagesList.Count() - 1);
+                return binarySearch(imagesList, searchedMs + offset, 0, imagesList.Count() - 1);
             }
 
             if (count > bigO)
             {
                 resetCounter();
-                return binarySearch(imagesList, searchedMs-1, 0, imagesList.Count - 1);
+                return binarySearch(imagesList, searchedMs + offset, 0, imagesList.Count - 1);
             }
 
             if ((long.Parse(extractElement)-long.Parse(min) == searchedMs))
@@ -509,6 +519,8 @@ namespace DataSetBuilder.controller
         {
             //ALGO IMPLEMENTETION, TWO WAYS
             resetCounter();
+            resetCounterCount();
+            offset = -1;
             return longBinarySearch(imagesList, searchedMs, 0, imagesList.Count - 1);
 
         }
@@ -527,14 +539,15 @@ namespace DataSetBuilder.controller
 
             if (searchedMs < 0)
             {
+                offset = 1;
                 resetCounter();
-                return longBinarySearch(imagesList, searchedMs + 20, 0, imagesList.Count() - 1);
+                return longBinarySearch(imagesList, searchedMs + offset, 0, imagesList.Count() - 1);
             }
 
             if (count > bigO)
             {
                 resetCounter();
-                return longBinarySearch(imagesList, searchedMs - 1, 0, imagesList.Count - 1);
+                return longBinarySearch(imagesList, searchedMs + offset, 0, imagesList.Count - 1);
             }
 
             if ((long.Parse(extractElement) == searchedMs))
@@ -617,6 +630,7 @@ namespace DataSetBuilder.controller
             MyDepoData myDepoData = depoDatas[getDepoName()];
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
+            shortMsResearch(0, myDepoData);
 
             //Extract actual and max ms
             setMsLabels(myDepoData);
