@@ -42,7 +42,7 @@ namespace DataSetBuilder.controller
         private TabControl actualTabControl;
         private short count = 0;
         private ulong counterCount = 0;
-        private short bigO = 25;
+        private short bigO = 23;
         private short offset = -1;
 
         public DepoTabControlController(MyExpTabItemModel myExpTabItemModel, String basePath)
@@ -375,6 +375,8 @@ namespace DataSetBuilder.controller
             if (left > right)
             {
                 //Do nothing!
+                resetCounter();
+                return pyroShortBS(pyroLines, searchedMs + offset, 0, pyroLines.Count() - 1, min);
             }
 
             int middle = (left + right) / 2;
@@ -421,6 +423,8 @@ namespace DataSetBuilder.controller
             if (left > right)
             {
                 //Do nothing!
+                resetCounter();
+                return pyroLongBS(pyroLines, searchedMs + offset, 0, pyroLines.Count() - 1);
             }
 
             int middle = (left + right) / 2;
