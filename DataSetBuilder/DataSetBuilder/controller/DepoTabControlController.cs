@@ -776,14 +776,31 @@ namespace DataSetBuilder.controller
             string actualMs = myDepoData.getImages()[(int)myDepoData.getActualImage()];
             string minMs = myDepoData.getImages()[0];
 
+            string maxString = extractMs(maxMs);
+            string minString = extractMs(minMs);
 
-            int max = (int)Int64.Parse(extractMs(maxMs));
+            int max = (int)Int64.Parse(maxString);
             int actual = (int)Int64.Parse(extractMs(actualMs));
-            int min = (int)Int64.Parse(extractMs(minMs));
+            int min = (int)Int64.Parse(minString);
 
-            this.maxMs.Content = (max-min).ToString();
-            this.actualMs.Text = (actual - min).ToString();
-            this.SliderMs.Maximum = max - min;
+            var maxArray = maxString.ToArray();
+            var minArray = minString.ToArray();
+
+            for (int i = 0; i<maxString.Length; i++)
+            {
+                if ((maxArray[i]!=minArray[i]))
+                {
+                    minString = minString.Substring(i);
+                    break;
+                }
+            }
+
+            
+
+            this.maxMs.Content = ((max-min)+ (int)Int64.Parse(minString)).ToString();
+            this.actualMs.Text = ((actual - min) + (int)Int64.Parse(minString)).ToString();
+            this.SliderMs.Maximum = max - min + (int)Int64.Parse(minString);
+            this.SliderMs.Minimum = actual - min + (int)Int64.Parse(minString);
         }
         private string extractMs(string msString)
         {
