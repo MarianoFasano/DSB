@@ -41,7 +41,7 @@ namespace DataSetBuilder.controller
         private MyExpTabItemModel myExpTabItemModel;
         private TabControl actualTabControl;
         private short count = 0;
-        private ulong counterCount = 0;
+        private ulong LRCounter = 0;
         private short bigO = 23;
         private short offset = -1;
 
@@ -163,7 +163,7 @@ namespace DataSetBuilder.controller
         private string cncShortBS(List<string> cNCLines, long searchedValue, List<string> imagesList)
         {
             resetCounter();
-            resetCounterCount();
+            resetLRCount();
             offset = -1;
             string min = imagesList[0];
             min = extractMs(min);
@@ -171,9 +171,9 @@ namespace DataSetBuilder.controller
             return cncShortBS(cNCLines, searchedValue, 0, cNCLines.Count() - 1, min);
         }
 
-        private void resetCounterCount()
+        private void resetLRCount()
         {
-            this.counterCount = 0;
+            this.LRCounter = 0;
         }
 
         private string cncShortBS(List<string> cNCLines, long searchedMs, int left, int right, string min)
@@ -249,6 +249,7 @@ namespace DataSetBuilder.controller
         private string cncLongBS(List<string> cNCLines, long searchedValue)
         {
             resetCounter();
+            resetLRCount();
             offset = -1;
             return cncLongBS(cNCLines, searchedValue, 0, cNCLines.Count() - 1);
         }
@@ -259,6 +260,13 @@ namespace DataSetBuilder.controller
             if (left > right)
             {
                 //Do nothing!
+                resetCounter();
+                if (LRCounter > 100)
+                {
+                    resetLRCount();
+                    return cncLongBS(cNCLines, searchedMs + (offset * 7), 0, cNCLines.Count() - 1);
+                }
+                return cncLongBS(cNCLines, searchedMs + (offset * 7), 0, cNCLines.Count() - 1);
             }
 
             int middle = (left + right) / 2;
@@ -361,7 +369,7 @@ namespace DataSetBuilder.controller
         private string pyroShortBS(List<string> pyroLines, long searchedMs, List<string> imagesList)
         {
             resetCounter();
-            resetCounterCount();
+            resetLRCount();
             offset = -1;
             string min = imagesList[0];
             min = extractMs(min);
@@ -375,6 +383,12 @@ namespace DataSetBuilder.controller
             if (left > right)
             {
                 //Do nothing!
+                LRCounter++;
+                if (LRCounter > 100)
+                {
+                    resetLRCount();
+                    return pyroShortBS(pyroLines, searchedMs + (offset*7), 0, pyroLines.Count() - 1, min);
+                }
                 resetCounter();
                 return pyroShortBS(pyroLines, searchedMs + offset, 0, pyroLines.Count() - 1, min);
             }
@@ -424,7 +438,12 @@ namespace DataSetBuilder.controller
             {
                 //Do nothing!
                 resetCounter();
-                return pyroLongBS(pyroLines, searchedMs + offset, 0, pyroLines.Count() - 1);
+                if (LRCounter > 100)
+                {
+                    resetLRCount();
+                    return pyroLongBS(pyroLines, searchedMs + (offset * 7), 0, pyroLines.Count() - 1);
+                }
+                return pyroLongBS(pyroLines, searchedMs + (offset*7), 0, pyroLines.Count() - 1);
             }
 
             int middle = (left + right) / 2;
@@ -472,7 +491,7 @@ namespace DataSetBuilder.controller
         {
             //ALGO IMPLEMENTETION, TWO WAYS
             resetCounter();
-            resetCounterCount();
+            resetLRCount();
             offset = -1;
             return binarySearch(imagesList, searchedMs, 0, imagesList.Count -1);
 
@@ -484,6 +503,13 @@ namespace DataSetBuilder.controller
             if (left > right)
             {
                 //Do nothing!
+                resetCounter();
+                if (LRCounter > 100)
+                {
+                    resetLRCount();
+                    return binarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
+                }
+                return binarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
             }
 
             int middle = (left + right) / 2;
@@ -523,7 +549,7 @@ namespace DataSetBuilder.controller
         {
             //ALGO IMPLEMENTETION, TWO WAYS
             resetCounter();
-            resetCounterCount();
+            resetLRCount();
             offset = -1;
             return longBinarySearch(imagesList, searchedMs, 0, imagesList.Count - 1);
 
