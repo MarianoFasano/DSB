@@ -142,39 +142,66 @@ namespace DataSetBuilder.controller
         {
             string result = binarySearch(searchedValue, myDepoData.getImages());
             setImage(result);
+            string temperature, laserOn, powerFeedback;
 
-            List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
-            List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+            if (myDepoData.getPyrometerList().Any())
+            {
+                List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                pyroLines = extractFromPyroList(pyroLines);
+                string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
+                temperature = extractTemp(pyroResult);
+            }
+            else
+            {
+                temperature = "No value";
+            }
+            if (myDepoData.getCNList().Any())
+            {
+                List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
 
-            pyroLines = extractFromPyroList(pyroLines);
-            CNCLines = extractFromCNCList(CNCLines);
 
-            string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
-            string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
-
-            string temperature = extractTemp(pyroResult);
-            string laserOn = extractLaserOn(cncResult);
-            string powerFeedback = extractPowerFeedback(cncResult);
-
+                CNCLines = extractFromCNCList(CNCLines);
+                string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
+                laserOn = extractLaserOn(cncResult);
+                powerFeedback = extractPowerFeedback(cncResult);
+            }
+            else
+            {
+                laserOn = "No value";
+                powerFeedback = "No value";
+            }
             updateDatas(temperature, laserOn, powerFeedback);
         }
         private void longMsResearch(long searchedValue, MyDepoData myDepoData)
         {
             string result = longBinarySearch(searchedValue, myDepoData.getImages());
             setImage(result);
+            string temperature, laserOn, powerFeedback;
 
-            List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
-            List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
-
-            pyroLines = extractFromPyroList(pyroLines);
-            CNCLines = extractFromCNCList(CNCLines);
-
-            string pyroResult = pyroLongBS(pyroLines, searchedValue);
-            string cncResult = cncLongBS(CNCLines, searchedValue);
-
-            string temperature = extractTemp(pyroResult);
-            string laserOn = extractLaserOn(cncResult);
-            string powerFeedback = extractPowerFeedback(cncResult);
+            if (myDepoData.getPyrometerList().Any())
+            {
+                List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                pyroLines = extractFromPyroList(pyroLines);
+                string pyroResult = pyroLongBS(pyroLines, searchedValue);
+                temperature = extractTemp(pyroResult);
+            }
+            else
+            {
+                temperature = "No value";
+            }
+            if (myDepoData.getCNList().Any())
+            {
+                List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+                CNCLines = extractFromCNCList(CNCLines);
+                string cncResult = cncLongBS(CNCLines, searchedValue);
+                laserOn = extractLaserOn(cncResult);
+                powerFeedback = extractPowerFeedback(cncResult);
+            }
+            else
+            {
+                laserOn = "No value";
+                powerFeedback = "No value";
+            }        
 
             updateDatas(temperature, laserOn, powerFeedback);
         }
@@ -697,6 +724,7 @@ namespace DataSetBuilder.controller
             BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
             this.depoImage.Source = bitmapImage;
             setMsLabels(myDepoData);
+            littleMsDataSearch(this.actualMs.Text, myDepoData);
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
@@ -723,19 +751,34 @@ namespace DataSetBuilder.controller
         {
             long searchedValue = long.Parse(stringValue);
 
-            List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
-            List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+            string temperature, laserOn, powerFeedback;
 
-            pyroLines = extractFromPyroList(pyroLines);
-            CNCLines = extractFromCNCList(CNCLines);
+            if (myDepoData.getPyrometerList().Any())
+            {
+                List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                pyroLines = extractFromPyroList(pyroLines);
+                string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
+                temperature = extractTemp(pyroResult);
+            }
+            else
+            {
+                temperature = "No value";
+            }
+            if (myDepoData.getCNList().Any())
+            {
+                List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
 
-            string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
-            string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
 
-            string temperature = extractTemp(pyroResult);
-            string laserOn = extractLaserOn(cncResult);
-            string powerFeedback = extractPowerFeedback(cncResult);
-
+                CNCLines = extractFromCNCList(CNCLines);
+                string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
+                laserOn = extractLaserOn(cncResult);
+                powerFeedback = extractPowerFeedback(cncResult);
+            }
+            else
+            {
+                laserOn = "No value";
+                powerFeedback = "No value";
+            }
             updateDatas(temperature, laserOn, powerFeedback);
         }
 
