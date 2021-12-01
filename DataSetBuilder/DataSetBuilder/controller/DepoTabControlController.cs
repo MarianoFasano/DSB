@@ -272,6 +272,10 @@ namespace DataSetBuilder.controller
                 index = powerFeedback.IndexOf("\t") + "\t".Length;
                 powerFeedback = powerFeedback.Substring(index);
             }
+            if (!powerFeedback.Any())
+            {
+                powerFeedback = "No value";
+            }
             return powerFeedback;
         }
 
@@ -286,9 +290,16 @@ namespace DataSetBuilder.controller
                 index = laserOn.IndexOf("\t") + "\t".Length;
                 laserOn = laserOn.Substring(index);
             }
-
-            index = laserOn.IndexOf("\t");
-            laserOn = laserOn.Substring(0, index);
+            if (!laserOn.Any())
+            {
+                laserOn = "No value";
+            }
+            else
+            {
+                index = laserOn.IndexOf("\t");
+                laserOn = laserOn.Substring(0, index);
+            }            
+            
             return laserOn;
         }
 
