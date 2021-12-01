@@ -15,13 +15,12 @@
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Column="0" Grid.ColumnSpan="2">
+
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
 
                 <Button x:Name="PrevImage" Content="&lt;" Width="20" Margin="2"></Button>
                 <Button x:Name="NextImage" Content=">" Width="20" Margin="2"></Button>
-                <TextBox x:Name="ActualMs" Text="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" IsReadOnly="True"/>
-                <Slider x:Name="MsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"></Slider>
-                <Label x:Name="MaxMs" Margin="2"></Label>
+
                 <TextBox x:Name="SearchMs" DockPanel.Dock="Right" TextAlignment="Center" MinWidth="60" Width="auto" Margin="2"/>
                 <Button x:Name="PlayImage" Content="(Play)" Margin="2"></Button>
                 <Button x:Name="PauseImage" Content="(Pause)" Margin="2"></Button>
@@ -30,6 +29,11 @@
                     <ComboBoxItem Content="(2x)"/>
                     <ComboBoxItem Content="(4x)"/>
                 </ComboBox>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBox x:Name="ActualMs" Text="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" IsReadOnly="True"/>
+                <Slider x:Name="MsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"></Slider>
+                <Label x:Name="MaxMs" Margin="2"></Label>
             </StackPanel>
             <Image x:Name="DepoImage"/>
         </DockPanel>
