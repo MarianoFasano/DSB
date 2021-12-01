@@ -12,6 +12,7 @@ namespace DataSetBuilder
         private MyExpTabControlController myExpTabControlController;
         private MyExpTabItemModel myExpTabItemModel = new MyExpTabItemModel();
         private DepoTabControlController depoTabControlController;
+        private double width = 0;
 
         public DSB_Controller(TabControl tabControl, String basePath)
         {            
@@ -23,19 +24,25 @@ namespace DataSetBuilder
         internal GridLength columnWidth(ColumnDefinition column)
         {
             Double width = column.ActualWidth;
-            if (width == 155)
+            if (this.width == 0)
             {
-                width = 0;
+                this.width = width;
             }
-            else if (width < 155 && width > 0)
+            if (width == this.width)
             {
                 width = 0;
+                return new GridLength(width);
+            }
+            else if (width < this.width && width > 0)
+            {
+                width = 0;
+                return new GridLength(width);
             }
             else
             {
-                width = 155;
+                width = this.width;
+                return new GridLength(width);
             }
-            return new GridLength(width);
         }
 
         internal System.Windows.Visibility viewComment(TextBox ExpCommentBox)

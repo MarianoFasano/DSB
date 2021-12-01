@@ -8,10 +8,10 @@
              d:DesignHeight="225" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Column="0" Grid.ColumnSpan="2">
@@ -29,10 +29,16 @@
                     <ComboBoxItem Content="(2x)"/>
                     <ComboBoxItem Content="(4x)"/>
                 </ComboBox>
+                <CheckBox x:Name="Show" Content="Show extended" VerticalAlignment="Center" Width="144"/>
+            </StackPanel>
+            <StackPanel x:Name="ExtendedPanel" DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
+                <TextBox x:Name="ExtendActualMs" Text="{Binding ElementName=ExtendMsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" IsReadOnly="True"/>
+                <Slider x:Name="ExtendMsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"></Slider>
+                <Label x:Name="ExtendMaxMs" Margin="2"></Label>
             </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBox x:Name="ActualMs" Text="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" IsReadOnly="True"/>
-                <Slider x:Name="MsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"></Slider>
+                <Slider x:Name="MsSlider" Width="200" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"></Slider>
                 <Label x:Name="MaxMs" Margin="2"></Label>
             </StackPanel>
             <Image x:Name="DepoImage"/>
@@ -57,7 +63,7 @@
             </WebBrowser>
         </DockPanel>
 
-        <GridSplitter Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="2" Background="DarkGray"/>
-        <GridSplitter Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="2" Background="DarkGray"/>
+        <GridSplitter Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="3" Background="DarkSlateGray"/>
+        <GridSplitter Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="3" Background="DarkSlateGray"/>
     </Grid>
 </UserControl>

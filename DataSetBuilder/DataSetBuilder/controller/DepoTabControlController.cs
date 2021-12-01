@@ -16,20 +16,29 @@ namespace DataSetBuilder.controller
 {
     class DepoTabControlController
     {
-        //Object from graphical interface
+        /*Object from graphical interface*/
+        //General
         private Button playButton;
         private Button pauseButton;
         private Button prevButton;
         private Button nextButton;
         private ComboBox imageSpeed;
         private Image depoImage;
+        private StackPanel datasStackPanel;
+        private CheckBox showExt;
+        //Significant version of ms
         private TextBox actualMs;
         private Label maxMs;
         private Slider SliderMs;
         private Thumb sliderThumb;
         private TextBox searchMs;
-        private StackPanel datasStackPanel;
-        
+        //Extended version of ms
+        private StackPanel ExtStackPanel;
+        private TextBox extActualMs;
+        private Label extMaxMs;
+        private Slider extSliderMs;
+        private Thumb extSliderThumb;
+
         //Other variables
         private String depoPath;
         private String dataPath;
@@ -78,12 +87,19 @@ namespace DataSetBuilder.controller
             this.prevButton.Click += PrevButton_Click;
             this.nextButton.Click += NextButton_Click;
             this.searchMs.KeyDown += SearchMs_KeyDown;
-            this.SliderMs.FocusableChanged += SliderMs_FocusableChanged1; ;
+            this.showExt.Click += ShowExt_Click;
         }
 
-        private void SliderMs_FocusableChanged1(object sender, DependencyPropertyChangedEventArgs e)
+        private void ShowExt_Click(object sender, RoutedEventArgs e)
         {
-            //TODO
+            if (showExt.IsChecked==true)
+            {
+                ExtStackPanel.Visibility = Visibility.Visible;
+            }
+            else if (showExt.IsChecked == false)
+            {
+                ExtStackPanel.Visibility = Visibility.Collapsed;
+            }
         }
 
         //On Enter down
@@ -750,17 +766,25 @@ namespace DataSetBuilder.controller
         //Assign the correct buttons to the controller and re-init the button actions
         private void assignIControl(DepoItemBody depoItemBody)
         {
+            //General
             this.playButton = depoItemBody.PlayImage;
             this.pauseButton = depoItemBody.PauseImage;
             this.prevButton = depoItemBody.PrevImage;
             this.nextButton = depoItemBody.NextImage;
             this.imageSpeed = depoItemBody.ImageSpeed;
             this.depoImage = depoItemBody.DepoImage;
+            this.datasStackPanel = depoItemBody.DataList;
+            this.showExt = depoItemBody.Show;
+            //Significant version of ms
             this.actualMs = depoItemBody.ActualMs;
             this.maxMs = depoItemBody.MaxMs;
             this.SliderMs = depoItemBody.MsSlider;
             this.searchMs = depoItemBody.SearchMs;
-            this.datasStackPanel = depoItemBody.DataList;
+            //Extendend version of ms
+            this.extActualMs = depoItemBody.ExtendActualMs;
+            this.extMaxMs = depoItemBody.ExtendMaxMs;
+            this.extSliderMs = depoItemBody.ExtendMsSlider;
+            this.ExtStackPanel = depoItemBody.ExtendedPanel;
         }
 
         //Set this.tabControl based on a key value
@@ -770,8 +794,6 @@ namespace DataSetBuilder.controller
             this.actualTabControl.SelectionChanged += TabControl_SelectionChanged;
         }
 
-
-
         //responsabilità del controller o del mydepodata? --> spostare in mydepodata
         private void setMsLabels(MyDepoData myDepoData)
         {
@@ -780,11 +802,12 @@ namespace DataSetBuilder.controller
             string minMs = myDepoData.getImages()[0];
 
             string maxString = extractMs(maxMs);
+            string actualString = extractMs(actualMs);
             string minString = extractMs(minMs);
 
-            int max = (int)Int64.Parse(maxString);
-            int actual = (int)Int64.Parse(extractMs(actualMs));
-            int min = (int)Int64.Parse(minString);
+            long max = long.Parse(maxString);
+            long actual = long.Parse(extractMs(actualMs));
+            long min = long.Parse(minString);
 
             var maxArray = maxString.ToArray();
             var minArray = minString.ToArray();
@@ -798,9 +821,11 @@ namespace DataSetBuilder.controller
                 }
             }            
 
-            this.maxMs.Content = ((max-min)+ (int)Int64.Parse(minString)).ToString();
+            //this.maxMs.Content = ((max-min)+ (int)Int64.Parse(minString)).ToString();
             this.actualMs.Text = ((actual - min) + (int)Int64.Parse(minString)).ToString();
-            this.SliderMs.Maximum = max - min + (int)Int64.Parse(minString);
+            //this.SliderMs.Maximum = max - min + (int)Int64.Parse(minString);
+
+            this.extActualMs.Text = actual.ToString();
         }
 
         private void initMsLabels(MyDepoData myDepoData)
@@ -810,11 +835,12 @@ namespace DataSetBuilder.controller
             string minMs = myDepoData.getImages()[0];
 
             string maxString = extractMs(maxMs);
+            string actualString = extractMs(actualMs);
             string minString = extractMs(minMs);
 
-            int max = (int)Int64.Parse(maxString);
-            int actual = (int)Int64.Parse(extractMs(actualMs));
-            int min = (int)Int64.Parse(minString);
+            long max = long.Parse(maxString);
+            long actual = long.Parse(extractMs(actualMs));
+            long min = long.Parse(minString);
 
             var maxArray = maxString.ToArray();
             var minArray = minString.ToArray();
@@ -828,10 +854,15 @@ namespace DataSetBuilder.controller
                 }
             }
 
-            this.maxMs.Content = ((max - min) + (int)Int64.Parse(minString)).ToString();
-            this.actualMs.Text = ((actual - min) + (int)Int64.Parse(minString)).ToString();
-            this.SliderMs.Maximum = max - min + (int)Int64.Parse(minString);
-            this.SliderMs.Minimum = actual - min + (int)Int64.Parse(minString);
+            this.maxMs.Content = ((max - min) + long.Parse(minString)).ToString();
+            this.actualMs.Text = ((actual - min) + long.Parse(minString)).ToString();
+            this.SliderMs.Maximum = max - min + long.Parse(minString);
+            this.SliderMs.Minimum = actual - min + long.Parse(minString);
+
+            this.extMaxMs.Content = maxString;
+            this.extActualMs.Text = actual.ToString();
+            this.extSliderMs.Maximum = long.Parse(maxString);
+            this.extSliderMs.Minimum = min;
         }
 
         private string extractMs(string msString)
