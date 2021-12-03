@@ -52,35 +52,64 @@ namespace DataSetBuilder.model
 
         private void initLists(String directoryPath)
         {
-            //List of images
-            DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath + @"\" + imagePrefix + ending);
-            foreach (var file in directoryInfo.GetFiles())
-            {
-                if (Path.GetExtension(file.Name).Equals(".jpeg"))
-                {
-                    nrImages++;
-                    this.images.Add(file.Name);
-                }
-            }
 
-            //List of CN files
-            directoryInfo = new DirectoryInfo(directoryPath + @"\" + DeviceCN);
-            foreach (var file in directoryInfo.GetFiles())
+            DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath);
+            if (directoryInfo.GetFiles().Length > 0)
             {
-                if (Path.GetExtension(file.Name).Equals(".txt"))
+                foreach (var file in directoryInfo.GetFiles())
                 {
-                    this.cns.Add(file.Name);
+                    if (Path.GetExtension(file.Name).Equals(".jpeg"))
+                    {
+                        nrImages++;
+                        this.images.Add(file.Name);
+                    }
+                    else if (Path.GetExtension(file.Name).Equals(".txt") && file.Name.Contains("CNC"))
+                    {
+                        this.cns.Add(file.Name);
+                    }
+                    else if (Path.GetExtension(file.Name).Equals(".txt") && file.Name.Contains("Pyrometer"))
+                    {
+                        this.pyrometers.Add(file.Name);
+                    }
+                    //DSB config file
+                    /*else if (Path.GetExtension(file.Name).Equals(".config"))
+                    {
+                        this.dsbs.Add(file.Name);
+                    }*/
                 }
             }
-            //List of pyrometer files
-            directoryInfo = new DirectoryInfo(directoryPath + @"\" + DevicePyrometer);
-            foreach (var file in directoryInfo.GetFiles())
+            else
             {
-                if (Path.GetExtension(file.Name).Equals(".txt"))
+                //List of images
+                directoryInfo = new DirectoryInfo(directoryPath + @"\" + imagePrefix + ending);
+                foreach (var file in directoryInfo.GetFiles())
                 {
-                    this.pyrometers.Add(file.Name);
+                    if (Path.GetExtension(file.Name).Equals(".jpeg"))
+                    {
+                        nrImages++;
+                        this.images.Add(file.Name);
+                    }                   
+                }
+                //List of CN files
+                directoryInfo = new DirectoryInfo(directoryPath + @"\" + DeviceCN);
+                foreach (var file in directoryInfo.GetFiles())
+                {
+                    if (Path.GetExtension(file.Name).Equals(".txt"))
+                    {
+                        this.cns.Add(file.Name);
+                    }
+                }
+                //List of pyrometer files
+                directoryInfo = new DirectoryInfo(directoryPath + @"\" + DevicePyrometer);
+                foreach (var file in directoryInfo.GetFiles())
+                {
+                    if (Path.GetExtension(file.Name).Equals(".txt"))
+                    {
+                        this.pyrometers.Add(file.Name);
+                    }
                 }
             }
+            
 
         }
         //Return the list containing the image names
