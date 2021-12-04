@@ -30,6 +30,7 @@ namespace DataSetBuilder.model
         private uint nrImages = 0;
         //private ushort nrOtherFiles = 0;
         private uint actualImage = 0;
+        private bool isOldVersion = false;
 
         public MyDepoData(String directoryPath)
         {
@@ -50,12 +51,20 @@ namespace DataSetBuilder.model
             return temp.Substring(start, temp.Length - start);
         }*/
 
+        public bool checkOldVersion()
+        {
+            return this.isOldVersion;
+        }
+
         private void initLists(String directoryPath)
         {
-
+            
             DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath);
+
             if (directoryInfo.GetFiles().Length > 0)
             {
+                this.isOldVersion = true;
+
                 foreach (var file in directoryInfo.GetFiles())
                 {
                     if (Path.GetExtension(file.Name).Equals(".jpeg"))

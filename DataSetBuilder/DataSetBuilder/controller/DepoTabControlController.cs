@@ -143,33 +143,65 @@ namespace DataSetBuilder.controller
             string result = binarySearch(searchedValue, myDepoData.getImages());
             setImage(result);
             string temperature, laserOn, powerFeedback;
-
-            if (myDepoData.getPyrometerList().Any())
+            if (myDepoData.checkOldVersion())
             {
-                List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
-                pyroLines = extractFromPyroList(pyroLines);
-                string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
-                temperature = extractTemp(pyroResult);
+                if (myDepoData.getPyrometerList().Any())
+                {
+                    List<string> pyroLines = File.ReadAllLines(myDepoData.getDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                    pyroLines = extractFromPyroList(pyroLines);
+                    string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
+                    temperature = extractTemp(pyroResult);
+                }
+                else
+                {
+                    temperature = "No value";
+                }
+                if (myDepoData.getCNList().Any())
+                {
+                    List<string> CNCLines = File.ReadAllLines(myDepoData.getDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+
+
+                    CNCLines = extractFromCNCList(CNCLines);
+                    string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
+                    laserOn = extractLaserOn(cncResult);
+                    powerFeedback = extractPowerFeedback(cncResult);
+                }
+                else
+                {
+                    laserOn = "No value";
+                    powerFeedback = "No value";
+                }
             }
             else
             {
-                temperature = "No value";
-            }
-            if (myDepoData.getCNList().Any())
-            {
-                List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+                if (myDepoData.getPyrometerList().Any())
+                {
+                    List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                    pyroLines = extractFromPyroList(pyroLines);
+                    string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
+                    temperature = extractTemp(pyroResult);
+                }
+                else
+                {
+                    temperature = "No value";
+                }
+                if (myDepoData.getCNList().Any())
+                {
+                    List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
 
 
-                CNCLines = extractFromCNCList(CNCLines);
-                string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
-                laserOn = extractLaserOn(cncResult);
-                powerFeedback = extractPowerFeedback(cncResult);
+                    CNCLines = extractFromCNCList(CNCLines);
+                    string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
+                    laserOn = extractLaserOn(cncResult);
+                    powerFeedback = extractPowerFeedback(cncResult);
+                }
+                else
+                {
+                    laserOn = "No value";
+                    powerFeedback = "No value";
+                }
             }
-            else
-            {
-                laserOn = "No value";
-                powerFeedback = "No value";
-            }
+            
             updateDatas(temperature, laserOn, powerFeedback);
         }
         private void longMsResearch(long searchedValue, MyDepoData myDepoData)
@@ -178,30 +210,61 @@ namespace DataSetBuilder.controller
             setImage(result);
             string temperature, laserOn, powerFeedback;
 
-            if (myDepoData.getPyrometerList().Any())
+            if (myDepoData.checkOldVersion())
             {
-                List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
-                pyroLines = extractFromPyroList(pyroLines);
-                string pyroResult = pyroLongBS(pyroLines, searchedValue);
-                temperature = extractTemp(pyroResult);
+                if (myDepoData.getPyrometerList().Any())
+                {
+                    List<string> pyroLines = File.ReadAllLines(myDepoData.getDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                    pyroLines = extractFromPyroList(pyroLines);
+                    string pyroResult = pyroLongBS(pyroLines, searchedValue);
+                    temperature = extractTemp(pyroResult);
+                }
+                else
+                {
+                    temperature = "No value";
+                }
+                if (myDepoData.getCNList().Any())
+                {
+                    List<string> CNCLines = File.ReadAllLines(myDepoData.getDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+                    CNCLines = extractFromCNCList(CNCLines);
+                    string cncResult = cncLongBS(CNCLines, searchedValue);
+                    laserOn = extractLaserOn(cncResult);
+                    powerFeedback = extractPowerFeedback(cncResult);
+                }
+                else
+                {
+                    laserOn = "No value";
+                    powerFeedback = "No value";
+                }
             }
             else
             {
-                temperature = "No value";
+                if (myDepoData.getPyrometerList().Any())
+                {
+                    List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                    pyroLines = extractFromPyroList(pyroLines);
+                    string pyroResult = pyroLongBS(pyroLines, searchedValue);
+                    temperature = extractTemp(pyroResult);
+                }
+                else
+                {
+                    temperature = "No value";
+                }
+                if (myDepoData.getCNList().Any())
+                {
+                    List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+                    CNCLines = extractFromCNCList(CNCLines);
+                    string cncResult = cncLongBS(CNCLines, searchedValue);
+                    laserOn = extractLaserOn(cncResult);
+                    powerFeedback = extractPowerFeedback(cncResult);
+                }
+                else
+                {
+                    laserOn = "No value";
+                    powerFeedback = "No value";
+                }
             }
-            if (myDepoData.getCNList().Any())
-            {
-                List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
-                CNCLines = extractFromCNCList(CNCLines);
-                string cncResult = cncLongBS(CNCLines, searchedValue);
-                laserOn = extractLaserOn(cncResult);
-                powerFeedback = extractPowerFeedback(cncResult);
-            }
-            else
-            {
-                laserOn = "No value";
-                powerFeedback = "No value";
-            }        
+      
 
             updateDatas(temperature, laserOn, powerFeedback);
         }
@@ -715,9 +778,20 @@ namespace DataSetBuilder.controller
         private void initFirstImage(String depoName)
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
-            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-            this.depoImage.Source = bitmapImage;
-            shortMsResearch(0, myDepoData);
+            BitmapImage bitmapImage;
+            if (myDepoData.checkOldVersion())
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\"  + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                this.depoImage.Source = bitmapImage;
+                shortMsResearch(0, myDepoData);
+            }
+            else
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                this.depoImage.Source = bitmapImage;
+                shortMsResearch(0, myDepoData);
+            }
+            
 
             //Extract actual and max ms
             initMsLabels(myDepoData);
@@ -732,8 +806,19 @@ namespace DataSetBuilder.controller
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
             myDepoData.downActualImage();
-            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-            this.depoImage.Source = bitmapImage;
+            BitmapImage bitmapImage;
+            if (myDepoData.checkOldVersion())
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                this.depoImage.Source = bitmapImage;
+                shortMsResearch(0, myDepoData);
+            }
+            else
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                this.depoImage.Source = bitmapImage;
+                shortMsResearch(0, myDepoData);
+            }
             setMsLabels(myDepoData);
             littleMsDataSearch(this.actualMs.Text, myDepoData);
         }
@@ -752,8 +837,19 @@ namespace DataSetBuilder.controller
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
             myDepoData.upActualImage();
-            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\"+ myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-            this.depoImage.Source = bitmapImage;
+            BitmapImage bitmapImage;
+            if (myDepoData.checkOldVersion())
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                this.depoImage.Source = bitmapImage;
+                shortMsResearch(0, myDepoData);
+            }
+            else
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                this.depoImage.Source = bitmapImage;
+                shortMsResearch(0, myDepoData);
+            }
             setMsLabels(myDepoData);
             littleMsDataSearch(this.actualMs.Text, myDepoData);
         }
@@ -764,40 +860,84 @@ namespace DataSetBuilder.controller
 
             string temperature, laserOn, powerFeedback;
 
-            if (myDepoData.getPyrometerList().Any())
+            if (myDepoData.checkOldVersion())
             {
-                List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
-                pyroLines = extractFromPyroList(pyroLines);
-                string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
-                temperature = extractTemp(pyroResult);
+                if (myDepoData.getPyrometerList().Any())
+                {
+                    List<string> pyroLines = File.ReadAllLines(myDepoData.getDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                    pyroLines = extractFromPyroList(pyroLines);
+                    string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
+                    temperature = extractTemp(pyroResult);
+                }
+                else
+                {
+                    temperature = "No value";
+                }
+                if (myDepoData.getCNList().Any())
+                {
+                    List<string> CNCLines = File.ReadAllLines(myDepoData.getDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+
+
+                    CNCLines = extractFromCNCList(CNCLines);
+                    string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
+                    laserOn = extractLaserOn(cncResult);
+                    powerFeedback = extractPowerFeedback(cncResult);
+                }
+                else
+                {
+                    laserOn = "No value";
+                    powerFeedback = "No value";
+                }
             }
             else
             {
-                temperature = "No value";
-            }
-            if (myDepoData.getCNList().Any())
-            {
-                List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
+                if (myDepoData.getPyrometerList().Any())
+                {
+                    List<string> pyroLines = File.ReadAllLines(myDepoData.getPyroFileDirectory() + @"\" + myDepoData.getPyrometerList()[0]).Cast<string>().ToList();
+                    pyroLines = extractFromPyroList(pyroLines);
+                    string pyroResult = pyroShortBS(pyroLines, searchedValue, myDepoData.getImages());
+                    temperature = extractTemp(pyroResult);
+                }
+                else
+                {
+                    temperature = "No value";
+                }
+                if (myDepoData.getCNList().Any())
+                {
+                    List<string> CNCLines = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList();
 
 
-                CNCLines = extractFromCNCList(CNCLines);
-                string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
-                laserOn = extractLaserOn(cncResult);
-                powerFeedback = extractPowerFeedback(cncResult);
+                    CNCLines = extractFromCNCList(CNCLines);
+                    string cncResult = cncShortBS(CNCLines, searchedValue, myDepoData.getImages());
+                    laserOn = extractLaserOn(cncResult);
+                    powerFeedback = extractPowerFeedback(cncResult);
+                }
+                else
+                {
+                    laserOn = "No value";
+                    powerFeedback = "No value";
+                }
             }
-            else
-            {
-                laserOn = "No value";
-                powerFeedback = "No value";
-            }
+           
             updateDatas(temperature, laserOn, powerFeedback);
         }
 
         private void setImage(string filename)
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
-            BitmapImage bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + filename, UriKind.RelativeOrAbsolute));
-            this.depoImage.Source = bitmapImage;
+            BitmapImage bitmapImage;
+            if (myDepoData.checkOldVersion())
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                this.depoImage.Source = bitmapImage;
+                shortMsResearch(0, myDepoData);
+            }
+            else
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                this.depoImage.Source = bitmapImage;
+                shortMsResearch(0, myDepoData);
+            }
             myDepoData.setActualImage(myDepoData.getImages().IndexOf(filename));
             setMsLabels(myDepoData);
         }
@@ -922,7 +1062,7 @@ namespace DataSetBuilder.controller
         private string extractMs(string msString)
         {
             string ms = msString;
-            int start = ms.IndexOf("ms") + "ms".Length;
+            int start = "ms".Length;
             ms = ms.Substring(start, ms.IndexOf("_")-2);
             return ms;
         }
