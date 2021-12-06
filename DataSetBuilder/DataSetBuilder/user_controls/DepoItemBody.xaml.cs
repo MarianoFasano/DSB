@@ -18,6 +18,11 @@ namespace DataSetBuilder.user_controls
     /// <summary>
     /// Logica di interazione per DepoItemBody.xaml
     /// </summary>
+    /// 
+
+    /*
+    User control - file xaml con relativa classe cs integrabili in altre interfacce
+    */
     public partial class DepoItemBody : UserControl
     {
         public DepoItemBody()
@@ -25,16 +30,21 @@ namespace DataSetBuilder.user_controls
             InitializeComponent();
         }
 
+        //Evento collegato al click del bottone "<<" (indietro)
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
+            //Se la componente FileBrowser (WebBrowser) è in grado di navigare indietro allora lo fa (massimo fino al percorso specificato in fase di inizializzazione)
             if (FileBrowser.CanGoBack)
             {
                 FileBrowser.GoBack();
             }
         }
 
+        //Evento collegato al click del bottone ">>" (avanti)
         private void Next_Click(object sender, RoutedEventArgs e)
         {
+            //Se la componente FileBrowser (WebBrowser) è in grado di navigare in avanti allora lo fa
+            //(unicamente se si ha già navigato in avanti rispetto al percorso base, es. entrare in una cartella)
             if (FileBrowser.CanGoForward)
             {
                 FileBrowser.GoForward();

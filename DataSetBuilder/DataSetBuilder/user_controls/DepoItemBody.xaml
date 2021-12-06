@@ -31,12 +31,12 @@
                 </ComboBox>
                 <CheckBox x:Name="Show" Content="Show extended" VerticalAlignment="Center" Width="144"/>
             </StackPanel>
-            <StackPanel x:Name="ExtendedPanel" DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBox x:Name="ExtendActualMs" Text="{Binding ElementName=ExtendMsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" IsReadOnly="True"/>
                 <Slider x:Name="ExtendMsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"></Slider>
                 <Label x:Name="ExtendMaxMs" Margin="2"></Label>
             </StackPanel>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel x:Name="ExtractPanel" DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
                 <TextBox x:Name="ActualMs" Text="{Binding ElementName=MsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" IsReadOnly="True"/>
                 <Slider x:Name="MsSlider" Width="200" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"></Slider>
                 <Label x:Name="MaxMs" Margin="2"></Label>

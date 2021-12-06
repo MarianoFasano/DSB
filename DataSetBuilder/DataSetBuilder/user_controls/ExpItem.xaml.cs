@@ -18,6 +18,11 @@ namespace DataSetBuilder.user_controls
     /// <summary>
     /// Logica di interazione per ExpItem.xaml
     /// </summary>
+    /// 
+
+    /*
+    User control - file xaml con relativa classe cs integrabili in altre interfacce
+    */
     public partial class ExpItem : UserControl
     {
         public ExpItem()
@@ -25,6 +30,7 @@ namespace DataSetBuilder.user_controls
             InitializeComponent();
         }
 
+        //TODO: Evento legato al menu item del commento
         private void ViewCommentMenu_Click(object sender, RoutedEventArgs e)
         {
 

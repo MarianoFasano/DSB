@@ -18,6 +18,11 @@ namespace DataSetBuilder.user_controls
     /// <summary>
     /// Logica di interazione per DepoTabItem.xaml
     /// </summary>
+    /// 
+
+    /*
+    User control - file xaml con relativa classe cs integrabili in altre interfacce
+    */
     public partial class DepoTabItem : UserControl
     {
         public DepoTabItem()
@@ -30,7 +35,10 @@ namespace DataSetBuilder.user_controls
             return DepoTabControl;
         }
 
-        //MoveTabItems
+        //Le prossime due funzioni servono per poter muovere di ordine i tab e mostrare la preview di dove finirà la tab in movimento
+        //https://stackoverflow.com/questions/10738161/is-it-possible-to-rearrange-tab-items-in-tab-control-in-wpf
+        //Prese Ctrl+C Ctrl+V
+
         private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (!(e.Source is TabItem tabItem))
