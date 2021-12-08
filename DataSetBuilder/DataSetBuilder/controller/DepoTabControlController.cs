@@ -105,21 +105,17 @@ namespace DataSetBuilder.controller
         {
             if(e.Key == Key.Return)
             {
+                string searchedValString = this.searchMs.Text;
 
-                if (this.searchMs.Text.All(char.IsDigit))
+                if (searchedValString.All(char.IsDigit))
                 {
-                    long searchedValue = long.Parse(this.searchMs.Text);
+                    long searchedValue = long.Parse(searchedValString);
                     MyDepoData myDepoData = depoDatas[getDepoName()];
-
-                    if ((long.Parse(this.searchMs.Text) >= this.SliderMs.Minimum) && (long.Parse(this.searchMs.Text) <= long.Parse(maxMs.Content.ToString())))
-                    {
-                        //Lunghezza maggiore di 0 e valore inferiore al massimo
-                        shortMsResearch(searchedValue - (long)this.SliderMs.Minimum, myDepoData);
-                    }
-                    else if (long.Parse(this.searchMs.Text) >= long.Parse(extractMs(myDepoData.getImages()[0])) && long.Parse(this.searchMs.Text) <= long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
+                
+                    if (long.Parse(searchedValString) >= long.Parse(extractMs(myDepoData.getImages()[0])) && long.Parse(searchedValString) <= long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
                     {
                         //Valore maggiore di max ms e inferiore al massimo scrivibile
-                        longMsResearch(searchedValue, myDepoData);
+                        msResearch(searchedValue, myDepoData);
                     }
                     else
                     {
@@ -136,124 +132,91 @@ namespace DataSetBuilder.controller
             }
         }
        
-        private void shortMsResearch(long searchedValue, MyDepoData myDepoData)
+        private void msResearch(long searchedValue, MyDepoData myDepoData)
         {
-            string result = imageSearcher.shortSearcher(searchedValue, myDepoData);         
+            searchImage(searchedValue, myDepoData);
+            string temperature = searchTemperature(searchedValue, myDepoData);
+            CncResult cncResult = searchCncDatas(searchedValue, myDepoData);        
+      
+            updateDatas(temperature, cncResult);
+        }
+
+        private void searchImage(long searchedValue, MyDepoData myDepoData)
+        {
+            string result = imageSearcher.longSearch(searchedValue, myDepoData);
             setImage(result);
-            string temperature, laserOn, powerFeedback;
+        }
+        private string searchTemperature(long searchedValue, MyDepoData myDepoData)
+        {
+            string temperature;
+            //Se la lista di file relativa al pirometro contiene elementi, si ricerca e si estrae la temperatura
             if (myDepoData.getPyrometerList().Any())
             {
-                string pyroResult = pyrometerSearcher.shortSearch(searchedValue, myDepoData);
+                //Si ricava la riga del file in corrispondenza dei ms passati
+                string pyroResult = pyrometerSearcher.longSearch(searchedValue, myDepoData);
+                //Si estrae la temperatura dalla riga
                 temperature = extractTemp(pyroResult);
             }
             else
             {
                 temperature = "No value";
             }
+            return temperature;
+        }
+
+        private CncResult searchCncDatas(long searchedValue, MyDepoData myDepoData)
+        {
+            CncResult cncResult = new CncResult();
             if (myDepoData.getCNList().Any())
             {
-                string cncResult = cncSearcher.shortSearch(searchedValue, myDepoData);
-                laserOn = extractLaserOn(cncResult);
-                powerFeedback = extractPowerFeedback(cncResult);
-            }
-            else
-            {
-                laserOn = "No value";
-                powerFeedback = "No value";
-            }
-            updateDatas(temperature, laserOn, powerFeedback);
-        }
-        private void longMsResearch(long searchedValue, MyDepoData myDepoData)
-        {
-            string result = imageSearcher.longSearch(searchedValue, myDepoData);
-            
-            setImage(result);
-            string temperature, laserOn, powerFeedback;
-
-                if (myDepoData.getPyrometerList().Any())
+                //TODO: sostituire non appena si esegue il refactoring del problema I/O
+                String measureString;
+                if (myDepoData.checkOldVersion())
                 {
-                    string pyroResult = pyrometerSearcher.longSearch(searchedValue, myDepoData);
-                    temperature = extractTemp(pyroResult);
+                    measureString = File.ReadAllLines(myDepoData.getDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList().ElementAt(0);
                 }
                 else
                 {
-                    temperature = "No value";
+                    measureString = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList().ElementAt(0);
                 }
-                if (myDepoData.getCNList().Any())
-                {
-                    string cncResult = cncSearcher.longSearch(searchedValue, myDepoData);
-                    laserOn = extractLaserOn(cncResult);
-                    powerFeedback = extractPowerFeedback(cncResult);
-                }
-                else
-                {
-                    laserOn = "No value";
-                    powerFeedback = "No value";
-                }           
-      
-            updateDatas(temperature, laserOn, powerFeedback);
-        }
-
-        private string extractPowerFeedback(string cncResult)
-        {
-            string powerFeedback = cncResult;
-            int index;
-
-            //The hardcoded way...
-            for (int i = 0; i < 15; i++)
-            {
-                index = powerFeedback.IndexOf("\t") + "\t".Length;
-                powerFeedback = powerFeedback.Substring(index);
-            }
-            if (!powerFeedback.Any())
-            {
-                powerFeedback = "No value";
-            }
-            return powerFeedback;
-        }
-
-        private string extractLaserOn(string cncResult)
-        {
-            string laserOn = cncResult;
-            int index;
-
-            //The hardcoded way...
-            for(int i=0; i<14; i++)
-            {
-                index = laserOn.IndexOf("\t") + "\t".Length;
-                laserOn = laserOn.Substring(index);
-            }
-            if (!laserOn.Any())
-            {
-                laserOn = "No value";
+                string stringCncResult = cncSearcher.longSearch(searchedValue, myDepoData);
+                cncResult.settingMeasure(measureString);
+                cncResult.settingValues(stringCncResult);
+                
             }
             else
             {
-                index = laserOn.IndexOf("\t");
-                laserOn = laserOn.Substring(0, index);
-            }            
-            
-            return laserOn;
+                cncResult.getMeasures().Add("No Cnc File");
+                cncResult.getValues().Add("No values");
+            }
+            return cncResult;
         }
+
+
 
         //Clear and populate the stackpanel with temperature, laseron TODO, powerfeedback TODO datas
-        private void updateDatas(string temperature, string laserOn, string powerFeedback)
+        private void updateDatas(string temperature, CncResult cncResult)
         {
             //Clear the stackPanel from the actual values
             datasStackPanel.Children.Clear();
 
             //Labels to append to the clean stackPanel
             Label Temperature = new Label();
-            Label LaserOn = new Label();
-            Label PowerFeedback = new Label();
 
             Temperature.Content = "Temperature:\t" + temperature;
-            LaserOn.Content = "LaserOn:\t\t" + laserOn;
-            PowerFeedback.Content = "PowerFeedback:\t" + powerFeedback;
 
             datasStackPanel.Children.Add(Temperature);
-            datasStackPanel.Children.Add(LaserOn);
-            datasStackPanel.Children.Add(PowerFeedback);
+
+            //Si cicla le liste di cncResult
+            List<String> measures = cncResult.getMeasures();
+            List<String> values = cncResult.getValues();
+
+            for(int i = 0; i < measures.Count; i++)
+            {
+                Label label = new Label();
+                label.Content = measures[i] + ":\t" + values[i];
+                datasStackPanel.Children.Add(label);
+            }
         }
 
         //Extract the temperature value from his line (string)
@@ -342,7 +305,10 @@ namespace DataSetBuilder.controller
 
             //Extract actual and max ms
             initMsLabels(myDepoData);
-            longMsResearch(long.Parse(this.extActualMs.Text), myDepoData);
+
+            string temperature = searchTemperature(long.Parse(this.extActualMs.Text), myDepoData);
+            CncResult cncResult = searchCncDatas(long.Parse(this.extActualMs.Text), myDepoData);
+            updateDatas(temperature, cncResult);
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -367,7 +333,7 @@ namespace DataSetBuilder.controller
             }
             setMsLabels(myDepoData);
             long actualMs = long.Parse(this.actualMs.Text);
-            shortMsResearch(actualMs, myDepoData);
+            //shortMsResearch(actualMs, myDepoData);
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
@@ -398,8 +364,8 @@ namespace DataSetBuilder.controller
 
             setMsLabels(myDepoData);
             long actualMs = long.Parse(this.extActualMs.Text);
-            longMsResearch(actualMs, myDepoData);
-            //MessageBox.Show(myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), "post_shortSearch");
+            msResearch(actualMs, myDepoData);
+
         }
 
         private void setImage(string filename)
