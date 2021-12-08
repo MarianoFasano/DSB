@@ -17,7 +17,7 @@ namespace DataSetBuilder.controller
     class DepoTabControlController
     {
         /*Object from graphical interface*/
-        //General
+        //Generali
         private Button playButton;
         private Button pauseButton;
         private Button prevButton;
@@ -26,29 +26,31 @@ namespace DataSetBuilder.controller
         private Image depoImage;
         private StackPanel datasStackPanel;
         private CheckBox showExt;
-        //Significant version of ms
-        private TextBox actualMs;
-        private Label maxMs;
-        private Slider SliderMs;
-        private Thumb sliderThumb;
+
         private TextBox searchMs;
-        //Extended version of ms
+        //Versione estesa dei ms
         private StackPanel ExtStackPanel;
         private TextBox extActualMs;
         private Label extMaxMs;
         private Slider extSliderMs;
         private Thumb extSliderThumb;
-        //Other variables
+        //Altre variabili
+        //Percorsi
         private String depoPath;
         private String dataPath;
         private String basePath;
+
+        //Dizionari che contengono i riferimenti ai dati e alla struttura grafica dell'interfaccia che viene caricata nel tabItem dell'esperimento
         private IDictionary<String, MyDepoData> depoDatas = new Dictionary<String, MyDepoData>();
         private IDictionary<String, DepoItemBody> depoStructures = new Dictionary<String, DepoItemBody>();
+
         private Boolean isAutomatic = false;
         private MyExpTabItemModel myExpTabItemModel;
+        //TabControl cui verrà assegnato il tabControl della deposizione di riferimento ogniqualvolta si seleziona la tab di un esperimento
         private TabControl actualTabControl;
         private String minValue;
-        //Controllers
+
+        //Controllers di ricerca
         ImageSearcher imageSearcher = new ImageSearcher();
         PyrometerSearcher pyrometerSearcher = new PyrometerSearcher();
         CNCSearcher cncSearcher = new CNCSearcher();
@@ -58,7 +60,7 @@ namespace DataSetBuilder.controller
             this.myExpTabItemModel = myExpTabItemModel;
             this.basePath = basePath;
         }
-
+        //Evento legato alla tab selezionata dell'esperimento, quando ciò avviene sono caricati alcuni dati relativi alle deposizioni dell'esperimento selezionato
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.Source is TabControl)
@@ -67,17 +69,19 @@ namespace DataSetBuilder.controller
                 //Mandatory check to avoid tabItem=null happened on drag&drop the tabItem
                 if (tabItem != null && (string)tabItem.Header != null)
                 {
+                    //Si richiama la depoItemBody di riferimento dalla struttura dati per l'esperimento selezionato
                     DepoItemBody depoItemBody = this.depoStructures[(string)tabItem.Header];
-                    
+                    //Verifica che essa non sia null
                     if (depoItemBody != null)
                     {
+                        //Si assegnano i relativi controlli (bottoni, slider, ecc...) e il percorso dell'esperimento nel file system
                         assignIControl(depoItemBody);
                         setDataPath((string)tabItem.Header);
                     }
                 }
             }
         }
-
+        //Inizializzazione degli eventi dei controlli dell'interfaccia grafica
         private void initControlsAction()
         {
             this.playButton.Click += PlayButton_Click;
@@ -85,59 +89,65 @@ namespace DataSetBuilder.controller
             this.prevButton.Click += PrevButton_Click;
             this.nextButton.Click += NextButton_Click;
             this.searchMs.KeyDown += SearchMs_KeyDown;
-            this.showExt.Click += ShowExt_Click;
+            this.extSliderMs.ValueChanged += ExtSliderMs_ValueChanged;
+        }
+        //TODO: evento dello slider, ancora da fare
+        private void ExtSliderMs_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {/*
+            MyDepoData myDepoData = depoDatas[getDepoName()];
+            long searchedValue = long.Parse(this.extActualMs.Text);
+            msResearch(searchedValue, myDepoData);
+            */
         }
 
-        private void ShowExt_Click(object sender, RoutedEventArgs e)
-        {
-            if (showExt.IsChecked==true)
-            {
-                ExtStackPanel.Visibility = Visibility.Visible;
-            }
-            else if (showExt.IsChecked == false)
-            {
-                ExtStackPanel.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        //On Enter down
+        //Evento che avviene quando si schiaccia "enter" --> fa partire la ricerca del valore passato al box di ricerca
         private void SearchMs_KeyDown(object sender, KeyEventArgs e)
         {
+            //Si deve premere "Enter"
             if(e.Key == Key.Return)
             {
+                //Stringa in locale con il valore del box di ricerca
                 string searchedValString = this.searchMs.Text;
-
+                //La stringa deve contenere solo numeri
                 if (searchedValString.All(char.IsDigit))
                 {
+                    //Cast a long della stringa e si richiama l'istanza che contiene i riferimenti correti ai files
                     long searchedValue = long.Parse(searchedValString);
                     MyDepoData myDepoData = depoDatas[getDepoName()];
                 
+                    //TODO:Si verifica che il valore passato si trovi nel corretto intervallo di valori --> slider min - slider max
+                    //sistemare!
                     if (long.Parse(searchedValString) >= long.Parse(extractMs(myDepoData.getImages()[0])) && long.Parse(searchedValString) <= long.Parse(extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1])))
                     {
-                        //Valore maggiore di max ms e inferiore al massimo scrivibile
+                        //Funzione di ricerca
                         msResearch(searchedValue, myDepoData);
                     }
                     else
                     {
-                        String firstFormat = this.SliderMs.Minimum.ToString() + "-" + this.SliderMs.Maximum.ToString();
-                        String secondFormat = extractMs(myDepoData.getImages()[0]) + "-" + extractMs(myDepoData.getImages()[myDepoData.getImages().Count - 1]);
-                        MessageBox.Show("I formati numerici associati sono i seguenti:\n\n" + firstFormat + "\n" + secondFormat, "Formato errato");
+                        //Altrimenti significa che il valore è fuori intervallo, si mostra quindi un popup che indica il corretto formato
+                        String firstFormat = this.extSliderMs.Minimum.ToString() + "-" + this.extSliderMs.Maximum.ToString();
+                        MessageBox.Show("I formati numerici associati sono i seguenti:\n\n" + firstFormat, "Formato errato");
                     }
                 }
                 else
                 {
+                    //Si ricorda all'utente che si devono cercare unicamente dei numeri
                     MessageBox.Show("Nel campo di ricerca devono essere scritti unicamente dei numeri", "Formato errato");
                 }
+                //Si pulisce la casella della ricerca
                 this.searchMs.Clear();
             }
         }
-       
+        //Funzione di ricerca --> all'interno si ricerca immagine, temperatura e altri dati
         private void msResearch(long searchedValue, MyDepoData myDepoData)
         {
+            //TODO: Ricerca l'immagine --> pare non andare
             searchImage(searchedValue, myDepoData);
+            //Ricerca della temperatura --> file pirometro
             string temperature = searchTemperature(searchedValue, myDepoData);
+            //Ricerca dei dati misurati e riportati nel CN --> file CN
             CncResult cncResult = searchCncDatas(searchedValue, myDepoData);        
-      
+            //Funzione che popola la colonna dei dati nell'interfaccia utente
             updateDatas(temperature, cncResult);
         }
 
@@ -153,7 +163,7 @@ namespace DataSetBuilder.controller
             if (myDepoData.getPyrometerList().Any())
             {
                 //Si ricava la riga del file in corrispondenza dei ms passati
-                string pyroResult = pyrometerSearcher.longSearch(searchedValue, myDepoData);
+                string pyroResult = pyrometerSearcher.pyroSearch(searchedValue, myDepoData);
                 //Si estrae la temperatura dalla riga
                 temperature = extractTemp(pyroResult);
             }
@@ -173,14 +183,17 @@ namespace DataSetBuilder.controller
                 String measureString;
                 if (myDepoData.checkOldVersion())
                 {
-                    measureString = File.ReadAllLines(myDepoData.getDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList().ElementAt(0);
+                    //measureString = File.ReadAllLines(myDepoData.getDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList().ElementAt(0);
+                    measureString = myDepoData.getCNList().ElementAt(0).ElementAt(0);
                 }
                 else
                 {
-                    measureString = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList().ElementAt(0);
+                    //measureString = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList().ElementAt(0);
+                    measureString = myDepoData.getCNList().ElementAt(0).ElementAt(0);
                 }
-                string stringCncResult = cncSearcher.longSearch(searchedValue, myDepoData);
                 cncResult.settingMeasure(measureString);
+                string stringCncResult = cncSearcher.cncSearch(searchedValue, myDepoData);
+                
                 cncResult.settingValues(stringCncResult);
                 
             }
@@ -332,8 +345,11 @@ namespace DataSetBuilder.controller
                 this.depoImage.Source = bitmapImage;
             }
             setMsLabels(myDepoData);
-            long actualMs = long.Parse(this.actualMs.Text);
-            //shortMsResearch(actualMs, myDepoData);
+            long actualMs = long.Parse(this.extActualMs.Text);
+            string temperature = searchTemperature(actualMs, myDepoData);
+            CncResult cncResult = searchCncDatas(actualMs, myDepoData);
+            updateDatas(temperature, cncResult);
+
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
@@ -364,7 +380,9 @@ namespace DataSetBuilder.controller
 
             setMsLabels(myDepoData);
             long actualMs = long.Parse(this.extActualMs.Text);
-            msResearch(actualMs, myDepoData);
+            string temperature = searchTemperature(actualMs, myDepoData);
+            CncResult cncResult = searchCncDatas(actualMs, myDepoData);
+            updateDatas(temperature, cncResult);
 
         }
 
@@ -412,17 +430,12 @@ namespace DataSetBuilder.controller
             this.imageSpeed = depoItemBody.ImageSpeed;
             this.depoImage = depoItemBody.DepoImage;
             this.datasStackPanel = depoItemBody.DataList;
-            this.showExt = depoItemBody.Show;
             //Significant version of ms
-            this.actualMs = depoItemBody.ActualMs;
-            this.maxMs = depoItemBody.MaxMs;
-            this.SliderMs = depoItemBody.MsSlider;
             this.searchMs = depoItemBody.SearchMs;
             //Extendend version of ms
             this.extActualMs = depoItemBody.ExtendActualMs;
             this.extMaxMs = depoItemBody.ExtendMaxMs;
             this.extSliderMs = depoItemBody.ExtendMsSlider;
-            this.ExtStackPanel = depoItemBody.ExtractPanel;
         }
 
         //Set this.tabControl based on a key value
@@ -448,10 +461,6 @@ namespace DataSetBuilder.controller
             long min = long.Parse(minString);
 
             minString = extractDifferentDigit(minString, maxString);
-
-            //this.maxMs.Content = ((max-min)+ (int)Int64.Parse(minString)).ToString();
-            this.actualMs.Text = ((actual - min) + (int)Int64.Parse(minString)).ToString();
-            //this.SliderMs.Maximum = max - min + (int)Int64.Parse(minString);
 
             this.extActualMs.Text = actual.ToString();
         }
@@ -499,11 +508,6 @@ namespace DataSetBuilder.controller
                     break;
                 }
             }
-
-            this.maxMs.Content = ((max - min) + long.Parse(minString)).ToString();
-            this.actualMs.Text = ((actual - min) + long.Parse(minString)).ToString();
-            this.SliderMs.Maximum = max - min + long.Parse(minString);
-            this.SliderMs.Minimum = actual - min + long.Parse(minString);
 
             this.extMaxMs.Content = maxString;
             this.extActualMs.Text = actual.ToString();

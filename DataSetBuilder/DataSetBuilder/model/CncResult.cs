@@ -44,8 +44,7 @@ namespace DataSetBuilder.model
                     break;
                 }
                 //Verificare se la string a contiene ancora numeri o lettere, in caso affermativo si continua a estrarre valori
-            } while (temp.Any(char.IsDigit) || temp.Any(char.IsLetter));
-            MessageBox.Show("settingValues", "Ciao");
+            } while (temp.Any(char.IsDigit) || temp.Any(char.IsLetter));;
         }
 
         public void settingMeasure(String result)
@@ -77,7 +76,6 @@ namespace DataSetBuilder.model
                 }
                 //Verificare se la string a contiene ancora numeri o lettere, in caso affermativo si continua a estrarre valori
             } while (temp.Any(char.IsLetter));
-            MessageBox.Show("settingMeasure", "Ciao");
         }
         //Ritorna la lista con le grandezze misurate
         public List<String> getMeasures()

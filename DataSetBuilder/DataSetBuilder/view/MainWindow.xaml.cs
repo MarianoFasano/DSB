@@ -38,6 +38,8 @@ namespace DataSetBuilder.view
             Init();
             initTabControl();
             this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, expPath);
+            //Massimizza la finestra
+            this.WindowState = System.Windows.WindowState.Maximized;
         }
 
         private void Init()
