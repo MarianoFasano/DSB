@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml;
 
 namespace DataSetBuilder.view
 {
@@ -39,7 +40,7 @@ namespace DataSetBuilder.view
             initTabControl();
             this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, expPath);
             //Massimizza la finestra
-            this.WindowState = System.Windows.WindowState.Maximized;
+            this.WindowState = System.Windows.WindowState.Normal;
         }
 
         private void Init()
@@ -54,10 +55,21 @@ namespace DataSetBuilder.view
                 listItem.Content = expDirectories[i].Remove(0, expPath.Length + 1);
                 //Alla ListViewItem si aggiunge l'evento openExpDeps (l'evento che permette di aprire la tab dell'esperimento)
                 listItem.MouseDoubleClick += openExpDeps;
+                listItem.Selected += ListItem_Selected;
                 //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
-                ExperimentViewer.Children.Add(listItem);
+                ExperimentViewer.Items.Add(listItem);
+                
             }
         }
+        //Funzione che carica il commento dell'esperimento nel DocumentViewer
+        private void ListItem_Selected(object sender, RoutedEventArgs e)
+        {
+            ListViewItem listViewItem = sender as ListViewItem;
+            //ExpComment.Source = new Uri("J:\\DTI\\_DSB\\Experiment_2021_9_14__11_13_42\\Experiment_2021_9_14__11_13_42.txt");
+            //ExpComment.Document = "J:\\DTI\\_DSB\\Experiment_2021_9_14__11_13_42\\Experiment_2021_9_14__11_13_42.txt";
+
+        }
+
         //Funzione che inizializza la classe TabsBody
         private void initTabControl()
         {

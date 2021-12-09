@@ -27,10 +27,8 @@
             </Menu>
             <TextBox x:Name="DepoComment" DockPanel.Dock="Bottom" Height="auto" TextWrapping="Wrap" Text="Commento" Visibility="Collapsed"/>
 
-            <ScrollViewer DockPanel.Dock="Left">
-                <StackPanel x:Name="DepositionViewer">
-                </StackPanel>
-            </ScrollViewer>
+            <ListBox x:Name="DepositionViewer">
+            </ListBox>
         </DockPanel>
         
         <GridSplitter Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="2" Background="DarkGray"/>

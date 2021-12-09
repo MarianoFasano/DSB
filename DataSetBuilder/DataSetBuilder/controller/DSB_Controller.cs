@@ -54,7 +54,7 @@ namespace DataSetBuilder
         }
 
         //Gestione della visibilità del commento sulla base del click del mouse sul menu dedicato
-        internal System.Windows.Visibility viewComment(TextBox ExpCommentBox)
+        internal System.Windows.Visibility viewComment(FrameworkElement ExpCommentBox)
         {
             if(ExpCommentBox.Visibility.Equals(System.Windows.Visibility.Collapsed))
             {
@@ -67,7 +67,7 @@ namespace DataSetBuilder
         }
 
         //Cambia il testo del menuitem legato al commento in base al fatto che sia attualmente visibile o meno
-        internal string commentText(TextBox ExpCommentBox)
+        internal string commentText(FrameworkElement ExpCommentBox)
         {
             if (ExpCommentBox.Visibility.Equals(System.Windows.Visibility.Collapsed))
             {

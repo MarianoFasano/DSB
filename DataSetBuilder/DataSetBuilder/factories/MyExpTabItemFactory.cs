@@ -18,23 +18,23 @@ namespace DataSetBuilder.factories
             this.basePath = basePath;
         }
 
-        public TabItem GetTabItem(ListViewItem listViewItem, StackPanel stackPanel)
+        public TabItem GetTabItem(ListViewItem listViewItem, ListBox listBox)
         {
             TabItem tabItem = new TabItem { Header = listViewItem.Content };
-            stackPanel = initDepoList((string)listViewItem.Content, stackPanel);
+            listBox = initDepoList((string)listViewItem.Content, listBox);
             return tabItem;
         }
 
-        private StackPanel initDepoList(String subPath, StackPanel stackPanel)
+        private ListBox initDepoList(String subPath, ListBox listBox)
         {
-            StackPanel depoList = stackPanel;
+            ListBox depoList = listBox;
             string depoPath = basePath + @"\" + subPath;
             //string depoPath = basePath + @"\" + subPath;
             string[] depoDirectories = Directory.GetDirectories(depoPath);
 
             if (isEmpty(depoDirectories.Length))
             {
-                depoList.Children.Add(emptyMessage());
+                depoList.Items.Add(emptyMessage());
             }
 
             for (int i = 0; i < depoDirectories.Length; i++)
@@ -42,7 +42,7 @@ namespace DataSetBuilder.factories
                 var listItem = new ListViewItem();
                 listItem.Content = depoDirectories[i].Remove(0, depoPath.Length + 1);
                 listItem.MouseDoubleClick += depoTabControlController.openDepsData;
-                depoList.Children.Add(listItem);
+                depoList.Items.Add(listItem);
             }
 
             return depoList;

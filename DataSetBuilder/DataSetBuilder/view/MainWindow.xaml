@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DataSetBuilder.view"
         mc:Ignorable="d"
-        Title="Data Set Builder" Height="450" Width="800">
+        Title="Data Set Builder" MinHeight="450" MinWidth="800"
+        SizeToContent="WidthAndHeight">
     <Grid x:Name="DSB_MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -18,10 +19,11 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         
-        <WrapPanel Grid.Row="0" Grid.ColumnSpan="4" Orientation="Horizontal">
+        <ToolBar Grid.Row="0" Grid.ColumnSpan="4">
             <Button Width="80">(Reset Layout)</Button>
             <Button Width="80">(Close Tabs)</Button>
-        </WrapPanel>
+            <Button Width="80">(Refresh)</Button>
+        </ToolBar>
         
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan ="2">
             <Button Click="Button_Click" Width="80" Content="Experiments" HorizontalAlignment="Left" Margin="0.7" Background="WhiteSmoke" ToolTip="Apri e chiudi la lista degli esperimenti">
@@ -44,13 +46,10 @@
                     </MenuItem>
                 </MenuItem>
             </Menu>
-            <TextBox x:Name="ExpComment" DockPanel.Dock="Bottom" Height="auto" TextWrapping="Wrap" Text="Commento" Visibility="Collapsed"/>
+            <DocumentViewer x:Name="ExpComment" DockPanel.Dock="Bottom" Visibility="Collapsed"/>
 
-            <ScrollViewer DockPanel.Dock="Left">
-                <StackPanel x:Name="ExperimentViewer">
-
-                </StackPanel>
-            </ScrollViewer>
+            <ListBox x:Name="ExperimentViewer" Height="auto">
+            </ListBox>
         </DockPanel>
         
         <GridSplitter x:Name="ExpGridSplitter" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="2" HorizontalAlignment="Right" Background="Black"></GridSplitter>
