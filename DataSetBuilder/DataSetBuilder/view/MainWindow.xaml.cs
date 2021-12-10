@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Xml;
 
@@ -24,9 +25,9 @@ namespace DataSetBuilder.view
         //Dichiarazione della classe DSB_Controller (il suo utilizzo è specificato nella classe stessa)
         DSB_Controller dsb_controller;
 
-        //Percorso della cartella contenente gli esperimenti, anch'essi sono delle cartelle
-        string expPath = @"J:\DTI\_DSB";    //fisso Mariano
-        //string expPath = @"D:\_DSB";      //portatile Mariano
+        //TODO:Percorso della cartella contenente gli esperimenti, anch'essi sono delle cartelle
+        //string expPath = @"J:\DTI\_DSB";    //fisso Mariano
+        string expPath = @"D:\_DSB";      //portatile Mariano
 
         //Dichiarazione della classe TabsBody, la classe di riferimento del file xaml con il medesimo nome
         private TabsBody tabBody;
@@ -58,15 +59,17 @@ namespace DataSetBuilder.view
                 listItem.Selected += ListItem_Selected;
                 //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
                 ExperimentViewer.Items.Add(listItem);
-                
             }
         }
         //Funzione che carica il commento dell'esperimento nel DocumentViewer
         private void ListItem_Selected(object sender, RoutedEventArgs e)
         {
             ListViewItem listViewItem = sender as ListViewItem;
-            //ExpComment.Source = new Uri("J:\\DTI\\_DSB\\Experiment_2021_9_14__11_13_42\\Experiment_2021_9_14__11_13_42.txt");
-            //ExpComment.Document = "J:\\DTI\\_DSB\\Experiment_2021_9_14__11_13_42\\Experiment_2021_9_14__11_13_42.txt";
+
+            String fileName = "D:\\_DSB\\Experiment_2021_9_14__11_13_42\\Experiment_2021_9_14__11_13_42.txt";
+            //TODO: gestire eccezione di file non trovato --> Si scrive nel textbox il contenuto di testo del file txt, letto dalla funzione File.ReadAllText
+            ExpComment.Text = File.ReadAllText(fileName);
+
 
         }
 

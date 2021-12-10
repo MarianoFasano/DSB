@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DataSetBuilder.view"
         mc:Ignorable="d"
-        Title="Data Set Builder" MinHeight="450" MinWidth="800"
+        Title="Ground Control" MinHeight="450" MinWidth="800"
         SizeToContent="WidthAndHeight">
     <Grid x:Name="DSB_MainGrid">
         <Grid.RowDefinitions>
@@ -46,7 +46,7 @@
                     </MenuItem>
                 </MenuItem>
             </Menu>
-            <DocumentViewer x:Name="ExpComment" DockPanel.Dock="Bottom" Visibility="Collapsed"/>
+            <TextBox x:Name="ExpComment" TextWrapping="WrapWithOverflow" DockPanel.Dock="Bottom" Visibility="Collapsed"/>
 
             <ListBox x:Name="ExperimentViewer" Height="auto">
             </ListBox>
