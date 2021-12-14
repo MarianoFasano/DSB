@@ -18,46 +18,50 @@ namespace DataSetBuilder.controller
     {
         /*Object from graphical interface*/
         //Generali
-        private Button playButton;
-        private Button pauseButton;
-        private Button prevButton;
-        private Button nextButton;
-        private ComboBox imageSpeed;
-        private Image depoImage;
-        private StackPanel datasStackPanel;
-        private CheckBox showExt;
+        private Button playButton;              //bottone play
+        private Button pauseButton;             //bottone pausa
+        private Button prevButton;              //bottone immagine precedente
+        private Button nextButton;              //bottone immagine successiva
+        private ComboBox imageSpeed;            //gestione "velocità" scorrimento immagini (play/pausa)
+        private Image depoImage;                //immagine
+        private StackPanel datasStackPanel;     //lista per i dati
+        private TextBox searchMs;               //campo di testo per la ricerca dei ms
 
-        private TextBox searchMs;
         //Versione estesa dei ms
-        private StackPanel ExtStackPanel;
-        private TextBox extActualMs;
-        private Label extMaxMs;
-        private Slider extSliderMs;
-        private Thumb extSliderThumb;
+        private TextBox extActualMs;            //campo di testo con i ms attuali
+        private Label extMaxMs;                 //etichetta con i ms totali (ms dell'ultima immagine)
+        private Slider extSliderMs;             //slider dei ms
+
         //Altre variabili
         //Percorsi
-        private String depoPath;
-        private String dataPath;
-        private String basePath;
+        private String depoPath;                //percorso della deposizione --> percorso base degli esperimenti + la cartella dell'esperimento
+        private String dataPath;                //percorso dei dati --> percorso base degli esperimenti + la cartella dell'esperimento + la cartella della deposizione
+        private String basePath;                //percorso base degli esperimenti
 
         //Dizionari che contengono i riferimenti ai dati e alla struttura grafica dell'interfaccia che viene caricata nel tabItem dell'esperimento
+        //Riferimento ai dati 
         private IDictionary<String, MyDepoData> depoDatas = new Dictionary<String, MyDepoData>();
+        //Riferimento alla struttura dell'interfaccia grafica
         private IDictionary<String, DepoItemBody> depoStructures = new Dictionary<String, DepoItemBody>();
 
         private Boolean isAutomatic = false;
         private MyExpTabItemModel myExpTabItemModel;
         //TabControl cui verrà assegnato il tabControl della deposizione di riferimento ogniqualvolta si seleziona la tab di un esperimento
         private TabControl actualTabControl;
-        private String minValue;
 
         //Controllers di ricerca
+        //Ricerca dell'immagine
         ImageSearcher imageSearcher = new ImageSearcher();
+        //Ricerca della temperatura
         PyrometerSearcher pyrometerSearcher = new PyrometerSearcher();
+        //Ricerca dei dai nel CN
         CNCSearcher cncSearcher = new CNCSearcher();
 
         public DepoTabControlController(MyExpTabItemModel myExpTabItemModel, String basePath)
         {
+            //Nel costruttore si inietta l'istanza di myExpTabItemModel, creata all'apertura dell'applicativo
             this.myExpTabItemModel = myExpTabItemModel;
+            //Percorso base passato come parametro
             this.basePath = basePath;
         }
         //Evento legato alla tab selezionata dell'esperimento, quando ciò avviene sono caricati alcuni dati relativi alle deposizioni dell'esperimento selezionato
@@ -84,14 +88,14 @@ namespace DataSetBuilder.controller
         //Inizializzazione degli eventi dei controlli dell'interfaccia grafica
         private void initControlsAction()
         {
-            this.playButton.Click += PlayButton_Click;
-            this.pauseButton.Click += PauseButton_Click;
-            this.prevButton.Click += PrevButton_Click;
-            this.nextButton.Click += NextButton_Click;
-            this.searchMs.KeyDown += SearchMs_KeyDown;
+            this.playButton.Click += PlayButton_Click;                      //Evento sul bottone di play
+            this.pauseButton.Click += PauseButton_Click;                    //Evento sul bottone di pausa
+            this.prevButton.Click += PrevButton_Click;                      //Evento sul bottone per l'immagine precedente
+            this.nextButton.Click += NextButton_Click;                      //Evento sul bottone per l'immagine successiva                
+            this.searchMs.KeyDown += SearchMs_KeyDown;                      //Evento sulla pressione del tasto enter
             this.extSliderMs.ValueChanged += ExtSliderMs_ValueChanged;
         }
-        //TODO: evento dello slider, ancora da fare
+        //TODO: evento dello slider, ancora da fare, non funzionante
         private void ExtSliderMs_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {/*
             MyDepoData myDepoData = depoDatas[getDepoName()];
@@ -150,12 +154,15 @@ namespace DataSetBuilder.controller
             //Funzione che popola la colonna dei dati nell'interfaccia utente
             updateDatas(temperature, cncResult);
         }
-
+        //Funzione per la ricerca/settaggio dell'immagine --> parametri: valore cercato, istanza contenente i vari dati/riferimenti
         private void searchImage(long searchedValue, MyDepoData myDepoData)
         {
+            //Stringa del risultato della ricerca nella lista delle immagini
             string result = imageSearcher.longSearch(searchedValue, myDepoData);
+            //Imposta l'immagine in base alla stringa risultante dalla ricerca
             setImage(result);
         }
+        //Funzione per la ricerca della temperatura
         private string searchTemperature(long searchedValue, MyDepoData myDepoData)
         {
             string temperature;
@@ -169,14 +176,16 @@ namespace DataSetBuilder.controller
             }
             else
             {
+                //Nel caso la lista controllata non contiene alcun elemento, la stringa della temperatura viene impostata su "No value"
                 temperature = "No value";
             }
             return temperature;
         }
-
+        //Funzione per la ricerca dei dati nel file CN --> ritorna un'istanza della classe CncResult che contiene le liste con le grandezze misurate e quella con i rispettivi valori misurati
         private CncResult searchCncDatas(long searchedValue, MyDepoData myDepoData)
         {
             CncResult cncResult = new CncResult();
+            //Verifica della presenza di elementi nella lista dei file CN (una lista di liste di stringhe)
             if (myDepoData.getCNList().Any())
             {
                 //TODO: sostituire non appena si esegue il refactoring del problema I/O
@@ -191,14 +200,17 @@ namespace DataSetBuilder.controller
                     //measureString = File.ReadAllLines(myDepoData.getCNCFileDirectory() + @"\" + myDepoData.getCNList()[0]).Cast<string>().ToList().ElementAt(0);
                     measureString = myDepoData.getCNList().ElementAt(0).ElementAt(0);
                 }
+                //La funzione imposta la lista delle grandezze di misura estrapolate dalla prima riga del file del CN
                 cncResult.settingMeasure(measureString);
+                //Si ricerca la stringa che si riferisce al valore passato come parametro
                 string stringCncResult = cncSearcher.cncSearch(searchedValue, myDepoData);
-                
+                //La funzione imposta la lista dei valori misurati estrapolati dalla stringa risultante della ricerca
                 cncResult.settingValues(stringCncResult);
                 
             }
             else
             {
+                //Nel caso la lista dei file del CN fosse vuota si impostano delle grandezze e dei valori su "No values"
                 cncResult.getMeasures().Add("No Cnc File");
                 cncResult.getValues().Add("No values");
             }
@@ -207,32 +219,36 @@ namespace DataSetBuilder.controller
 
 
 
-        //Clear and populate the stackpanel with temperature, laseron TODO, powerfeedback TODO datas
+        //Pulisce e popola la lista dei dati ricavati dalla ricerca dei valori
         private void updateDatas(string temperature, CncResult cncResult)
         {
-            //Clear the stackPanel from the actual values
+            //Pulisce gli attuali valori della lista
             datasStackPanel.Children.Clear();
 
-            //Labels to append to the clean stackPanel
+            //Etichette da aggiungere alla lista pulita
             Label Temperature = new Label();
-
+            //Si imposta il testo dell'etichetta, sia esso il valore della temperatura sia esso "No value"
             Temperature.Content = "Temperature:\t" + temperature;
-
+            //Aggiunge l'etichetta alla lista
             datasStackPanel.Children.Add(Temperature);
 
-            //Si cicla le liste di cncResult
+            //Liste locali dei risultati della ricerca sul CN
             List<String> measures = cncResult.getMeasures();
             List<String> values = cncResult.getValues();
-
+            
+            //Si cicla sulle liste e per ogni grandezza si crea un'etichetta con testo il nome della grandezza e il valore misurato
             for(int i = 0; i < measures.Count; i++)
             {
+                //Si crea una nuova etichetta
                 Label label = new Label();
+                //Testo dell'etichetta
                 label.Content = measures[i] + ":\t" + values[i];
+                //Si aggiunge l'etichetta alla lista
                 datasStackPanel.Children.Add(label);
             }
         }
 
-        //Extract the temperature value from his line (string)
+        //Si estrae la temperatura dalla stringa passata come parametro
         private string extractTemp(string pyroResult)
         {
             string temp = pyroResult;
@@ -243,13 +259,15 @@ namespace DataSetBuilder.controller
             temp = temp.Substring(start + "\t".Length);
             return temp;
         }
-
+        //Imposta la variabile del percorso della deposizione in base alla stringa passata come parametro
         public void setDepoPath(String path)
         {
             this.depoPath = path;
         }
+        //Imposta la variabile del percorso dei dati in base alla stringa passata come parametro
         public void setDataPath(String path)
         {
+            //La stringa del percorso si basa sul percorso di base e su quello della deposizione
             this.dataPath = basePath + @"\" + depoPath + @"\" + path;
         }
 
