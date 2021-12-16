@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace DataSetBuilder.model
 {
-    class MyDepoData
+    public class MyDepoData
     {
         
         private List<String> images;

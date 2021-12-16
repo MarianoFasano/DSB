@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataSetBuilder.controller;
+using DataSetBuilder.model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,9 +27,13 @@ namespace DataSetBuilder.user_controls
     */
     public partial class DepoItemBody : UserControl
     {
-        public DepoItemBody()
+        //Istanza necessaria per chiamare la funzione di ricerca, essa è passata nel costruttore della classe DepoItemBody
+        private DepoTabControlController depoTabControlController;
+        public DepoItemBody(DepoTabControlController depoTabControlController)
         {
             InitializeComponent();
+            //Assegnazione dell'istanza depotabcontrolController passata come parametro
+            this.depoTabControlController = depoTabControlController;
         }
 
         //Evento collegato al click del bottone "<<" (indietro)
@@ -49,6 +55,20 @@ namespace DataSetBuilder.user_controls
             {
                 FileBrowser.GoForward();
             }
+        }
+
+        //Evento collegato al cursore dello slider, che richiama una funzione della classe DepoTabControlController
+        private void ExtendMsSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            //Variabile locale che ottiene il valore dallo slider --> cast a long poiché i valori predefiniti dello slider sono double
+            long searchedValue = (long)ExtendMsSlider.Value;
+            //Variabile locale che ottiene il nome della deposizione, utile per richiamare l'istanza MyDepoData da passare alla funzione di ricerca
+            String depositionName = this.depoTabControlController.getDepoName();
+            //Variabile locale che ottiene l'istanza myDepoData di riferimento
+            MyDepoData myDepoData = this.depoTabControlController.getDepoDatas()[depositionName];
+
+            //Ricerca del valore tramite l'istanza depoTabControlController
+            this.depoTabControlController.msResearch(searchedValue, myDepoData);
         }
     }
 }

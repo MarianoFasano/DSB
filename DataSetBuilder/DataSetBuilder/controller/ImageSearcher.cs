@@ -56,9 +56,9 @@ namespace DataSetBuilder.controller
                 if (LRCounter > 100)
                 {
                     resetLRCount();
-                    return binarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
+                    return longBinarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
                 }
-                return binarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
+                return longBinarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
             }
 
             int middle = (left + right) / 2;
@@ -93,76 +93,10 @@ namespace DataSetBuilder.controller
                 return longBinarySearch(imagesList, searchedMs, middle + 1, right);
             }
         }
-        internal string shortSearcher(long searchedValue, MyDepoData myDepoData)
-        {
-            return binarySearch(searchedValue, myDepoData.getImages());
-        }
-        private String binarySearch(long searchedMs, List<string> imagesList)
-        {
-            //ALGO IMPLEMENTETION, TWO WAYS
-            resetCounter();
-            resetLRCount();
-            offset = -1;
-            return binarySearch(imagesList, searchedMs, 0, imagesList.Count - 1);
 
-        }
-
-        private string binarySearch(List<string> imagesList, long searchedMs, int left, int right)
-        {
-            count++;
-            if (left > right)
-            {
-                //Do nothing!
-                resetCounter();
-                if (LRCounter > 100)
-                {
-                    resetLRCount();
-                    return binarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
-                }
-                return binarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
-            }
-
-            int middle = (left + right) / 2;
-            string originalElement = imagesList[middle];
-            string minimum = imagesList[0];
-            string extractElement = extractMs(originalElement);
-
-            minimum = extractMs(minimum);
-
-            //extractElement = extractDifferentDigit(extractElement, minimum);
-            //string min = extractDifferentDigit(minimum, extractElement);
-
-            //MessageBox.Show(searchedMs.ToString(), "binarysearch_elemento_cercato");
-            //MessageBox.Show(extractElement, "binarysearch_elemento_analizzato");
-            //MessageBox.Show(min, "binarysearch_elemento_minimo");
-
-            if (searchedMs < 0)
-            {
-                offset = 1;
-                resetCounter();
-                return binarySearch(imagesList, searchedMs + offset, 0, imagesList.Count() - 1);
-            }
-
-            if (count > bigO)
-            {
-                resetCounter();
-                return binarySearch(imagesList, searchedMs + offset, 0, imagesList.Count - 1);
-            }
-
-            if ((long.Parse(extractElement)-long.Parse(minimum)) == (searchedMs-long.Parse(minimum)))
-            {
-                return originalElement;
-            }
-            else if ((long.Parse(extractElement) - long.Parse(minimum)) > (searchedMs - long.Parse(minimum)))
-            {
-                return binarySearch(imagesList, searchedMs, left, middle - 1);
-            }
-            else
-            {
-                return binarySearch(imagesList, searchedMs, middle + 1, right);
-            }
-        }
-
+/*
+ *      Obsoleta, la funzionalità estraeva i ms significativi
+ * 
         private string extractDifferentDigit(String min, String max)
         {
             String minString = min;
@@ -181,6 +115,6 @@ namespace DataSetBuilder.controller
             }
             return minString;
         }
-
+*/
     }
 }

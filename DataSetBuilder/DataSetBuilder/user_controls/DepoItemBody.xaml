@@ -31,8 +31,9 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label x:Name="ExtendMinMs" Margin="2"></Label>
                 <TextBox x:Name="ExtendActualMs" Text="{Binding ElementName=ExtendMsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" Margin="2" IsReadOnly="True"/>
-                <Slider x:Name="ExtendMsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"></Slider>
+                <Slider x:Name="ExtendMsSlider" Width="115" Margin="2" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" Thumb.DragCompleted="ExtendMsSlider_DragCompleted"></Slider>
                 <Label x:Name="ExtendMaxMs" Margin="2"></Label>
             </StackPanel>
             <Image x:Name="DepoImage"/>
@@ -51,7 +52,7 @@
                 </StackPanel>
                 <StackPanel>
                     <Button x:Name="Next" Click="Next_Click" Content=">>"></Button>
-                </StackPanel>                
+                </StackPanel>
             </StackPanel>
             <WebBrowser x:Name="FileBrowser">
             </WebBrowser>

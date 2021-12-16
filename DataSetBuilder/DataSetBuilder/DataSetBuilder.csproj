@@ -93,6 +93,7 @@
     <Compile Include="model\MyDepoData.cs" />
     <Compile Include="model\MyExpTabControlModel.cs" />
     <Compile Include="model\MyExpTabItemModel.cs" />
+    <Compile Include="model\PyroResult.cs" />
     <Compile Include="user_controls\DepoItemBody.xaml.cs">
       <DependentUpon>DepoItemBody.xaml</DependentUpon>
     </Compile>

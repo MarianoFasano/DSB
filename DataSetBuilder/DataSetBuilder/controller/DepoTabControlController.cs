@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 
 namespace DataSetBuilder.controller
 {
-    class DepoTabControlController
+    public class DepoTabControlController
     {
         /*Object from graphical interface*/
         //Generali
@@ -29,6 +29,7 @@ namespace DataSetBuilder.controller
 
         //Versione estesa dei ms
         private TextBox extActualMs;            //campo di testo con i ms attuali
+        private Label extMinMs;                 //etichetta co i ms minimi (ms della prima immagine)
         private Label extMaxMs;                 //etichetta con i ms totali (ms dell'ultima immagine)
         private Slider extSliderMs;             //slider dei ms
 
@@ -93,15 +94,6 @@ namespace DataSetBuilder.controller
             this.prevButton.Click += PrevButton_Click;                      //Evento sul bottone per l'immagine precedente
             this.nextButton.Click += NextButton_Click;                      //Evento sul bottone per l'immagine successiva                
             this.searchMs.KeyDown += SearchMs_KeyDown;                      //Evento sulla pressione del tasto enter
-            this.extSliderMs.ValueChanged += ExtSliderMs_ValueChanged;
-        }
-        //TODO: evento dello slider, ancora da fare, non funzionante
-        private void ExtSliderMs_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {/*
-            MyDepoData myDepoData = depoDatas[getDepoName()];
-            long searchedValue = long.Parse(this.extActualMs.Text);
-            msResearch(searchedValue, myDepoData);
-            */
         }
 
         //Evento che avviene quando si schiaccia "enter" --> fa partire la ricerca del valore passato al box di ricerca
@@ -143,16 +135,16 @@ namespace DataSetBuilder.controller
             }
         }
         //Funzione di ricerca --> all'interno si ricerca immagine, temperatura e altri dati
-        private void msResearch(long searchedValue, MyDepoData myDepoData)
+        public void msResearch(long searchedValue, MyDepoData myDepoData)
         {
             //TODO: Ricerca l'immagine --> pare non andare
             searchImage(searchedValue, myDepoData);
             //Ricerca della temperatura --> file pirometro
-            string temperature = searchTemperature(searchedValue, myDepoData);
+            PyroResult pyroResult = searchTemperature(searchedValue, myDepoData);
             //Ricerca dei dati misurati e riportati nel CN --> file CN
             CncResult cncResult = searchCncDatas(searchedValue, myDepoData);        
             //Funzione che popola la colonna dei dati nell'interfaccia utente
-            updateDatas(temperature, cncResult);
+            updateDatas(pyroResult, cncResult);
         }
         //Funzione per la ricerca/settaggio dell'immagine --> parametri: valore cercato, istanza contenente i vari dati/riferimenti
         private void searchImage(long searchedValue, MyDepoData myDepoData)
@@ -163,23 +155,23 @@ namespace DataSetBuilder.controller
             setImage(result);
         }
         //Funzione per la ricerca della temperatura
-        private string searchTemperature(long searchedValue, MyDepoData myDepoData)
+        private PyroResult searchTemperature(long searchedValue, MyDepoData myDepoData)
         {
-            string temperature;
+            PyroResult pyroResult;
             //Se la lista di file relativa al pirometro contiene elementi, si ricerca e si estrae la temperatura
             if (myDepoData.getPyrometerList().Any())
             {
                 //Si ricava la riga del file in corrispondenza dei ms passati
-                string pyroResult = pyrometerSearcher.pyroSearch(searchedValue, myDepoData);
+                string pyroString = pyrometerSearcher.pyroSearch(searchedValue, myDepoData);
                 //Si estrae la temperatura dalla riga
-                temperature = extractTemp(pyroResult);
+                pyroResult = new PyroResult(pyroString);
             }
             else
             {
                 //Nel caso la lista controllata non contiene alcun elemento, la stringa della temperatura viene impostata su "No value"
-                temperature = "No value";
+                pyroResult = new PyroResult("No value");
             }
-            return temperature;
+            return pyroResult;
         }
         //Funzione per la ricerca dei dati nel file CN --> ritorna un'istanza della classe CncResult che contiene le liste con le grandezze misurate e quella con i rispettivi valori misurati
         private CncResult searchCncDatas(long searchedValue, MyDepoData myDepoData)
@@ -220,17 +212,25 @@ namespace DataSetBuilder.controller
 
 
         //Pulisce e popola la lista dei dati ricavati dalla ricerca dei valori
-        private void updateDatas(string temperature, CncResult cncResult)
+        private void updateDatas(PyroResult pyroResult, CncResult cncResult)
         {
             //Pulisce gli attuali valori della lista
             datasStackPanel.Children.Clear();
 
             //Etichette da aggiungere alla lista pulita
+            Label Ms = new Label();
             Label Temperature = new Label();
+            //Si imposta il testo dell'etichetta, sia esso il valore dei millisecondi sia esso "No value"
+            Ms.Content = "Ms:\t" + pyroResult.getTime();
             //Si imposta il testo dell'etichetta, sia esso il valore della temperatura sia esso "No value"
-            Temperature.Content = "Temperature:\t" + temperature;
-            //Aggiunge l'etichetta alla lista
+            Temperature.Content = "Temperature:\t" + pyroResult.getTemperature();
+            //Aggiunge le etichette alla lista
+            datasStackPanel.Children.Add(Ms);
             datasStackPanel.Children.Add(Temperature);
+
+            //Aggiunge un separatore alla lista
+            Separator separator = new Separator();
+            datasStackPanel.Children.Add(separator);
 
             //Liste locali dei risultati della ricerca sul CN
             List<String> measures = cncResult.getMeasures();
@@ -248,17 +248,6 @@ namespace DataSetBuilder.controller
             }
         }
 
-        //Si estrae la temperatura dalla stringa passata come parametro
-        private string extractTemp(string pyroResult)
-        {
-            string temp = pyroResult;
-            int start = temp.IndexOf("Read:.\t") + "Read:.\t".Length;
-            temp = temp.Substring(start);
-            string local = temp.Substring(0, temp.IndexOf("\t"));
-            start = temp.IndexOf(local) + local.Length;
-            temp = temp.Substring(start + "\t".Length);
-            return temp;
-        }
         //Imposta la variabile del percorso della deposizione in base alla stringa passata come parametro
         public void setDepoPath(String path)
         {
@@ -302,7 +291,7 @@ namespace DataSetBuilder.controller
 
             TabItem tabItem = new TabItem();
             tabItem.Header = (string)listViewItem.Content;
-            DepoItemBody depoItemBody = new DepoItemBody();
+            DepoItemBody depoItemBody = new DepoItemBody(this);
             depoItemBody.FileBrowser.Source = new Uri(basePath + @"\" + depoPath + @"\" + (string)listViewItem.Content);
             tabItem.Content = depoItemBody;
             tabControl.Items.Add(tabItem);
@@ -337,9 +326,9 @@ namespace DataSetBuilder.controller
             //Extract actual and max ms
             initMsLabels(myDepoData);
 
-            string temperature = searchTemperature(long.Parse(this.extActualMs.Text), myDepoData);
+            PyroResult pyroResult = searchTemperature(long.Parse(this.extActualMs.Text), myDepoData);
             CncResult cncResult = searchCncDatas(long.Parse(this.extActualMs.Text), myDepoData);
-            updateDatas(temperature, cncResult);
+            updateDatas(pyroResult, cncResult);
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -364,9 +353,9 @@ namespace DataSetBuilder.controller
             }
             setMsLabels(myDepoData);
             long actualMs = long.Parse(this.extActualMs.Text);
-            string temperature = searchTemperature(actualMs, myDepoData);
+            PyroResult pyroResult = searchTemperature(actualMs, myDepoData);
             CncResult cncResult = searchCncDatas(actualMs, myDepoData);
-            updateDatas(temperature, cncResult);
+            updateDatas(pyroResult, cncResult);
 
         }
 
@@ -398,9 +387,9 @@ namespace DataSetBuilder.controller
 
             setMsLabels(myDepoData);
             long actualMs = long.Parse(this.extActualMs.Text);
-            string temperature = searchTemperature(actualMs, myDepoData);
+            PyroResult pyroResult = searchTemperature(actualMs, myDepoData);
             CncResult cncResult = searchCncDatas(actualMs, myDepoData);
-            updateDatas(temperature, cncResult);
+            updateDatas(pyroResult, cncResult);
 
         }
 
@@ -408,21 +397,28 @@ namespace DataSetBuilder.controller
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
             BitmapImage bitmapImage;
+            myDepoData.setActualImage(myDepoData.getImages().IndexOf(filename));
+
             if (myDepoData.checkOldVersion())
             {
-                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                String imageName = myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
+                String imagePath = dataPath + @"\" + imageName;
+                bitmapImage = new BitmapImage(new Uri(imagePath, UriKind.RelativeOrAbsolute));
                 this.depoImage.Source = bitmapImage;
             }
             else
             {
-                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                String imageName = myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
+                String directoryName = myDepoData.getImageDirectory();
+                String imagePath = dataPath + @"\" + directoryName + imageName;
+                bitmapImage = new BitmapImage(new Uri(imagePath, UriKind.RelativeOrAbsolute));
                 this.depoImage.Source = bitmapImage;
             }
-            myDepoData.setActualImage(myDepoData.getImages().IndexOf(filename));
+            
             setMsLabels(myDepoData);
         }
 
-        private String getDepoName()
+        public String getDepoName()
         {
             String removeString = basePath + @"\" + depoPath + @"\";
             int index = dataPath.IndexOf(removeString);
@@ -435,6 +431,11 @@ namespace DataSetBuilder.controller
             int index = depoPath.IndexOf(removeString);
             string cleanPath = (index < 0) ? depoPath : depoPath.Remove(index, removeString.Length);
             return cleanPath;
+        }
+        //Getter del dizionario delle myDepoData
+        public IDictionary<String, MyDepoData> getDepoDatas()
+        {
+            return this.depoDatas;
         }
 
         //Assign the correct buttons to the controller and re-init the button actions
@@ -452,6 +453,7 @@ namespace DataSetBuilder.controller
             this.searchMs = depoItemBody.SearchMs;
             //Extendend version of ms
             this.extActualMs = depoItemBody.ExtendActualMs;
+            this.extMinMs = depoItemBody.ExtendMinMs;
             this.extMaxMs = depoItemBody.ExtendMaxMs;
             this.extSliderMs = depoItemBody.ExtendMsSlider;
         }
@@ -514,7 +516,9 @@ namespace DataSetBuilder.controller
             long max = long.Parse(maxString);
             long actual = long.Parse(extractMs(actualMs));
             long min = long.Parse(minString);
-
+/*
+ *          Obsoleta, la funzionalità estraeva i ms significativi
+ * 
             var maxArray = maxString.ToArray();
             var minArray = minString.ToArray();
 
@@ -526,11 +530,12 @@ namespace DataSetBuilder.controller
                     break;
                 }
             }
-
-            this.extMaxMs.Content = maxString;
-            this.extActualMs.Text = actual.ToString();
-            this.extSliderMs.Maximum = long.Parse(maxString);
-            this.extSliderMs.Minimum = min;
+*/
+            this.extMaxMs.Content = maxString;                                              //settaggio del testo dell'etichetta extMaxMs con la stringa dei ms massimi estratti dall'ultima immagine
+            this.extMinMs.Content = minString;                                              //settaggio del testo dell'etichetta extMinMs con la stringa dei ms minimi estratti dalla prima immagine
+            this.extActualMs.Text = actual.ToString();                                      //settaggio del testo dell'etichetta extActualMs con la stringa dei ms attuali estratti dall'attuale immagine
+            this.extSliderMs.Maximum = long.Parse(maxString);                               //settaggio del valore massimo dello slider con la stringa dei ms massimi estratti dall'ultima immagine "castati" come long              
+            this.extSliderMs.Minimum = min;                                                 //settaggio del valore minimo dello slider con la stringa dei ms minimi estratti dalla prima immagine "castati" come long
         }
 
         private string extractMs(string msString)

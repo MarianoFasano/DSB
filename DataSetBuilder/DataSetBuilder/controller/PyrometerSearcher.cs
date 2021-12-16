@@ -140,6 +140,18 @@ namespace DataSetBuilder.controller
             this.LRCounter = 0;
         }
 
+        //Si estrae la temperatura dalla stringa passata come parametro
+        private string extractTemp(string pyroResult)
+        {
+            string temp = pyroResult;
+            int start = temp.IndexOf("Read:.\t") + "Read:.\t".Length;
+            temp = temp.Substring(start);
+            string local = temp.Substring(0, temp.IndexOf("\t"));
+            start = temp.IndexOf(local) + local.Length;
+            temp = temp.Substring(start + "\t".Length);
+            return temp;
+        }
+
         //TODO: La funzione toglie gli elementi non utili durante la ricerca --> al momento hard-coded
         //APPUNTO: Eventualmente creare una copia del parametro
         private List<string> extractFromPyroList(List<string> original)
