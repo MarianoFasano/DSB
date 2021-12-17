@@ -44,3 +44,5 @@ C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSe
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoTabItem.baml
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.baml
 C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\TabsBody.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\CloseableHeader.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\CloseableHeader.baml

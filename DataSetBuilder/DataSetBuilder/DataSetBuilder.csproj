@@ -57,6 +57,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="user_controls\CloseableHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="user_controls\DepoItemBody.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -89,11 +93,15 @@
     <Compile Include="controller\MyExpTabControlController.cs" />
     <Compile Include="controller\PyrometerSearcher.cs" />
     <Compile Include="factories\MyExpTabItemFactory.cs" />
+    <Compile Include="model\CloseableTab.cs" />
     <Compile Include="model\CncResult.cs" />
     <Compile Include="model\MyDepoData.cs" />
     <Compile Include="model\MyExpTabControlModel.cs" />
     <Compile Include="model\MyExpTabItemModel.cs" />
     <Compile Include="model\PyroResult.cs" />
+    <Compile Include="user_controls\CloseableHeader.xaml.cs">
+      <DependentUpon>CloseableHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="user_controls\DepoItemBody.xaml.cs">
       <DependentUpon>DepoItemBody.xaml</DependentUpon>
     </Compile>

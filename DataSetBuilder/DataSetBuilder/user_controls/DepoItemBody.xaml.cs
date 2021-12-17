@@ -66,9 +66,9 @@ namespace DataSetBuilder.user_controls
             String depositionName = this.depoTabControlController.getDepoName();
             //Variabile locale che ottiene l'istanza myDepoData di riferimento
             MyDepoData myDepoData = this.depoTabControlController.getDepoDatas()[depositionName];
-
             //Ricerca del valore tramite l'istanza depoTabControlController
             this.depoTabControlController.msResearch(searchedValue, myDepoData);
         }
+
     }
 }

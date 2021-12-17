@@ -51,7 +51,7 @@ namespace DataSetBuilder.controller
         {
             //Inizializzazione della struttura (user control) da aggiungere al tabItem dell'esperimento
             ExpItem expItem = new ExpItem();
-            TabItem tabItem = myExpTabItemFactory.GetTabItem(listViewItem, expItem.DepositionViewer);
+            CloseableTab tabItem = myExpTabItemFactory.GetTabItem(listViewItem, expItem.DepositionViewer);
 
             //Controllo di aggiunta del TabItem, prosegue se non esiste ancora
             if (addItem(listViewItem, tabItem))
@@ -65,7 +65,7 @@ namespace DataSetBuilder.controller
                 //L'istanza della DepoTabItem viene aggiunta alla griglia della struttura della tabItem dell'esperimento, secondo le impostazioni sopra effettuate
                 expItem.ExpGrid.Children.Add(depodataTabItem);
                 //All'intestazione della tab si assegna il contenuto della listViewItem (il nome dell'esperimento)
-                tabItem.Header = listViewItem.Content;
+                tabItem.Title = (string)listViewItem.Content;
                 //Alla tabItem si assegna la struttura ExpItem
                 tabItem.Content = expItem;
                 //Al TabsControl si aggiunge l'item
@@ -88,18 +88,24 @@ namespace DataSetBuilder.controller
         {
             if (e.Source is TabControl)
             {
-                TabItem tabItem = (TabItem)mainTabControl.SelectedItem;
-                //Mandatory check to avoid tabItem=null happened on drag&drop the tabItem
-                //Controllo obbligatorio per evitare che il drag&drop della tab produca un tabItem con riferimento null (ACCADEVA!)
-                if(tabItem != null)
+                //Controllo dell'istanza, se si tratta di un CloseableTab allora si esegue il cast
+                if (mainTabControl.SelectedItem is CloseableTab)
                 {
-                    //Mandatory to open the deposition in the correct tabControl
-                    //Necessario affinché la deposizione sia aperta nel corretto TabControl
-                    String header = (string)tabItem.Header;
-                    if (header != null)
+                    CloseableTab tabItem = (CloseableTab)mainTabControl.SelectedItem;
+                    //Mandatory check to avoid tabItem=null happened on drag&drop the tabItem
+                    //Controllo obbligatorio per evitare che il drag&drop della tab produca un tabItem con riferimento null (ACCADEVA!)
+                    if (tabItem != null)
                     {
-                        depoTabControlController.setDepoPath((string)tabItem.Header);
-                        depoTabControlController.setActualTabControl((string)tabItem.Header);
+                        //Mandatory to open the deposition in the correct tabControl
+                        //Necessario affinché la deposizione sia aperta nel corretto TabControl
+                        String header = (string)tabItem.Title;
+                        if (header != null)
+                        {
+                            //depoTabControlController.setDepoPath((string)tabItem.Header);
+                            //depoTabControlController.setActualTabControl((string)tabItem.Header);
+                            depoTabControlController.setDepoPath(header);
+                            depoTabControlController.setActualTabControl(header);
+                        }
                     }
                 }
             }

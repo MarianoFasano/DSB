@@ -1,4 +1,5 @@
 ﻿using DataSetBuilder.controller;
+using DataSetBuilder.model;
 using DataSetBuilder.user_controls;
 using System;
 using System.IO;
@@ -18,9 +19,9 @@ namespace DataSetBuilder.factories
             this.basePath = basePath;
         }
 
-        public TabItem GetTabItem(ListViewItem listViewItem, ListBox listBox)
+        public CloseableTab GetTabItem(ListViewItem listViewItem, ListBox listBox)
         {
-            TabItem tabItem = new TabItem { Header = listViewItem.Content };
+            CloseableTab tabItem = new CloseableTab { Title = (string)listViewItem.Content };
             listBox = initDepoList((string)listViewItem.Content, listBox);
             return tabItem;
         }
