@@ -26,8 +26,8 @@ namespace DataSetBuilder.view
         DSB_Controller dsb_controller;
 
         //TODO PATH:Percorso della cartella contenente gli esperimenti, anch'essi sono delle cartelle
-        //string expPath = @"J:\DTI\_DSB";    //fisso Mariano
-        string expPath = @"D:\_DSB";      //portatile Mariano
+        string expPath = @"J:\DTI\_DSB";    //fisso Mariano
+        //string expPath = @"D:\_DSB";      //portatile Mariano
 
         //Dichiarazione della classe TabsBody, la classe di riferimento del file xaml con il medesimo nome
         private TabsBody tabBody;

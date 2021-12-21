@@ -70,18 +70,23 @@ namespace DataSetBuilder.controller
         {
             if (e.Source is TabControl)
             {
-                TabItem tabItem = (TabItem)actualTabControl.SelectedItem;
-                //Mandatory check to avoid tabItem=null happened on drag&drop the tabItem
-                if (tabItem != null && (string)tabItem.Header != null)
-                {
-                    //Si richiama la depoItemBody di riferimento dalla struttura dati per l'esperimento selezionato
-                    DepoItemBody depoItemBody = this.depoStructures[(string)tabItem.Header];
-                    //Verifica che essa non sia null
-                    if (depoItemBody != null)
+                if (actualTabControl.SelectedItem is CloseableTab)
+                {           
+                    CloseableTab tabItem = (CloseableTab)actualTabControl.SelectedItem;
+                    String header = (string)tabItem.Title;
+
+                    //Mandatory check to avoid tabItem=null happened on drag&drop the tabItem
+                    if (tabItem != null && header != null)
                     {
-                        //Si assegnano i relativi controlli (bottoni, slider, ecc...) e il percorso dell'esperimento nel file system
-                        assignIControl(depoItemBody);
-                        setDataPath((string)tabItem.Header);
+                        //Si richiama la depoItemBody di riferimento dalla struttura dati per l'esperimento selezionato
+                        DepoItemBody depoItemBody = this.depoStructures[header];
+                        //Verifica che essa non sia null
+                        if (depoItemBody != null)
+                        {
+                            //Si assegnano i relativi controlli (bottoni, slider, ecc...) e il percorso dell'esperimento nel file system
+                            assignIControl(depoItemBody);
+                            setDataPath(header);
+                        }
                     }
                 }
             }
@@ -289,8 +294,8 @@ namespace DataSetBuilder.controller
         {
             TabControl tabControl = myExpTabItemModel.getTabControl(getExpName());
 
-            TabItem tabItem = new TabItem();
-            tabItem.Header = (string)listViewItem.Content;
+            CloseableTab tabItem = new CloseableTab();
+            tabItem.Title = (string)listViewItem.Content;
             DepoItemBody depoItemBody = new DepoItemBody(this);
             depoItemBody.FileBrowser.Source = new Uri(basePath + @"\" + depoPath + @"\" + (string)listViewItem.Content);
             tabItem.Content = depoItemBody;
