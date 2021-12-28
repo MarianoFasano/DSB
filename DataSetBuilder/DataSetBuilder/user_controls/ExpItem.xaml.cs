@@ -25,9 +25,22 @@ namespace DataSetBuilder.user_controls
     */
     public partial class ExpItem : UserControl
     {
+        //Variabile legata al TabControl delle deposizioni
+        private DepoTabItem depoTabItem;
+
         public ExpItem()
         {
             InitializeComponent();
+        }
+        //Settare la variabile DepoTabItem
+        public void setDepoTabControl(DepoTabItem depoTabItem)
+        {
+            this.depoTabItem = depoTabItem;
+        }
+        //Torna il valore della depoTabItem
+        public DepoTabItem getDepoTabItem()
+        {
+            return this.depoTabItem;
         }
 
         //TODO: Evento legato al menu item del commento

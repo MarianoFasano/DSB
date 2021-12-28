@@ -468,6 +468,26 @@ namespace DataSetBuilder.controller
         {
             this.actualTabControl = this.myExpTabItemModel.getTabControl(key);
             this.actualTabControl.SelectionChanged += TabControl_SelectionChanged;
+
+            if (actualTabControl.SelectedItem is CloseableTab)
+            {
+                CloseableTab tabItem = (CloseableTab)actualTabControl.SelectedItem;
+                String header = (string)tabItem.Title;
+
+                //Mandatory check to avoid tabItem=null happened on drag&drop the tabItem
+                if (tabItem != null && header != null)
+                {
+                    //Si richiama la depoItemBody di riferimento dalla struttura dati per l'esperimento selezionato
+                    DepoItemBody depoItemBody = this.depoStructures[header];
+                    //Verifica che essa non sia null
+                    if (depoItemBody != null)
+                    {
+                        //Si assegnano i relativi controlli (bottoni, slider, ecc...) e il percorso dell'esperimento nel file system
+                        assignIControl(depoItemBody);
+                        setDataPath(header);
+                    }
+                }
+            }
         }
 
         //responsabilità del controller o del mydepodata? --> spostare in mydepodata
