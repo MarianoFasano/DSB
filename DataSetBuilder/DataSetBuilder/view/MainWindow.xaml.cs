@@ -1,10 +1,15 @@
 ﻿using DataSetBuilder.user_controls;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml;
 
 namespace DataSetBuilder.view
@@ -32,6 +37,9 @@ namespace DataSetBuilder.view
 
         //Dichiarazione della classe TabsBody, la classe di riferimento del file xaml con il medesimo nome
         private TabsBody tabBody;
+
+        //Domanda cambiamento immagine
+        string questionDialog = "Desideri cambiare immagine di \"Provino\"?";
 
         //Costruttore della MainWindow, nel quale sono inizializzati i componenti della finestra e altre classi e funzioni necessarie
         public MainWindow()
@@ -67,9 +75,16 @@ namespace DataSetBuilder.view
         {
             ListViewItem listViewItem = sender as ListViewItem;
 
-            //String fileName = "D:\\_DSB\\Experiment_2021_9_14__11_13_42\\Experiment_2021_9_14__11_13_42.txt";
+            String fileName = @"J:\DTI\Experiments_Lite\Experiment_2021_09_14__11_13_42\Experiment_2021_9_14__11_13_42.txt";
             //TODO: gestire eccezione di file non trovato --> Si scrive nel textbox il contenuto di testo del file txt, letto dalla funzione File.ReadAllText
-            //ExpComment.Text = File.ReadAllText(fileName);
+
+            Paragraph paragraph = new Paragraph();
+            paragraph.Inlines.Add(System.IO.File.ReadAllText(fileName));
+            FlowDocument document = new FlowDocument(paragraph);
+            ExpDetails.Height = this.ActualHeight / 2;
+            Provino.Height = ExpDetails.ActualHeight / 2;
+            ExpComment.Height = ExpDetails.ActualHeight / 2;
+            ExpComment.Document = document;
 
 
         }
@@ -101,9 +116,101 @@ namespace DataSetBuilder.view
         private void ViewExpCommentMenu_Click(object sender, RoutedEventArgs e)
         {
             //TODO: dopo aver commentato il dsb_controller
-            ExpComment.Visibility = dsb_controller.viewComment(ExpComment);
-            ViewCommentMenu.Header = dsb_controller.commentText(ExpComment);
+            ExpDetails.Visibility = dsb_controller.viewComment(ExpDetails);
+            ViewCommentMenu.Header = dsb_controller.commentText(ExpDetails);
         }
+        //Funzione di drag&drop per l'immagine
+        private void Provino_Drop(object sender, DragEventArgs e)
+        {
+            string[] files = null;
 
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                //Le stringhe salvate sono il percorso del file rilasciato sulla finestra
+                files = (string[])e.Data.GetData(DataFormats.FileDrop, true);
+
+                //Siccome qualsiasi file può essere "droppato", la condizione verifica che:
+                // - la lista non sia vuota
+                // - la lista contenga un'immagine tramite la verifica dell'estensione
+                if (files.Length>0 && isImage(files[0]))
+                {
+                    System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show(questionDialog, "Immagine \"Provino\"", MessageBoxButton.YesNo);
+                    if(dialogResult == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        //Si assegna l'immagine
+                        BitmapImage tmpImage = new BitmapImage((new Uri(files[0])));
+                        Provino.Source = tmpImage;
+                    }
+                    else if (dialogResult == System.Windows.Forms.DialogResult.No)
+                    {
+                        //Do Nothing
+                    }
+                }                
+            }
+        }
+        //TODO: capire esattamente perché sia qui questa funzione
+        private void Provino_DragEnter(object sender, DragEventArgs e)
+        {
+            {
+                if (e.Data.GetDataPresent(DataFormats.Bitmap))
+                    e.Effects = DragDropEffects.Copy;
+                else
+                    e.Effects = DragDropEffects.None;
+            }
+        }
+        //Funzione di verifica dell'estensione del file
+        private bool isImage(String filename)
+        {
+            if (Path.GetExtension(filename).Equals(".jpg") || Path.GetExtension(filename).Equals(".bmp") || Path.GetExtension(filename).Equals(".png"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        //Evento legato al click dell'apertura della directory degli esperimenti
+        private void ExpsDir_Click(object sender, RoutedEventArgs e)
+        {
+            string path = expPath;
+            openFolder(path);
+        }
+        //Evento legato al click dell'apertura della directory dell'esperimento selezionato
+        private void ExpDir_Click(object sender, RoutedEventArgs e)
+        {
+            string path;
+            ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;    //Si recupare l'item selezionato
+            
+            //Verifica che sia effettivamente selezionato un item della lista
+            //Se così non fosse si apre la directory degli esperimenti
+            if(listViewItem != null)
+            {
+                string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
+                path = expPath + @"\" + itemName;
+            }
+            else
+            {
+                path = expPath;
+            }
+            openFolder(path);
+        }
+        //Funzione che apre in Windows il file explorer con il percorso passato come stringa
+        private void openFolder(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    Arguments = path,
+                    FileName = "explorer.exe"
+                };
+                Process.Start(startInfo);
+            }
+            else
+            {
+                MessageBox.Show(string.Format("{0} La directory non esiste!", path));
+            }
+        }
     }
 }

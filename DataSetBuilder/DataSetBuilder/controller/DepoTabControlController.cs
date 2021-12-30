@@ -469,6 +469,7 @@ namespace DataSetBuilder.controller
             this.actualTabControl = this.myExpTabItemModel.getTabControl(key);
             this.actualTabControl.SelectionChanged += TabControl_SelectionChanged;
 
+            //Richiama il TabItem selezionato
             if (actualTabControl.SelectedItem is CloseableTab)
             {
                 CloseableTab tabItem = (CloseableTab)actualTabControl.SelectedItem;

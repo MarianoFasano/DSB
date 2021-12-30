@@ -71,11 +71,11 @@ namespace DataSetBuilder
         {
             if (ExpCommentBox.Visibility.Equals(System.Windows.Visibility.Collapsed))
             {
-                return "Vedi Commento";
+                return "Vedi dettagli";
             }
             else
             {
-                return "Nascondi Commento";
+                return "Dettagli";
             }
         }
 
