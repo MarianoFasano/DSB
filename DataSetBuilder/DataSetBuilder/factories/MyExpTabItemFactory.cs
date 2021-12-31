@@ -30,7 +30,6 @@ namespace DataSetBuilder.factories
         {
             ListBox depoList = listBox;
             string depoPath = basePath + @"\" + subPath;
-            //string depoPath = basePath + @"\" + subPath;
             string[] depoDirectories = Directory.GetDirectories(depoPath);
 
             if (isEmpty(depoDirectories.Length))
@@ -41,11 +40,19 @@ namespace DataSetBuilder.factories
             for (int i = 0; i < depoDirectories.Length; i++)
             {
                 var listItem = new ListViewItem();
-                listItem.Content = depoDirectories[i].Remove(0, depoPath.Length + 1);
-                listItem.MouseDoubleClick += depoTabControlController.openDepsData;
-                depoList.Items.Add(listItem);
-            }
+                string depoName = depoDirectories[i].Remove(0, depoPath.Length + 1);
+                if (depoName.Contains("Deposition"))
+                {
+                    listItem.Content = depoName;
+                    listItem.MouseDoubleClick += depoTabControlController.openDepsData;
+                    depoList.Items.Add(listItem);
+                }
 
+            }
+            if (depoList.Items.Count == 0)
+            {
+                depoList.Items.Add(emptyMessage());
+            }
             return depoList;
         }
         private Boolean isEmpty(int length)

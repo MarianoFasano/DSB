@@ -63,11 +63,17 @@ namespace DataSetBuilder.view
             {
                 var listItem = new ListViewItem();
                 //Si estrae dal nome della folder dell'esperimento il percorso, lasciando unicamente il nome dell'esperimento
-                listItem.Content = expDirectories[i].Remove(0, expPath.Length + 1);
-                //Alla ListViewItem si aggiunge l'evento openExpDeps (l'evento che permette di aprire la tab dell'esperimento)
-                listItem.MouseDoubleClick += openExpDeps;
-                //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
-                ExperimentViewer.Items.Add(listItem);
+                string folderName = expDirectories[i].Remove(0, expPath.Length + 1);
+                //Si verifica che il nome contenga la parola "Experiment"
+                if (folderName.Contains("Experiment"))
+                {
+                    //Si assegna il nome al content del ListViewItem
+                    listItem.Content = folderName;
+                    //Alla ListViewItem si aggiunge l'evento openExpDeps (l'evento che permette di aprire la tab dell'esperimento)
+                    listItem.MouseDoubleClick += openExpDeps;
+                    //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
+                    ExperimentViewer.Items.Add(listItem);
+                }                
             }
         }
         //Funzione che carica il commento dell'esperimento nel DocumentViewer
@@ -99,7 +105,6 @@ namespace DataSetBuilder.view
                 ExpComment.Document = document;
             }            
         }
-
         //Funzione che inizializza la classe TabsBody
         private void initTabControl()
         {
@@ -126,7 +131,7 @@ namespace DataSetBuilder.view
         //Evento legato al click del mouse sul menuitem del commento dell'esperimento
         private void ViewExpCommentMenu_Click(object sender, RoutedEventArgs e)
         {
-            String fileName = @"J:\DTI\Experiments_Lite\Experiment_2021_09_14__11_13_42\Experiment_2021_9_14__11_13_42.txt";
+            String fileName =getExpCommentPath();
             //TODO: dopo aver commentato il dsb_controller
             ExpDetails.Visibility = dsb_controller.viewComment(ExpDetails);
             ViewCommentMenu.Header = dsb_controller.commentText(ExpDetails);
@@ -166,7 +171,6 @@ namespace DataSetBuilder.view
             {
                 commentPath = "";
             }
-
             return commentPath;
         }
         //Funzione di drag&drop per l'immagine
