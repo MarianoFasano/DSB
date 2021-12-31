@@ -20,7 +20,7 @@
             <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
             <Menu DockPanel.Dock="Bottom" Name="Modifica">
                 <MenuItem Header="Edit" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
-                    <MenuItem x:Name="ViewCommentMenu" Click="ViewCommentMenu_Click" Header="(Vedi commento)"/>
+                    <MenuItem x:Name="ViewCommentMenu" Header="(Vedi commento)"/>
                     <MenuItem x:Name="DepoDirectoryMenu" Header="(Directory)"/>
                     <MenuItem x:Name="DeleteDepoMenu" Header="(Cancella deposizione)"/>
                 </MenuItem>

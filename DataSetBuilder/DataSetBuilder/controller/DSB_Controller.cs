@@ -75,7 +75,7 @@ namespace DataSetBuilder
             }
             else
             {
-                return "Dettagli";
+                return "Nascondi Dettagli";
             }
         }
 

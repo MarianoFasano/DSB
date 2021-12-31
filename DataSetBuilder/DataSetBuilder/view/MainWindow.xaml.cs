@@ -1,5 +1,6 @@
 ﻿using DataSetBuilder.user_controls;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -65,28 +66,38 @@ namespace DataSetBuilder.view
                 listItem.Content = expDirectories[i].Remove(0, expPath.Length + 1);
                 //Alla ListViewItem si aggiunge l'evento openExpDeps (l'evento che permette di aprire la tab dell'esperimento)
                 listItem.MouseDoubleClick += openExpDeps;
-                listItem.Selected += ListItem_Selected;
                 //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
                 ExperimentViewer.Items.Add(listItem);
             }
         }
         //Funzione che carica il commento dell'esperimento nel DocumentViewer
-        private void ListItem_Selected(object sender, RoutedEventArgs e)
+        private void ExperimentViewer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListViewItem listViewItem = sender as ListViewItem;
 
-            String fileName = @"J:\DTI\Experiments_Lite\Experiment_2021_09_14__11_13_42\Experiment_2021_9_14__11_13_42.txt";
             //TODO: gestire eccezione di file non trovato --> Si scrive nel textbox il contenuto di testo del file txt, letto dalla funzione File.ReadAllText
-
-            Paragraph paragraph = new Paragraph();
-            paragraph.Inlines.Add(System.IO.File.ReadAllText(fileName));
-            FlowDocument document = new FlowDocument(paragraph);
+            string fileName = getExpCommentPath();
+            updateDetails(fileName);
+            updateSize();
+        }
+        //Adattamento delle dimensioni dell'area dei dettagli dell'esperimento
+        private void updateSize()
+        {
             ExpDetails.Height = this.ActualHeight / 2;
             Provino.Height = ExpDetails.ActualHeight / 2;
             ExpComment.Height = ExpDetails.ActualHeight / 2;
-            ExpComment.Document = document;
-
-
+        }
+        //Aggiornamento dei dettagli dell'esperimento
+        private void updateDetails(string filepath)
+        {
+            //Aggiornamento del commento in formato txt
+            if (Path.GetExtension(filepath).Equals(".txt"))
+            {
+                Paragraph paragraph = new Paragraph();
+                paragraph.Inlines.Add(System.IO.File.ReadAllText(filepath));
+                FlowDocument document = new FlowDocument(paragraph);
+                ExpComment.Document = document;
+            }            
         }
 
         //Funzione che inizializza la classe TabsBody
@@ -106,7 +117,7 @@ namespace DataSetBuilder.view
             //La funzione della classe DSB_Controller ritorna un oggetto TabsBody
             tabBody = dsb_controller.NewExpTabItem(tabBody, listViewItem);
         }
-
+        //Visibilità della colonna della lista degli esperimenti
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //Ridimensionamento della colonna contenente la lista degli esperimenti (se visibile la nasconde, e viceversa; anche se non avviene tramite la proprietà Visibility, ma con numeri)
@@ -115,9 +126,48 @@ namespace DataSetBuilder.view
         //Evento legato al click del mouse sul menuitem del commento dell'esperimento
         private void ViewExpCommentMenu_Click(object sender, RoutedEventArgs e)
         {
+            String fileName = @"J:\DTI\Experiments_Lite\Experiment_2021_09_14__11_13_42\Experiment_2021_9_14__11_13_42.txt";
             //TODO: dopo aver commentato il dsb_controller
             ExpDetails.Visibility = dsb_controller.viewComment(ExpDetails);
             ViewCommentMenu.Header = dsb_controller.commentText(ExpDetails);
+            updateDetails(fileName);
+            updateSize();
+        }
+        //Funzione per recuperare il percorso del commento dell'esperimento
+        private string getExpCommentPath()
+        {
+            string commentPath;
+            ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;    //Si recupare l'item selezionato
+
+            //Verifica che sia effettivamente selezionato un item della lista
+            //Se così non fosse si apre la directory degli esperimenti
+            if (listViewItem != null)
+            {
+                string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
+                string path = expPath + @"\" + itemName;
+                string[] files = Directory.GetFiles(path);                              //Si ottengono i files presenti nella cartella sottoforma di array di stringhe
+                //Si verifica che la lista contenga degli elementi
+                if (files.Length > 0)
+                {
+                    //Si estraggono in una lista le stringhe che contengono la parola Experiment e che sono dei file txt
+                    List<string> fileNames = files.Where(e => e.Contains("Experiment")).Where(e => e.Contains(".txt")).ToList();
+                    //Si verifica che la lista contenga degli elementi
+                    if (fileNames.Count > 0)
+                        commentPath = fileNames[0];
+                    else
+                        commentPath = "";
+                }
+                else
+                {
+                    commentPath = "";
+                }
+            }
+            else
+            {
+                commentPath = "";
+            }
+
+            return commentPath;
         }
         //Funzione di drag&drop per l'immagine
         private void Provino_Drop(object sender, DragEventArgs e)
@@ -211,6 +261,50 @@ namespace DataSetBuilder.view
             {
                 MessageBox.Show(string.Format("{0} La directory non esiste!", path));
             }
+        }
+        //Comando di refresh che ricarica l'intero applicativo
+        private void RefreshCmd_Click(object sender, RoutedEventArgs e)
+        {
+
+            //Si chiede la conferma per il refresh dell'applicazione
+            System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show("Si desidera riavviare Ground Control?", "Refresh Ground Control", MessageBoxButton.YesNo);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                //Si riavvia l'applicazione
+                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
+            }
+            else if (dialogResult == System.Windows.Forms.DialogResult.No)
+            {
+                //Do Nothing
+            }
+        }
+        //Comando di chiusura dell'applicazione
+        private void QuitCmd_Click(object sender, RoutedEventArgs e)
+        {
+            //Si chiede la conferma per la chiusura dell'applicazione
+            System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show("Si desidera chiudere Ground Control?", "Chiusura Ground Control", MessageBoxButton.YesNo);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                //Si chiude l'applicazione
+                System.Windows.Application.Current.Shutdown();
+            }
+            else if (dialogResult == System.Windows.Forms.DialogResult.No)
+            {
+                //Do Nothing
+            }
+        }
+        //Modifica del commento --> si apre il file con il programma di default
+        private void EditComment_Click(object sender, RoutedEventArgs e)
+        {
+            //Si recupera il percorso del file di commento dell'esperimento
+            string commentPath = getExpCommentPath();
+            //Controllo sia un file txt
+            if (Path.GetExtension(commentPath).Equals(".txt"))
+            {
+                //Si apre il file con il programma di default
+                System.Diagnostics.Process.Start(commentPath);
+            }            
         }
     }
 }

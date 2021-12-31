@@ -42,11 +42,5 @@ namespace DataSetBuilder.user_controls
         {
             return this.depoTabItem;
         }
-
-        //TODO: Evento legato al menu item del commento
-        private void ViewCommentMenu_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

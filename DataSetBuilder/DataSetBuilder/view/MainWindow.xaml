@@ -20,9 +20,12 @@
         </Grid.ColumnDefinitions>
         
         <ToolBar Grid.Row="0" Grid.ColumnSpan="4">
-            <Button Width="80">(Reset Layout)</Button>
-            <Button Width="80">(Close Tabs)</Button>
-            <Button Width="80">(Refresh)</Button>
+            <Menu IsMainMenu="True">
+                <MenuItem Header="File">
+                    <MenuItem x:Name="RefreshCmd" Header="Aggiorna/Riavvia" Click="RefreshCmd_Click"/>
+                    <MenuItem x:Name="QuitCmd" Header="Chiudi" Click="QuitCmd_Click"/>
+                </MenuItem>
+            </Menu>
         </ToolBar>
         
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan ="2">
@@ -38,7 +41,7 @@
             <Menu DockPanel.Dock="Bottom" Name="Modifica">
                 <MenuItem Header="Edit" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
                     <MenuItem x:Name="ViewCommentMenu" Click="ViewExpCommentMenu_Click" Header="(Vedi dettagli)"/>
-                    <MenuItem Header="(Modifica commento)"/>
+                    <MenuItem x:Name="EditComment" Click="EditComment_Click" Header="Modifica commento"/>
                     <MenuItem x:Name="ExpDirectoryMenu" Header="(Directory)">
                         <MenuItem x:Name="ExpsDir" Click="ExpsDir_Click" Header="Esperimenti"/>
                         <MenuItem x:Name="ExpDir" Click="ExpDir_Click" Header="Esperimento selezionato"/>
@@ -57,7 +60,7 @@
                 <FlowDocumentReader x:Name="ExpComment"/>
             </StackPanel>
 
-            <ListBox x:Name="ExperimentViewer" Height="auto">
+            <ListBox x:Name="ExperimentViewer" Height="auto" SelectionChanged="ExperimentViewer_SelectionChanged">
             </ListBox>
         </DockPanel>
         
