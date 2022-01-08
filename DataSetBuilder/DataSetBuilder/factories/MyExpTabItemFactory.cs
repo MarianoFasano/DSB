@@ -19,16 +19,17 @@ namespace DataSetBuilder.factories
             this.basePath = basePath;
         }
 
-        public CloseableTab GetTabItem(ListViewItem listViewItem, ListBox listBox)
+        public CloseableTab GetTabItem(ListViewItem listViewItem, ListBox listBox, string path)
         {
             CloseableTab tabItem = new CloseableTab { Title = (string)listViewItem.Content };
-            listBox = initDepoList((string)listViewItem.Content, listBox);
+            listBox = initDepoList((string)listViewItem.Content, listBox, path);
             return tabItem;
         }
 
-        private ListBox initDepoList(String subPath, ListBox listBox)
+        private ListBox initDepoList(String subPath, ListBox listBox, string path)
         {
             ListBox depoList = listBox;
+            this.basePath = path;
             string depoPath = basePath + @"\" + subPath;
             string[] depoDirectories = Directory.GetDirectories(depoPath);
 

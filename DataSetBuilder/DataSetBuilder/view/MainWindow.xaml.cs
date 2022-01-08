@@ -1,6 +1,8 @@
-﻿using DataSetBuilder.user_controls;
+﻿using DataSetBuilder.controller;
+using DataSetBuilder.user_controls;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,12 +32,13 @@ namespace DataSetBuilder.view
     {
         //Dichiarazione della classe DSB_Controller (il suo utilizzo è specificato nella classe stessa)
         DSB_Controller dsb_controller;
+        ConfigurationController configurationController = new ConfigurationController();
 
         //TODO PATH:Percorso della cartella contenente gli esperimenti, anch'essi sono delle cartelle
         //string expPath = @"J:\DTI\_DSB";    //fisso Mariano
         //string expPath = @"D:\_DSB";      //portatile Mariano
         //string expPath = @"J:\DTI\Experiments_Lite";
-        string expPath = @"J:\DTI\Unity";
+        string expPath;
 
         //Dichiarazione della classe TabsBody, la classe di riferimento del file xaml con il medesimo nome
         private TabsBody tabBody;
@@ -50,6 +53,7 @@ namespace DataSetBuilder.view
         public MainWindow()
         {
             InitializeComponent();
+            ConfigurationInit();
             //Inizializza la lista degli esperimenti
             Init();
             initTabControl();
@@ -58,28 +62,57 @@ namespace DataSetBuilder.view
             this.WindowState = System.Windows.WindowState.Normal;
         }
 
+        private void ConfigurationInit()
+        {
+            PathFromConfig();            
+        }
+
+        private void PathFromConfig()
+        {
+            string key = "path";
+            string value = ConfigurationManager.AppSettings[key];
+            if (value != null)
+            {
+                this.expPath = value;
+            }
+            else
+            {
+                changeExpPath();
+            }
+        }
+
         private void Init()
         {
+            //Pulizia della lista dei listviewitems, altrimenti rimangono presenti i precedenti items
+            ExperimentViewer.Items.Clear();
+            string[] expDirectories;
             //Il metodo di classe ritorna la lista dei nomi delle directories contenute nel percorso specificato quale argomento
-            string[] expDirectories = Directory.GetDirectories(expPath);
-            //TODO: Ciclo per inizializzare la lista di esperimenti, con listViewItem (da modificare)
-            for(int i = 0; i < expDirectories.Length; i++)
+            try
             {
-                var listItem = new ListViewItem();
-                //Si estrae dal nome della folder dell'esperimento il percorso, lasciando unicamente il nome dell'esperimento
-                string folderName = expDirectories[i].Remove(0, expPath.Length + 1);
-                //Si verifica che il nome contenga la parola "Experiment"
-                if (folderName.Contains("Experiment"))
+                expDirectories = Directory.GetDirectories(expPath);
+                //TODO: Ciclo per inizializzare la lista di esperimenti, con listViewItem (da modificare)
+                for (int i = 0; i < expDirectories.Length; i++)
                 {
-                    //Si assegna il nome al content del ListViewItem
-                    listItem.Content = folderName;
-                    //Alla ListViewItem si aggiunge l'evento openExpDeps (l'evento che permette di aprire la tab dell'esperimento)
-                    listItem.MouseDoubleClick += openExpDeps;
-                    //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
-                    ExperimentViewer.Items.Add(listItem);
-                }                
+                    var listItem = new ListViewItem();
+                    //Si estrae dal nome della folder dell'esperimento il percorso, lasciando unicamente il nome dell'esperimento
+                    string folderName = expDirectories[i].Remove(0, expPath.Length + 1);
+                    //Si verifica che il nome contenga la parola "Experiment"
+                    if (folderName.Contains("Experiment"))
+                    {
+                        //Si assegna il nome al content del ListViewItem
+                        listItem.Content = folderName;
+                        //Alla ListViewItem si aggiunge l'evento openExpDeps (l'evento che permette di aprire la tab dell'esperimento)
+                        listItem.MouseDoubleClick += openExpDeps;
+                        //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
+                        ExperimentViewer.Items.Add(listItem);
+                    }
+                }
+                checkEmptyExpList(ExperimentViewer);
             }
-            checkEmptyExpList(ExperimentViewer);
+            catch(DirectoryNotFoundException dirEx)
+            {
+                changeExpPath();
+            }            
         }
         //Controllo se la lista degli esperimenti contiene elementi --> se no, inserisce la label di comunicazione
         private void checkEmptyExpList(ListBox experimentViewer)
@@ -103,7 +136,6 @@ namespace DataSetBuilder.view
                 experimentViewer.Items.Add(label);
             }
         }
-
         //Funzione che carica il commento dell'esperimento nel DocumentViewer
         private void ExperimentViewer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -148,7 +180,7 @@ namespace DataSetBuilder.view
         {
             ListViewItem listViewItem = sender as ListViewItem;
             //La funzione della classe DSB_Controller ritorna un oggetto TabsBody
-            tabBody = dsb_controller.NewExpTabItem(tabBody, listViewItem);
+            tabBody = dsb_controller.NewExpTabItem(tabBody, listViewItem, expPath);
         }
         //Visibilità della colonna della lista degli esperimenti
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -360,6 +392,32 @@ namespace DataSetBuilder.view
                 //Si apre il file con il programma di default
                 System.Diagnostics.Process.Start(commentPath);
             }            
+        }
+        //Funzione che apre un filedialog per selezionare la cartella degli esperimenti
+        private void PathCmd_Click(object sender, RoutedEventArgs e)
+        {
+            changeExpPath();
+        }
+        //Funzione che apre un filedialog per selezionare la cartella degli esperimenti
+        private void changeExpPath()
+        {
+            System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show("Desideri cambiare percorso?\n\nNota: l'applicativo sarà riavviato chiudendo ogni esperimento e deposizione!", "Nuovo percorso esperimenti", MessageBoxButton.YesNo);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                System.Windows.Forms.FolderBrowserDialog openFileDlg = new System.Windows.Forms.FolderBrowserDialog();
+                var result = openFileDlg.ShowDialog();
+                if (result.ToString() != string.Empty)
+                {
+                    expPath = openFileDlg.SelectedPath;
+                    configurationController.addSettings("path", expPath);
+                    System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                    Application.Current.Shutdown();
+                }
+            }
+            else if (dialogResult == System.Windows.Forms.DialogResult.No)
+            {
+                //Do Nothing
+            }
         }
     }
 }

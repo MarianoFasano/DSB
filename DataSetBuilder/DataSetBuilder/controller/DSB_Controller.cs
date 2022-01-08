@@ -81,9 +81,9 @@ namespace DataSetBuilder
 
         //La funzione chiamata nella classe MainWindow è delegata alla classe myExpTabControlController
         //Ritorna un oggetto TabsBody (l'argomento passato viene tornato modificato)
-        internal TabsBody NewExpTabItem(TabsBody tabBody, ListViewItem listViewItem)
+        internal TabsBody NewExpTabItem(TabsBody tabBody, ListViewItem listViewItem, string path)
         {
-            return myExpTabControlController.createTabItem(tabBody, listViewItem);
+            return myExpTabControlController.createTabItem(tabBody, listViewItem, path);
         }
     }
 }

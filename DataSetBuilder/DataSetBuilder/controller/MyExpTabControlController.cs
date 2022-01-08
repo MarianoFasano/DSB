@@ -21,6 +21,7 @@ namespace DataSetBuilder.controller
         private MyExpTabItemFactory myExpTabItemFactory;
         private DepoTabControlController depoTabControlController;
         private TabControl mainTabControl;
+        private string actualBasePath;
 
         public MyExpTabControlController(TabControl tabControl, String basePath, MyExpTabItemModel myExpTabItemModel, DepoTabControlController depoTabControlController)
         {
@@ -47,11 +48,11 @@ namespace DataSetBuilder.controller
         }
 
         //Si crea il tabItem e si aggiunge al TabsBody passato come argomento, poi ritornato
-        internal TabsBody createTabItem(TabsBody tabBody, ListViewItem listViewItem)
+        internal TabsBody createTabItem(TabsBody tabBody, ListViewItem listViewItem, string path)
         {
             //Inizializzazione della struttura (user control) da aggiungere al tabItem dell'esperimento
             ExpItem expItem = new ExpItem();
-            CloseableTab tabItem = myExpTabItemFactory.GetTabItem(listViewItem, expItem.DepositionViewer);
+            CloseableTab tabItem = myExpTabItemFactory.GetTabItem(listViewItem, expItem.DepositionViewer, path);
 
             //Controllo di aggiunta del TabItem, prosegue se non esiste ancora
             if (addItem(listViewItem, tabItem))
