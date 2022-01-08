@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -143,9 +145,62 @@ namespace DataSetBuilder.view
 
             //TODO: gestire eccezione di file non trovato --> Si scrive nel textbox il contenuto di testo del file txt, letto dalla funzione File.ReadAllText
             string fileName = getExpCommentPath();
+            Provino.Source = getProvinoImage();
             updateDetails(fileName);
             updateSize();
         }
+
+        private ImageSource getProvinoImage()
+        {
+            //Controllo se l'item selezionato dalla lista sia effettivamente un listviewitem
+            if (checkItemType())
+            {
+                var icon = Resources.Source;
+                string imagepath;
+                BitmapImage tmpImage;
+                ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;    //Si recupare l'item selezionato
+
+                //Verifica che sia effettivamente selezionato un item della lista
+                //Se così non fosse si apre la directory degli esperimenti
+                if (listViewItem != null)
+                {
+                    string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
+                    string path = expPath + @"\" + itemName;
+                    string[] files = Directory.GetFiles(path);                              //Si ottengono i files presenti nella cartella sottoforma di array di stringhe
+                                                                                            //Si verifica che la lista contenga degli elementi
+                    if (files.Length > 0)
+                    {
+                        //Si estraggono in una lista le stringhe che contengono la parola Experiment e che sono dei file txt
+                        List<string> fileNames = files.Where(e => e.Contains("Experiment")).Where(e => e.Contains(".jpeg")).ToList();
+                        //Si verifica che la lista contenga degli elementi
+                        if (fileNames.Count > 0)
+                        {
+                            imagepath = fileNames[0];
+                            tmpImage = new BitmapImage((new Uri(imagepath)));
+                        }                            
+                        else
+                        {
+                            tmpImage = new BitmapImage(new Uri(@"/Immagini/GC_addImage.png", UriKind.RelativeOrAbsolute));
+                        }                            
+                    }
+                    else
+                    {
+                        tmpImage = new BitmapImage(new Uri(@"/Immagini/GC_addImage.png", UriKind.RelativeOrAbsolute));
+                    }
+                }
+                else
+                {
+                   tmpImage = new BitmapImage(new Uri(@"/Immagini/GC_addImage.png", UriKind.RelativeOrAbsolute));
+                }
+                return tmpImage;
+            }
+            else
+            {
+                BitmapImage tmpImage = new BitmapImage(new Uri(@"/Immagini/GC_addImage.png", UriKind.RelativeOrAbsolute));
+                return tmpImage;
+            }
+        }
+
         //Adattamento delle dimensioni dell'area dei dettagli dell'esperimento
         private void updateSize()
         {
@@ -245,7 +300,7 @@ namespace DataSetBuilder.view
         private void Provino_Drop(object sender, DragEventArgs e)
         {
             string[] files = null;
-
+            
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 //Le stringhe salvate sono il percorso del file rilasciato sulla finestra
@@ -262,6 +317,7 @@ namespace DataSetBuilder.view
                         //Si assegna l'immagine
                         BitmapImage tmpImage = new BitmapImage((new Uri(files[0])));
                         Provino.Source = tmpImage;
+                        SaveImage(tmpImage);
                     }
                     else if (dialogResult == System.Windows.Forms.DialogResult.No)
                     {
@@ -270,6 +326,64 @@ namespace DataSetBuilder.view
                 }                
             }
         }
+
+        private void SaveImage(BitmapImage tmpImage)
+        {
+            //Variabili necessarie per il salvataggio dell'immagine
+            Bitmap bitmap = convertToBitmap(tmpImage);
+            ImageCodecInfo imageCodecInfo;
+            Encoder encoder;
+            EncoderParameter encoderParameter;
+            EncoderParameters encoderParameters;
+
+            //Parametrizzazione per il salvataggio
+            imageCodecInfo = GetEncoderInfo("image/jpeg");
+            encoder = Encoder.Quality;
+            encoderParameters = new EncoderParameters(1);
+
+            //Salvataggio dell'immagine
+            ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;
+            string imagename = "_Provino.jpeg";
+            string expname = (string)listViewItem.Content;
+            string filename = (string)listViewItem.Content + imagename;
+            string imagepath = expPath + @"\" + expname + @"\" + filename;
+
+            encoderParameter = new EncoderParameter(encoder, 100L);
+            encoderParameters.Param[0] = encoderParameter;
+            Bitmap image = convertToBitmap(tmpImage);
+
+            image.Save(imagepath, imageCodecInfo, encoderParameters);
+
+        }
+
+        private Bitmap convertToBitmap(BitmapImage tmpImage)
+        {
+            // BitmapImage bitmapImage = new BitmapImage(new Uri("../Images/test.png", UriKind.Relative));
+
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(tmpImage));
+                enc.Save(outStream);
+                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
+
+                return new Bitmap(bitmap);
+            }
+        }
+
+        private ImageCodecInfo GetEncoderInfo(String mimeType)
+        {
+            int j;
+            ImageCodecInfo[] encoders;
+            encoders = ImageCodecInfo.GetImageEncoders();
+            for (j = 0; j < encoders.Length; ++j)
+            {
+                if (encoders[j].MimeType == mimeType)
+                    return encoders[j];
+            }
+            return null;
+        }
+
         //TODO: capire esattamente perché sia qui questa funzione
         private void Provino_DragEnter(object sender, DragEventArgs e)
         {
