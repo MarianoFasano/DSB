@@ -34,13 +34,17 @@ namespace DataSetBuilder.view
         //TODO PATH:Percorso della cartella contenente gli esperimenti, anch'essi sono delle cartelle
         //string expPath = @"J:\DTI\_DSB";    //fisso Mariano
         //string expPath = @"D:\_DSB";      //portatile Mariano
-        string expPath = @"J:\DTI\Experiments_Lite";
+        //string expPath = @"J:\DTI\Experiments_Lite";
+        string expPath = @"J:\DTI\Unity";
 
         //Dichiarazione della classe TabsBody, la classe di riferimento del file xaml con il medesimo nome
         private TabsBody tabBody;
 
         //Domanda cambiamento immagine
         string questionDialog = "Desideri cambiare immagine di \"Provino\"?";
+
+        //Testo in caso di percorso esperimenti non consono
+        string noExpDetected = "Non sono presenti esperimenti nella lista! \nSeleziona il percorso degli esperimenti dal menu file.\nNota: in lista appariranno unicamente le cartelle che contengono la parola 'Experiment' nel nome.";
 
         //Costruttore della MainWindow, nel quale sono inizializzati i componenti della finestra e altre classi e funzioni necessarie
         public MainWindow()
@@ -75,7 +79,31 @@ namespace DataSetBuilder.view
                     ExperimentViewer.Items.Add(listItem);
                 }                
             }
+            checkEmptyExpList(ExperimentViewer);
         }
+        //Controllo se la lista degli esperimenti contiene elementi --> se no, inserisce la label di comunicazione
+        private void checkEmptyExpList(ListBox experimentViewer)
+        {
+            bool hasElement;
+            //Controllo se la cartella indicata contiene cartelle relative agli esperimenti
+            if (experimentViewer.Items.Count > 0)
+            {
+                hasElement = true;
+            }                
+            else
+            {
+                hasElement = false;
+            }
+
+            if (!hasElement)
+            {
+                //Se la lista non contiene elementi, ossia nessuna cartella di esperimenti, sarà mostrata la scritta di avviso
+                Label label = new Label();
+                label.Content = noExpDetected;
+                experimentViewer.Items.Add(label);
+            }
+        }
+
         //Funzione che carica il commento dell'esperimento nel DocumentViewer
         private void ExperimentViewer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -141,37 +169,45 @@ namespace DataSetBuilder.view
         //Funzione per recuperare il percorso del commento dell'esperimento
         private string getExpCommentPath()
         {
-            string commentPath;
-            ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;    //Si recupare l'item selezionato
-
-            //Verifica che sia effettivamente selezionato un item della lista
-            //Se così non fosse si apre la directory degli esperimenti
-            if (listViewItem != null)
+            //Controllo se l'item selezionato dalla lista sia effettivamente un listviewitem
+            if (checkItemType())
             {
-                string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
-                string path = expPath + @"\" + itemName;
-                string[] files = Directory.GetFiles(path);                              //Si ottengono i files presenti nella cartella sottoforma di array di stringhe
-                //Si verifica che la lista contenga degli elementi
-                if (files.Length > 0)
+                string commentPath;
+                ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;    //Si recupare l'item selezionato
+
+                //Verifica che sia effettivamente selezionato un item della lista
+                //Se così non fosse si apre la directory degli esperimenti
+                if (listViewItem != null)
                 {
-                    //Si estraggono in una lista le stringhe che contengono la parola Experiment e che sono dei file txt
-                    List<string> fileNames = files.Where(e => e.Contains("Experiment")).Where(e => e.Contains(".txt")).ToList();
-                    //Si verifica che la lista contenga degli elementi
-                    if (fileNames.Count > 0)
-                        commentPath = fileNames[0];
+                    string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
+                    string path = expPath + @"\" + itemName;
+                    string[] files = Directory.GetFiles(path);                              //Si ottengono i files presenti nella cartella sottoforma di array di stringhe
+                                                                                            //Si verifica che la lista contenga degli elementi
+                    if (files.Length > 0)
+                    {
+                        //Si estraggono in una lista le stringhe che contengono la parola Experiment e che sono dei file txt
+                        List<string> fileNames = files.Where(e => e.Contains("Experiment")).Where(e => e.Contains(".txt")).ToList();
+                        //Si verifica che la lista contenga degli elementi
+                        if (fileNames.Count > 0)
+                            commentPath = fileNames[0];
+                        else
+                            commentPath = "";
+                    }
                     else
+                    {
                         commentPath = "";
+                    }
                 }
                 else
                 {
                     commentPath = "";
                 }
+                return commentPath;
             }
             else
             {
-                commentPath = "";
+                return "";
             }
-            return commentPath;
         }
         //Funzione di drag&drop per l'immagine
         private void Provino_Drop(object sender, DragEventArgs e)
@@ -233,21 +269,36 @@ namespace DataSetBuilder.view
         //Evento legato al click dell'apertura della directory dell'esperimento selezionato
         private void ExpDir_Click(object sender, RoutedEventArgs e)
         {
-            string path;
-            ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;    //Si recupare l'item selezionato
-            
-            //Verifica che sia effettivamente selezionato un item della lista
-            //Se così non fosse si apre la directory degli esperimenti
-            if(listViewItem != null)
+            if (checkItemType())
             {
-                string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
-                path = expPath + @"\" + itemName;
+                string path;
+                ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;    //Si recupare l'item selezionato
+
+                //Verifica che sia effettivamente selezionato un item della lista
+                //Se così non fosse si apre la directory degli esperimenti
+                if (listViewItem != null)
+                {
+                    string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
+                    path = expPath + @"\" + itemName;
+                }
+                else
+                {
+                    path = expPath;
+                }
+                openFolder(path);
+            }            
+        }
+        //Verifica se l'item selezionato della lista è un listviewitem --> se sì torna true
+        private bool checkItemType()
+        {
+            if(ExperimentViewer.SelectedItem is ListViewItem)
+            {
+                return true;
             }
             else
             {
-                path = expPath;
+                return false;
             }
-            openFolder(path);
         }
         //Funzione che apre in Windows il file explorer con il percorso passato come stringa
         private void openFolder(string path)
