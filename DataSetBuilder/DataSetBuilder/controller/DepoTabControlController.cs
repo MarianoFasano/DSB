@@ -5,17 +5,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace DataSetBuilder.controller
 {
     public class DepoTabControlController
     {
+
         /*Object from graphical interface*/
         //Generali
         private Button playButton;              //bottone play
@@ -44,8 +47,11 @@ namespace DataSetBuilder.controller
         private IDictionary<String, MyDepoData> depoDatas = new Dictionary<String, MyDepoData>();
         //Riferimento alla struttura dell'interfaccia grafica
         private IDictionary<String, DepoItemBody> depoStructures = new Dictionary<String, DepoItemBody>();
-
+        //Variabili per la visione in automatico delle immagini
         private Boolean isAutomatic = false;
+        private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+        private CancellationToken token;
+
         private MyExpTabItemModel myExpTabItemModel;
         //TabControl cui verrà assegnato il tabControl della deposizione di riferimento ogniqualvolta si seleziona la tab di un esperimento
         private TabControl actualTabControl;
@@ -63,7 +69,7 @@ namespace DataSetBuilder.controller
             //Nel costruttore si inietta l'istanza di myExpTabItemModel, creata all'apertura dell'applicativo
             this.myExpTabItemModel = myExpTabItemModel;
             //Percorso base passato come parametro
-            this.basePath = basePath;
+            this.basePath = basePath;            
         }
         //Evento legato alla tab selezionata dell'esperimento, quando ciò avviene sono caricati alcuni dati relativi alle deposizioni dell'esperimento selezionato
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -94,10 +100,10 @@ namespace DataSetBuilder.controller
         //Inizializzazione degli eventi dei controlli dell'interfaccia grafica
         private void initControlsAction()
         {
-            this.playButton.Click += PlayButton_Click;                      //Evento sul bottone di play
-            this.pauseButton.Click += PauseButton_Click;                    //Evento sul bottone di pausa
-            this.prevButton.Click += PrevButton_Click;                      //Evento sul bottone per l'immagine precedente
-            this.nextButton.Click += NextButton_Click;                      //Evento sul bottone per l'immagine successiva                
+            //this.playButton.Click += PlayButton_Click;                      //Evento sul bottone di play
+            //this.pauseButton.Click += PauseButton_Click;                    //Evento sul bottone di pausa
+            //this.prevButton.Click += PrevButton_Click;                      //Evento sul bottone per l'immagine precedente
+            //this.nextButton.Click += NextButton_Click;                      //Evento sul bottone per l'immagine successiva                
             this.searchMs.KeyDown += SearchMs_KeyDown;                      //Evento sulla pressione del tasto enter
         }
 
@@ -315,16 +321,17 @@ namespace DataSetBuilder.controller
         private void initFirstImage(String depoName)
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
+            DepoItemBody depoItemBody = depoStructures[getDepoName()];
             BitmapImage bitmapImage;
             if (myDepoData.checkOldVersion())
             {
                 bitmapImage = new BitmapImage(new Uri(dataPath + @"\"  + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-                this.depoImage.Source = bitmapImage;
+                depoItemBody.SetImageSource(bitmapImage);
             }
             else
             {
                 bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-                this.depoImage.Source = bitmapImage;
+                depoItemBody.SetImageSource(bitmapImage);
             }
             
 
@@ -336,58 +343,46 @@ namespace DataSetBuilder.controller
             updateDatas(pyroResult, cncResult);
         }
 
-        private void NextButton_Click(object sender, RoutedEventArgs e)
+        private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
-            nextImage();
+            //MessageBox.Show("Bottone pausa", "Bottone schiacciato");
+            isAutomatic = false;
+            cancelTokenSource.Cancel();
         }
 
-        private void PrevButton_Click(object sender, RoutedEventArgs e)
+        //Controllo se le immaagini sono giunte al termine oppure no
+        private bool areImagesAtEnd()
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
-            myDepoData.downActualImage();
-            BitmapImage bitmapImage;
-            if (myDepoData.checkOldVersion())
+            if(myDepoData.getActualImage() == myDepoData.getMaxNrImage())
             {
-                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-                this.depoImage.Source = bitmapImage;
+                return true;
             }
             else
             {
-                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-                this.depoImage.Source = bitmapImage;
+                return false;
             }
-            setMsLabels(myDepoData);
-            long actualMs = long.Parse(this.extActualMs.Text);
-            PyroResult pyroResult = searchTemperature(actualMs, myDepoData);
-            CncResult cncResult = searchCncDatas(actualMs, myDepoData);
-            updateDatas(pyroResult, cncResult);
-
-        }
-
-        private void PauseButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Bottone pausa", "Bottone schiacciato");
-        }
-
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Bottone play", "Bottone schiacciato");
         }
 
         private void nextImage()
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
+            DepoItemBody depoItemBody = depoStructures[getDepoName()];
             myDepoData.upActualImage();
             BitmapImage bitmapImage;
             if (myDepoData.checkOldVersion())
             {
                 bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-                this.depoImage.Source = bitmapImage;
+                //depoImage.Source = bitmapImage;
+                depoItemBody.SetImageSource(bitmapImage);                
             }
             else
             {
                 bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-                this.depoImage.Source = bitmapImage;
+                //depoImage.Source = bitmapImage;
+
+                //depoItemBody.DepoImage.Source = bitmapImage;
+                depoItemBody.SetImageSource(bitmapImage);
             }
 
             setMsLabels(myDepoData);
@@ -401,6 +396,7 @@ namespace DataSetBuilder.controller
         private void setImage(string filename)
         {
             MyDepoData myDepoData = depoDatas[getDepoName()];
+            DepoItemBody depoItemBody = depoStructures[getDepoName()];
             BitmapImage bitmapImage;
             myDepoData.setActualImage(myDepoData.getImages().IndexOf(filename));
 
@@ -409,7 +405,7 @@ namespace DataSetBuilder.controller
                 String imageName = myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
                 String imagePath = dataPath + @"\" + imageName;
                 bitmapImage = new BitmapImage(new Uri(imagePath, UriKind.RelativeOrAbsolute));
-                this.depoImage.Source = bitmapImage;
+                depoItemBody.SetImageSource(bitmapImage);
             }
             else
             {
@@ -417,7 +413,7 @@ namespace DataSetBuilder.controller
                 String directoryName = myDepoData.getImageDirectory();
                 String imagePath = dataPath + @"\" + directoryName + imageName;
                 bitmapImage = new BitmapImage(new Uri(imagePath, UriKind.RelativeOrAbsolute));
-                this.depoImage.Source = bitmapImage;
+                depoItemBody.SetImageSource(bitmapImage);
             }
             
             setMsLabels(myDepoData);
@@ -447,12 +443,12 @@ namespace DataSetBuilder.controller
         private void assignIControl(DepoItemBody depoItemBody)
         {
             //General
-            this.playButton = depoItemBody.PlayImage;
-            this.pauseButton = depoItemBody.PauseImage;
-            this.prevButton = depoItemBody.PrevImage;
-            this.nextButton = depoItemBody.NextImage;
-            this.imageSpeed = depoItemBody.ImageSpeed;
-            this.depoImage = depoItemBody.DepoImage;
+            //this.playButton = depoItemBody.PlayImage;
+            //this.pauseButton = depoItemBody.PauseImage;
+            //this.prevButton = depoItemBody.PrevImage;
+            //this.nextButton = depoItemBody.NextImage;
+            //this.imageSpeed = depoItemBody.ImageSpeed;
+            //this.depoImage = depoItemBody.DepoImage;
             this.datasStackPanel = depoItemBody.DataList;
             //Significant version of ms
             this.searchMs = depoItemBody.SearchMs;
@@ -494,6 +490,7 @@ namespace DataSetBuilder.controller
         //responsabilità del controller o del mydepodata? --> spostare in mydepodata
         private void setMsLabels(MyDepoData myDepoData)
         {
+            DepoItemBody depoItemBody = depoStructures[getDepoName()];
             string maxMs = myDepoData.getImages()[myDepoData.getImages().Count - 1];
             string actualMs = myDepoData.getImages()[(int)myDepoData.getActualImage()];
             string minMs = myDepoData.getImages()[0];
@@ -508,7 +505,7 @@ namespace DataSetBuilder.controller
 
             minString = extractDifferentDigit(minString, maxString);
 
-            this.extActualMs.Text = actual.ToString();
+            depoItemBody.SetActualMs(actual.ToString());
         }
         private string extractDifferentDigit(String min, String max)
         {
@@ -531,6 +528,7 @@ namespace DataSetBuilder.controller
 
         private void initMsLabels(MyDepoData myDepoData)
         {
+            DepoItemBody depoItemBody = depoStructures[getDepoName()];
             string maxMs = myDepoData.getImages()[myDepoData.getImages().Count - 1];
             string actualMs = myDepoData.getImages()[(int)myDepoData.getActualImage()];
             string minMs = myDepoData.getImages()[0];
@@ -557,11 +555,12 @@ namespace DataSetBuilder.controller
                 }
             }
 */
-            this.extMaxMs.Content = maxString;                                              //settaggio del testo dell'etichetta extMaxMs con la stringa dei ms massimi estratti dall'ultima immagine
-            this.extMinMs.Content = minString;                                              //settaggio del testo dell'etichetta extMinMs con la stringa dei ms minimi estratti dalla prima immagine
-            this.extActualMs.Text = actual.ToString();                                      //settaggio del testo dell'etichetta extActualMs con la stringa dei ms attuali estratti dall'attuale immagine
-            this.extSliderMs.Maximum = long.Parse(maxString);                               //settaggio del valore massimo dello slider con la stringa dei ms massimi estratti dall'ultima immagine "castati" come long              
-            this.extSliderMs.Minimum = min;                                                 //settaggio del valore minimo dello slider con la stringa dei ms minimi estratti dalla prima immagine "castati" come long
+ 
+            depoItemBody.SetMaxLabel(maxString);                                            //settaggio del testo dell'etichetta extMaxMs con la stringa dei ms massimi estratti dall'ultima immagine
+            depoItemBody.SetMinLabel(minString);                                            //settaggio del testo dell'etichetta extMinMs con la stringa dei ms minimi estratti dalla prima immagine
+            depoItemBody.SetActualMs(actual.ToString());                               //settaggio del testo dell'etichetta extActualMs con la stringa dei ms attuali estratti dall'attuale immagine
+            depoItemBody.SetSliderMax(long.Parse(maxString));                               //settaggio del valore massimo dello slider con la stringa dei ms massimi estratti dall'ultima immagine "castati" come long              
+            depoItemBody.SetSliderMin(min);                                                 //settaggio del valore minimo dello slider con la stringa dei ms minimi estratti dalla prima immagine "castati" come long
         }
 
         private string extractMs(string msString)
@@ -570,6 +569,81 @@ namespace DataSetBuilder.controller
             int start = "ms".Length;
             ms = ms.Substring(start, ms.IndexOf("_")-2);
             return ms;
+        }
+
+        public void NextButton_Click()
+        {
+            nextImage();
+        }
+
+        public void PrevButton_Click()
+        {
+            MyDepoData myDepoData = depoDatas[getDepoName()];
+            DepoItemBody depoItemBody = depoStructures[getDepoName()];
+            myDepoData.downActualImage();
+            BitmapImage bitmapImage;
+            if (myDepoData.checkOldVersion())
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                depoItemBody.SetImageSource(bitmapImage);
+            }
+            else
+            {
+                bitmapImage = new BitmapImage(new Uri(dataPath + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                depoItemBody.SetImageSource(bitmapImage);
+            }
+            setMsLabels(myDepoData);
+            long actualMs = long.Parse(this.extActualMs.Text);
+            PyroResult pyroResult = searchTemperature(actualMs, myDepoData);
+            CncResult cncResult = searchCncDatas(actualMs, myDepoData);
+            updateDatas(pyroResult, cncResult);
+
+        }
+
+        public void PauseButton_Click()
+        {
+            MessageBox.Show("Bottone pausa", "Bottone schiacciato");
+            isAutomatic = false;
+        }
+
+        public void PlayButton_Click()
+        {
+                MessageBox.Show("Bottone play", "Bottone schiacciato");
+                /*DepoItemBody depoItemBody = depoStructures[getDepoName()];
+                int ratio = depoItemBody.getSpeed();
+                isAutomatic = true;
+                Thread thread = new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    automation(ratio);
+                });
+                thread.Start();*/              
+        }
+
+        private void AutomatedImage(int ratio)
+        {
+         /*   try
+            {
+                App.Current.Dispatcher.BeginInvoke(new update_image_in_background(automation), DispatcherPriority.Render, new object[] { ratio });
+            }
+            catch(Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }*/
+        }
+        private void automation(int ratio)
+        {
+            int ms = 1000;
+            while (isAutomatic)
+            {
+                nextImage();
+                Thread.Sleep(ms / ratio);
+                if (areImagesAtEnd())
+                {
+                    isAutomatic = false;
+                    MessageBox.Show("Immagini finite");
+                }
+            }
         }
     }
 }

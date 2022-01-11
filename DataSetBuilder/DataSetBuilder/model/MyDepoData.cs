@@ -214,5 +214,9 @@ namespace DataSetBuilder.model
         {
             return (this.DepoPath + @"\" + this.DeviceCN);
         }
+        public uint getMaxNrImage()
+        {
+            return this.nrImages;
+        }
     }
 }

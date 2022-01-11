@@ -59,7 +59,11 @@ namespace DataSetBuilder.view
             //Inizializza la lista degli esperimenti
             Init();
             initTabControl();
-            this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, expPath);
+            this.Dispatcher.Invoke(() =>
+            {
+                this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, expPath);
+            });
+            //this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, expPath);
             //Massimizza la finestra
             this.WindowState = System.Windows.WindowState.Normal;
         }

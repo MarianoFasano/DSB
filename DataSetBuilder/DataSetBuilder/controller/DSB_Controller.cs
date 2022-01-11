@@ -4,6 +4,7 @@ using DataSetBuilder.user_controls;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace DataSetBuilder
 {

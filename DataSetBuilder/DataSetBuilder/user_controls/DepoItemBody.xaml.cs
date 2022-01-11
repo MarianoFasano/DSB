@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace DataSetBuilder.user_controls
 {
@@ -29,11 +31,18 @@ namespace DataSetBuilder.user_controls
     {
         //Istanza necessaria per chiamare la funzione di ricerca, essa è passata nel costruttore della classe DepoItemBody
         private DepoTabControlController depoTabControlController;
+        //Variabili per la visione in automatico delle immagini
+        private Boolean isAutomatic = false;
+        private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+        private CancellationToken token;
+
         public DepoItemBody(DepoTabControlController depoTabControlController)
         {
             InitializeComponent();
             //Assegnazione dell'istanza depotabcontrolController passata come parametro
             this.depoTabControlController = depoTabControlController;
+            //Inizializzazione del token per l'interruzione del task per lo scorrimento automatico delle immagini
+            this.token = cancelTokenSource.Token;
         }
 
         //Evento collegato al click del bottone "<<" (indietro)
@@ -70,5 +79,65 @@ namespace DataSetBuilder.user_controls
             this.depoTabControlController.msResearch(searchedValue, myDepoData);
         }
 
+        private void PrevImage_Click(object sender, RoutedEventArgs e)
+        {
+                depoTabControlController.PrevButton_Click();         
+        }
+
+        private void NextImage_Click(object sender, RoutedEventArgs e)
+        {
+                depoTabControlController.NextButton_Click();
+            
+        }
+
+        private void PlayImage_Click(object sender, RoutedEventArgs e)
+        {
+            depoTabControlController.PlayButton_Click();            
+        }
+
+        private void PauseImage_Click(object sender, RoutedEventArgs e)
+        {
+                depoTabControlController.PauseButton_Click();
+           
+        }
+
+        internal void SetImageSource(BitmapImage bitmapImage)
+        {
+            DepoImage.Source = bitmapImage;
+        }
+        //Funzione per estrarre il valore numerico dal combobox: 2x --> 2
+        public int getSpeed()
+        {
+            ComboBoxItem item = (ComboBoxItem)ImageSpeed.SelectedItem;
+            string value = item.Content.ToString();
+            int endIndex = value.IndexOf("x");
+            int ratio = Int32.Parse(value.Substring(0, endIndex));
+            return ratio;
+        }
+
+        internal void SetMaxLabel(string maxString)
+        {
+            ExtendMaxMs.Content = maxString;
+        }
+
+        internal void SetMinLabel(string minString)
+        {
+            ExtendMinMs.Content = minString;
+        }
+
+        internal void SetActualMs(string actualvalue)
+        {
+            ExtendActualMs.Text = actualvalue;
+        }
+
+        internal void SetSliderMax(long maxvalue)
+        {
+            ExtendMsSlider.Maximum = maxvalue;
+        }
+
+        internal void SetSliderMin(long minvalue)
+        {
+            ExtendMsSlider.Minimum = minvalue;
+        }
     }
 }
