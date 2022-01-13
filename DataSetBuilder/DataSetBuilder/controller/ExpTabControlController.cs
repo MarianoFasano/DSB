@@ -14,7 +14,7 @@ using System.Windows.Controls;
 
 namespace DataSetBuilder.controller
 {
-    class MyExpTabControlController
+    class ExpTabControlController
     {
         private MyExpTabControlModel myTabControlModel;
         private MyExpTabItemModel myExpTabItemModel;
@@ -23,7 +23,7 @@ namespace DataSetBuilder.controller
         private TabControl mainTabControl;
         private string actualBasePath;
 
-        public MyExpTabControlController(TabControl tabControl, String basePath, MyExpTabItemModel myExpTabItemModel, DepoTabControlController depoTabControlController)
+        public ExpTabControlController(TabControl tabControl, String basePath, MyExpTabItemModel myExpTabItemModel, DepoTabControlController depoTabControlController)
         {
             this.mainTabControl = tabControl;
             this.myTabControlModel = new MyExpTabControlModel(tabControl);

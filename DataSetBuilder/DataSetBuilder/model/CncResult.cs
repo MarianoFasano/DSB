@@ -8,7 +8,7 @@ using System.Windows;
 namespace DataSetBuilder.model
 {
     //Classe usata per wrappare e tornare i valori del cnc
-    class CncResult
+    public class CncResult
     {
         //Lista che contiene le grandezze misurate durante l'esperimento
         private List<String> measures = new List<string>();

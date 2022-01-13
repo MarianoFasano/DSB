@@ -21,9 +21,9 @@
                 <Button Click="PrevImage_Click" x:Name="PrevImage" Content="&lt;" Width="20" Margin="2"></Button>
                 <Button Click="NextImage_Click" x:Name="NextImage" Content=">" Width="20" Margin="2"></Button>
 
-                <TextBox x:Name="SearchMs" DockPanel.Dock="Right" TextAlignment="Center" MinWidth="60" Width="auto" Margin="2"/>
-                <Button Click="PlayImage_Click" x:Name="PlayImage" Content="(Play)" Margin="2"></Button>
-                <Button Click="PauseImage_Click" x:Name="PauseImage" Content="(Pause)" Margin="2"></Button>
+                <TextBox x:Name="SearchMs" KeyDown="SearchMs_KeyDown" DockPanel.Dock="Right" TextAlignment="Center" MinWidth="60" Width="auto" Margin="2"/>
+                <Button Click="PlayImage_Click" x:Name="PlayImage" Content="Play" Margin="2"></Button>
+                <Button Click="PauseImage_Click" x:Name="PauseImage" Content="Pause" Margin="2"></Button>
                 <ComboBox x:Name="ImageSpeed" Width="auto" Margin="2">
                     <ComboBoxItem Content="1x" IsSelected="True"/>
                     <ComboBoxItem Content="2x"/>

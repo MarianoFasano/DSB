@@ -1,4 +1,5 @@
 ﻿using DataSetBuilder.controller;
+using DataSetBuilder.model;
 using DataSetBuilder.user_controls;
 using System;
 using System.Collections.Generic;
@@ -32,16 +33,19 @@ namespace DataSetBuilder.view
 
     public partial class MainWindow : Window
     {
-        //Dichiarazione della classe DSB_Controller (il suo utilizzo è specificato nella classe stessa)
-        DSB_Controller dsb_controller;
+        //Variabili
         ConfigurationController configurationController = new ConfigurationController();
+        private ExpTabControlController myExpTabControlController;
+        private MyExpTabItemModel myExpTabItemModel = new MyExpTabItemModel();
+        private DepoTabControlController depoTabControlController;
 
         //TODO PATH:Percorso della cartella contenente gli esperimenti, anch'essi sono delle cartelle
         //string expPath = @"J:\DTI\_DSB";    //fisso Mariano
         //string expPath = @"D:\_DSB";      //portatile Mariano
         //string expPath = @"J:\DTI\Experiments_Lite";
         string expPath;
-
+        //Larghezza per la colonna degli esperimenti
+        private double width = 0;
         //Dichiarazione della classe TabsBody, la classe di riferimento del file xaml con il medesimo nome
         private TabsBody tabBody;
 
@@ -59,12 +63,9 @@ namespace DataSetBuilder.view
             //Inizializza la lista degli esperimenti
             Init();
             initTabControl();
-            this.Dispatcher.Invoke(() =>
-            {
-                this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, expPath);
-            });
-            //this.dsb_controller = new DSB_Controller(this.tabBody.TabsControl, expPath);
-            //Massimizza la finestra
+            this.depoTabControlController = new DepoTabControlController(this.myExpTabItemModel, expPath);
+            this.myExpTabControlController = new ExpTabControlController(this.tabBody.TabsControl, expPath, this.myExpTabItemModel, this.depoTabControlController);
+            //NON Massimizza la finestra
             this.WindowState = System.Windows.WindowState.Normal;
         }
 
@@ -239,24 +240,75 @@ namespace DataSetBuilder.view
         {
             ListViewItem listViewItem = sender as ListViewItem;
             //La funzione della classe DSB_Controller ritorna un oggetto TabsBody
-            tabBody = dsb_controller.NewExpTabItem(tabBody, listViewItem, expPath);
+            tabBody = myExpTabControlController.createTabItem(tabBody, listViewItem, expPath);
         }
         //Visibilità della colonna della lista degli esperimenti
+        //Gestione della larghezza della colonna della lista degli esperimenti
+        //La colonna assume in maniera predefinita la larghezza del contenuto (lunghezza della stringa)
+        //Se la larghezza è 0 assume la larghezza iniziale, e viceversa
+        //Si istanzia quindi un oggetto GridLength che va a impostare la larghezza della colonna dell'interfaccia
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //Ridimensionamento della colonna contenente la lista degli esperimenti (se visibile la nasconde, e viceversa; anche se non avviene tramite la proprietà Visibility, ma con numeri)
-            Column.Width = dsb_controller.columnWidth(Column);        
+            //Variabile locale che assume il valore dell'attributo "width"
+            Double width = Column.ActualWidth;
+            if (this.width == 0)
+            {
+                //Se tale attributo è ancora di valore zero, esso assume l'attuale valore della larghezza
+                this.width = width;
+            }
+            if (width == this.width)
+            {
+                width = 0;
+                Column.Width = new GridLength(width);
+            }
+            else if (width < this.width && width > 0)
+            {
+                width = 0;
+                Column.Width = new GridLength(width);
+            }
+            else
+            {
+                width = this.width;
+                Column.Width = new GridLength(width);
+            }
         }
         //Evento legato al click del mouse sul menuitem del commento dell'esperimento
         private void ViewExpCommentMenu_Click(object sender, RoutedEventArgs e)
         {
             String fileName =getExpCommentPath();
             //TODO: dopo aver commentato il dsb_controller
-            ExpDetails.Visibility = dsb_controller.viewComment(ExpDetails);
-            ViewCommentMenu.Header = dsb_controller.commentText(ExpDetails);
+            ExpDetails.Visibility = viewComment();
+            ViewCommentMenu.Header = commentText();
             updateDetails(fileName);
             updateSize();
         }
+        //Cambia il testo del menuitem legato al commento in base al fatto che sia attualmente visibile o meno
+        private object commentText()
+        {
+            if (ExpDetails.Visibility.Equals(System.Windows.Visibility.Collapsed))
+            {
+                return "Vedi dettagli";
+            }
+            else
+            {
+                return "Nascondi Dettagli";
+
+            }
+        }
+            //Gestione della visibilità del commento sulla base del click del mouse sul menu dedicato
+            private Visibility viewComment()
+        {
+            if (ExpDetails.Visibility.Equals(System.Windows.Visibility.Collapsed))
+            {
+                return System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                return System.Windows.Visibility.Collapsed;
+            }
+        }
+
         //Funzione per recuperare il percorso del commento dell'esperimento
         private string getExpCommentPath()
         {

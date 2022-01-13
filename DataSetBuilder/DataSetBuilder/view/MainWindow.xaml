@@ -41,10 +41,10 @@
         <DockPanel x:Name="ExpDockPanel" Grid.Row="1" Grid.Column="1" MinWidth="0" LastChildFill="True" DragDrop.Drop="Provino_Drop" DragDrop.DragEnter="Provino_DragEnter">
             <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
             <Menu DockPanel.Dock="Bottom" Name="Modifica">
-                <MenuItem Header="Edit" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
-                    <MenuItem x:Name="ViewCommentMenu" Click="ViewExpCommentMenu_Click" Header="(Vedi dettagli)"/>
+                <MenuItem Header="Opzioni" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
+                    <MenuItem x:Name="ViewCommentMenu" Click="ViewExpCommentMenu_Click" Header="Vedi dettagli"/>
                     <MenuItem x:Name="EditComment" Click="EditComment_Click" Header="Modifica commento"/>
-                    <MenuItem x:Name="ExpDirectoryMenu" Header="(Directory)">
+                    <MenuItem x:Name="ExpDirectoryMenu" Header="Directory">
                         <MenuItem x:Name="ExpsDir" Click="ExpsDir_Click" Header="Esperimenti"/>
                         <MenuItem x:Name="ExpDir" Click="ExpDir_Click" Header="Esperimento selezionato"/>
                     </MenuItem>

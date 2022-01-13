@@ -96,9 +96,8 @@
     <Compile Include="controller\ConfigurationController.cs" />
     <Compile Include="controller\DepoTabItemController.cs" />
     <Compile Include="controller\DepoTabControlController.cs" />
-    <Compile Include="controller\DSB_Controller.cs" />
     <Compile Include="controller\ImageSearcher.cs" />
-    <Compile Include="controller\MyExpTabControlController.cs" />
+    <Compile Include="controller\ExpTabControlController.cs" />
     <Compile Include="controller\PyrometerSearcher.cs" />
     <Compile Include="factories\MyExpTabItemFactory.cs" />
     <Compile Include="model\CloseableTab.cs" />

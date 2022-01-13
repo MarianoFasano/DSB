@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DataSetBuilder.model
 {
     //Classe usata per wrappare e tornare i valori del pirometro
-    class PyroResult
+    public class PyroResult
     {
         //Variabili
         private String ms;              //stringa che contiene i ms
