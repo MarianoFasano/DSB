@@ -30,8 +30,6 @@ namespace DataSetBuilder.controller
         private IDictionary<String, MyDepoData> depoDatas = new Dictionary<String, MyDepoData>();
         //Riferimento alla struttura dell'interfaccia grafica
         private IDictionary<String, DepoItemBody> depoStructures = new Dictionary<String, DepoItemBody>();
-        //Variabili per la visione in automatico delle immagini
-        private Boolean isAutomatic = false;
 
         private MyExpTabItemModel myExpTabItemModel;
         //TabControl cui verrà assegnato il tabControl della deposizione di riferimento ogniqualvolta si seleziona la tab di un esperimento
@@ -183,17 +181,29 @@ namespace DataSetBuilder.controller
 
         private Boolean allowAdding(ListViewItem listViewItem)
         {
-            if (!this.depoStructures.ContainsKey((string)listViewItem.Content))
+            int copyindex = 0;
+            string temp = (string)listViewItem.Content;
+            try
             {
+                while (this.depoStructures.ContainsKey(temp))
+                {
+                    copyindex++;
+                    temp = (string)listViewItem.Content + "(" + copyindex.ToString() + ")";
+                }
+                listViewItem.Content = temp;
                 return true;
             }
-            return false;
+            catch (Exception exception)
+            {
+                return false;
+            }
         }
 
         private void initLists(ListViewItem listViewItem)
         {
             TabControl tabControl = myExpTabItemModel.getTabControl(getExpName());
-            this.dataPath = basePath + @"\" + depoPath + @"\" + (string)listViewItem.Content;
+            string depofolder = extractName((string)listViewItem.Content);
+            this.dataPath = basePath + @"\" + depoPath + @"\" + depofolder;
             MyDepoData myDepoData = new MyDepoData(dataPath);
             depoDatas.Add((string)listViewItem.Content, myDepoData);
 
@@ -201,10 +211,9 @@ namespace DataSetBuilder.controller
             tabItem.Title = (string)listViewItem.Content;
             DepoItemBody depoItemBody = new DepoItemBody(this, myDepoData, dataPath);
             tabItem.Content = depoItemBody;
-            tabControl.Items.Add(tabItem);
+            this.actualTabControl.Items.Add(tabItem);
             depoStructures.Add((string)listViewItem.Content, depoItemBody);
-            //assignIControl(depoItemBody);
-            this.actualTabControl = tabControl;
+            listViewItem.Content = extractName((string)listViewItem.Content);
         }
 
         public String getDepoName()
@@ -262,6 +271,21 @@ namespace DataSetBuilder.controller
             ms = ms.Substring(start, ms.IndexOf("_")-2);
             return ms;
         }
-
+        //Estrazione del nome della deposizione/esperimento escludendo la parte di indicazione del numero di copia
+        private string extractName(string header)
+        {
+            //Per essere considerata una copia, la stringa deve contenere il simbolo "("
+            if (header.Contains("("))
+            {
+                //In caso affermativo si estra dalla stringa tutto ciò che arriva prima della parentesi aperta
+                int endIndex = header.IndexOf("(");
+                string name = header.Substring(0, endIndex);
+                return name;
+            }
+            else
+            {
+                return header;
+            }
+        }
     }
 }

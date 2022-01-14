@@ -35,9 +35,9 @@ namespace DataSetBuilder.controller
         }
 
         //Funzione di controllo che verifica se il TabItem che si sta cercando di aggiungere esiste già
-        private Boolean addItem(Object itemID, TabItem tabItem)
+        private bool Contains(ListViewItem itemID)
         {
-            if(myTabControlModel.addItem(itemID, tabItem))
+            if(myTabControlModel.Contains(itemID))
             {
                 return true;
             }
@@ -46,17 +46,22 @@ namespace DataSetBuilder.controller
                 return false;
             }
         }
+        private void addItem(ListViewItem itemID, TabItem tabItem)
+        {
+            myTabControlModel.addItem(itemID, tabItem);
+        }
 
         //Si crea il tabItem e si aggiunge al TabsBody passato come argomento, poi ritornato
         internal TabsBody createTabItem(TabsBody tabBody, ListViewItem listViewItem, string path)
         {
-            //Inizializzazione della struttura (user control) da aggiungere al tabItem dell'esperimento
-            ExpItem expItem = new ExpItem();
-            CloseableTab tabItem = myExpTabItemFactory.GetTabItem(listViewItem, expItem.DepositionViewer, path);
-
             //Controllo di aggiunta del TabItem, prosegue se non esiste ancora
-            if (addItem(listViewItem, tabItem))
+            if (!Contains(listViewItem))
             {
+                //Inizializzazione della struttura (user control) da aggiungere al tabItem dell'esperimento
+                ExpItem expItem = new ExpItem();
+                string tabheader = (string)listViewItem.Content;
+                CloseableTab tabItem = myExpTabItemFactory.GetTabItem(extractName(tabheader), expItem.DepositionViewer, path);
+                addItem(listViewItem, tabItem);
                 //Creazione dell'user control che contiene il TabControl delle deposizioni (dove si aggiungeranno le tab delle varie deposizioni)
                 //L'istanza della DepoTabItem viene poi inserita nella cella della griglia corretta (riga due, colonna uno e occupa due colonne)
                 DepoTabItem depodataTabItem = new DepoTabItem();
@@ -73,6 +78,8 @@ namespace DataSetBuilder.controller
                 tabBody.TabsControl.Items.Add(tabItem);
                 //Si aggiunge il TabControl delle deposizioni al dizionario di controllo con la rispettiva chiave (il nome dell'esperimento)
                 this.myExpTabItemModel.addToDict((string)listViewItem.Content, depodataTabItem.DepoTabControl);
+                //Si resetta il listviewitem, siccome è un riferimento
+                listViewItem.Content = extractName((string)listViewItem.Content);
                 //Si ritorna l'istanza tabBody debitamente aggiornata
                 return tabBody;
             }
@@ -99,16 +106,29 @@ namespace DataSetBuilder.controller
                     {
                         //Mandatory to open the deposition in the correct tabControl
                         //Necessario affinché la deposizione sia aperta nel corretto TabControl
-                        String header = (string)tabItem.Title;
+                        string header = (string)tabItem.Title;
                         if (header != null)
                         {
-                            //depoTabControlController.setDepoPath((string)tabItem.Header);
-                            //depoTabControlController.setActualTabControl((string)tabItem.Header);
-                            depoTabControlController.setDepoPath(header);
                             depoTabControlController.setActualTabControl(header);
+                            header = extractName(header);
+                            depoTabControlController.setDepoPath(header);
                         }
                     }
                 }
+            }
+        }
+        //Estrazione del nome --> si elimina la parte di copia (es (3))
+        private string extractName(string header)
+        {
+            if (header.Contains("("))
+            {
+                int endIndex = header.IndexOf("(");
+                string name = header.Substring(0, endIndex);
+                return name;
+            }
+            else
+            {
+                return header;
             }
         }
     }

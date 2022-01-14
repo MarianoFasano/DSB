@@ -19,10 +19,10 @@ namespace DataSetBuilder.factories
             this.basePath = basePath;
         }
 
-        public CloseableTab GetTabItem(ListViewItem listViewItem, ListBox listBox, string path)
+        public CloseableTab GetTabItem(string listViewItem, ListBox listBox, string path)
         {
-            CloseableTab tabItem = new CloseableTab { Title = (string)listViewItem.Content };
-            listBox = initDepoList((string)listViewItem.Content, listBox, path);
+            CloseableTab tabItem = new CloseableTab { Title = listViewItem };
+            listBox = initDepoList(listViewItem, listBox, path);
             return tabItem;
         }
 

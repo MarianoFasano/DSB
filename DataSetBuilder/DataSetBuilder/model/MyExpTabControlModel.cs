@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DataSetBuilder.model
@@ -12,7 +13,7 @@ namespace DataSetBuilder.model
     class MyExpTabControlModel
     {
         private TabControl tabControl;
-        private IDictionary items = new Dictionary<Object, TabItem>();
+        private IDictionary items = new Dictionary<string, TabItem>();
 
         //TODO: costruttore probabilmente da rivedere poiché l'attributo TabControl non è utilizzato
         public MyExpTabControlModel(TabControl tabControl)
@@ -20,17 +21,30 @@ namespace DataSetBuilder.model
             this.tabControl = tabControl;
         }
 
-        //La funzione si occupa di ritornare un valore boolean che indica se la TabItem è aggiungibile o meno al TabControl
         //In contemporanea è aggiunta al dizionario presente in questa classe
-        public Boolean addItem(Object itemID, TabItem tabItem)
+        public void addItem(ListViewItem itemID, TabItem tabItem)
         {
-            if (!items.Contains(itemID))
+            items.Add((string)itemID.Content, tabItem);
+        }
+        //La funzione si occupa di ritornare un valore boolean che indica se la TabItem è aggiungibile o meno al TabControl
+        public bool Contains(ListViewItem itemID)
+        {
+            int copyindex = 0;
+            string temp = (string)itemID.Content;
+            try
             {
-                items.Add(itemID, tabItem);
-                //tabControl.Items.Add(tabItem);
+                while (items.Contains(temp))
+                {
+                    copyindex++;
+                    temp = (string)itemID.Content + "(" + copyindex.ToString() + ")";
+                }
+                itemID.Content = temp;
+                return false;
+            }
+            catch(Exception exception)
+            {
                 return true;
             }
-            return false;
         }
     }
 }
