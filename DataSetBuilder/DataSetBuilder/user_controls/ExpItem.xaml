@@ -17,16 +17,21 @@
         </Grid.ColumnDefinitions>
 
         <DockPanel x:Name="DepoDockPanel" Grid.Column="0" MinWidth="0" LastChildFill="True">
-            <TextBox DockPanel.Dock="Top" Height="20" TextWrapping="Wrap" Text="Cerca ..."/>
+            <TextBox DockPanel.Dock="Top" x:Name="DepoSearchBox" TextChanged="DepoSearchBox_TextChanged"  Height="20" TextWrapping="Wrap"/>
             <Menu DockPanel.Dock="Bottom" Name="Modifica">
-                <MenuItem Header="Edit" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
-                    <MenuItem x:Name="ViewCommentMenu" Header="(Vedi commento)"/>
-                    <MenuItem x:Name="DepoDirectoryMenu" Header="(Directory)"/>
+                <MenuItem Header="Opzioni" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
+                    <MenuItem x:Name="ViewDetailsMenu" Header="Vedi dettagli"/>
+                    <MenuItem x:Name="UpdateDepoView" Header="Aggiorna" Click="UpdateDepoView_Click"/>
                     <MenuItem x:Name="DeleteDepoMenu" Header="(Cancella deposizione)"/>
                 </MenuItem>
             </Menu>
-            <TextBox x:Name="DepoComment" DockPanel.Dock="Bottom" Height="auto" TextWrapping="Wrap" Text="Commento" Visibility="Collapsed"/>
 
+            <StackPanel x:Name="DepoDetails" DockPanel.Dock="Bottom" Visibility="Collapsed">
+                <Border BorderThickness="1" BorderBrush="DarkSlateGray" >
+                    <Image x:Name="Provino" Stretch="Fill"/>
+                </Border>
+                <FlowDocumentReader x:Name="DepoComment"/>
+            </StackPanel>
             <ListBox x:Name="DepositionViewer">
             </ListBox>
         </DockPanel>

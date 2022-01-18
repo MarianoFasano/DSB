@@ -23,7 +23,6 @@
         <ToolBar Grid.Row="0" Grid.ColumnSpan="4">
             <Menu IsMainMenu="True">
                 <MenuItem Header="File">
-                    <MenuItem x:Name="RefreshCmd" Header="Aggiorna" Click="RefreshCmd_Click"/>
                     <MenuItem x:Name="PathCmd" Header="Percorso esperimenti" Click="PathCmd_Click"/>
                     <MenuItem x:Name="RecentExp" Header="Esperimenti recenti"/>
                     <MenuItem x:Name="RestartCmd" Header="Riavvia" Click="RestartCmd_Click"/>
@@ -50,6 +49,7 @@
                         <MenuItem x:Name="ExpsDir" Click="ExpsDir_Click" Header="Esperimenti"/>
                         <MenuItem x:Name="ExpDir" Click="ExpDir_Click" Header="Esperimento selezionato"/>
                     </MenuItem>
+                    <MenuItem x:Name="RefreshCmd" Header="Aggiorna" Click="RefreshCmd_Click"/>
                     <MenuItem x:Name="DeleteExpMenu" Header="(Cancella esperimento)"/>
                     <MenuItem Header="(Nuovo esperimento)">
                         <MenuItem x:Name="NewEmtpyExpMenu" Header="(Esperimento vuoto)"/>

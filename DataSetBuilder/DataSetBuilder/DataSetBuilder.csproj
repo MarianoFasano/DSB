@@ -94,7 +94,6 @@
     </Compile>
     <Compile Include="controller\CNCSearcher.cs" />
     <Compile Include="controller\ConfigurationController.cs" />
-    <Compile Include="controller\DepoTabItemController.cs" />
     <Compile Include="controller\DepoTabControlController.cs" />
     <Compile Include="controller\ImageSearcher.cs" />
     <Compile Include="controller\ExpTabControlController.cs" />

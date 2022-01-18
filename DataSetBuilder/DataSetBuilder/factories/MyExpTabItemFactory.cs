@@ -19,44 +19,14 @@ namespace DataSetBuilder.factories
             this.basePath = basePath;
         }
 
-        public CloseableTab GetTabItem(string listViewItem, ListBox listBox, string path)
+        public CloseableTab GetTabItem(string depoName, ExpItem expitem, string path)
         {
-            CloseableTab tabItem = new CloseableTab { Title = listViewItem };
-            listBox = initDepoList(listViewItem, listBox, path);
+            CloseableTab tabItem = new CloseableTab { Title = depoName };
+            expitem.initDepoList(depoName, path);
             return tabItem;
         }
 
-        private ListBox initDepoList(String subPath, ListBox listBox, string path)
-        {
-            ListBox depoList = listBox;
-            this.basePath = path;
-            string depoPath = basePath + @"\" + subPath;
-            string[] depoDirectories = Directory.GetDirectories(depoPath);
-
-            if (isEmpty(depoDirectories.Length))
-            {
-                depoList.Items.Add(emptyMessage());
-            }
-
-            for (int i = 0; i < depoDirectories.Length; i++)
-            {
-                var listItem = new ListViewItem();
-                string depoName = depoDirectories[i].Remove(0, depoPath.Length + 1);
-                if (depoName.Contains("Deposition"))
-                {
-                    listItem.Content = depoName;
-                    listItem.MouseDoubleClick += depoTabControlController.openDepsData;
-                    depoList.Items.Add(listItem);
-                }
-
-            }
-            if (depoList.Items.Count == 0)
-            {
-                depoList.Items.Add(emptyMessage());
-            }
-            return depoList;
-        }
-        private Boolean isEmpty(int length)
+        private bool isEmpty(int length)
         {
             if (length==0)
             {
@@ -66,13 +36,6 @@ namespace DataSetBuilder.factories
             {
                 return false;
             }
-        }
-        private Label emptyMessage()
-        {
-            var label = new Label();
-            label.Content = "Nessuna deposizione trovata";
-            label.HorizontalAlignment = HorizontalAlignment.Center;
-            return label;
         }
     }
 }

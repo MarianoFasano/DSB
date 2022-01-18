@@ -58,9 +58,9 @@ namespace DataSetBuilder.controller
             if (!Contains(listViewItem))
             {
                 //Inizializzazione della struttura (user control) da aggiungere al tabItem dell'esperimento
-                ExpItem expItem = new ExpItem();
+                ExpItem expItem = new ExpItem(depoTabControlController);
                 string tabheader = (string)listViewItem.Content;
-                CloseableTab tabItem = myExpTabItemFactory.GetTabItem(extractName(tabheader), expItem.DepositionViewer, path);
+                CloseableTab tabItem = myExpTabItemFactory.GetTabItem(extractName(tabheader), expItem, path);
                 addItem(listViewItem, tabItem);
                 //Creazione dell'user control che contiene il TabControl delle deposizioni (dove si aggiungeranno le tab delle varie deposizioni)
                 //L'istanza della DepoTabItem viene poi inserita nella cella della griglia corretta (riga due, colonna uno e occupa due colonne)
