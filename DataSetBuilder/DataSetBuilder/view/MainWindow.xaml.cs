@@ -68,22 +68,30 @@ namespace DataSetBuilder.view
             //NON Massimizza la finestra
             this.WindowState = System.Windows.WindowState.Normal;
         }
-
+        //Inizializzazione dal file di configurazione
         private void ConfigurationInit()
         {
+            //Configurazione percorso
             PathFromConfig();            
         }
-
+        //Ripresa dei dati sul percorso dal file di configurazione
         private void PathFromConfig()
         {
-            string key = "path";
-            string value = ConfigurationManager.AppSettings[key];
-            if (value != null)
+            //Verifica se il file di configurazione contiene un percorso segnato come temporaneo
+            if (configurationController.containsTemppath())
             {
-                this.expPath = value;
+                //Imposta il percorso dell'applicativo al percorso temporaneo di configurazione 
+                this.expPath = configurationController.getTempPath();
+            }
+            //Verifica se il file di configurazione contiene un percorso segnato come predefinito
+            else if (configurationController.containspath())
+            {
+                //Imposta il percorso dell'applicativo al percorso predefinito di configurazione 
+                this.expPath = configurationController.getConfigPath();
             }
             else
             {
+                //Richiama la funzione per impostare un nuovo percorso se non sono trovati ne quello predefinito ne quello temporaneo
                 changeExpPath();
             }
         }
@@ -119,7 +127,11 @@ namespace DataSetBuilder.view
             catch(DirectoryNotFoundException dirEx)
             {
                 changeExpPath();
-            }            
+            }
+            catch (ArgumentException argEx)
+            {
+                changeExpPath();
+            }
         }
         //Controllo se la lista degli esperimenti contiene elementi --> se no, inserisce la label di comunicazione
         private void checkEmptyExpList(ListBox experimentViewer)
@@ -522,19 +534,8 @@ namespace DataSetBuilder.view
         //Comando di refresh che ricarica l'intero applicativo
         private void RefreshCmd_Click(object sender, RoutedEventArgs e)
         {
-
-            //Si chiede la conferma per il refresh dell'applicazione
-            System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show("Si desidera riavviare Ground Control?", "Refresh Ground Control", MessageBoxButton.YesNo);
-            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
-            {
-                //Si riavvia l'applicazione
-                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-                Application.Current.Shutdown();
-            }
-            else if (dialogResult == System.Windows.Forms.DialogResult.No)
-            {
-                //Do Nothing
-            }
+            //Inizializza nuovamente la lista degli esperimenti
+            Init();            
         }
         //Comando di chiusura dell'applicazione
         private void QuitCmd_Click(object sender, RoutedEventArgs e)
@@ -543,7 +544,12 @@ namespace DataSetBuilder.view
             System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show("Si desidera chiudere Ground Control?", "Chiusura Ground Control", MessageBoxButton.YesNo);
             if (dialogResult == System.Windows.Forms.DialogResult.Yes)
             {
-                //Si chiude l'applicazione
+                //Si chiude l'applicazione e si toglie il riferimento al percorso temporaneo
+                if (configurationController.containsTemppath())
+                {
+                    string key = "temppath";
+                    configurationController.remove(key);
+                }
                 System.Windows.Application.Current.Shutdown();
             }
             else if (dialogResult == System.Windows.Forms.DialogResult.No)
@@ -576,13 +582,58 @@ namespace DataSetBuilder.view
             {
                 System.Windows.Forms.FolderBrowserDialog openFileDlg = new System.Windows.Forms.FolderBrowserDialog();
                 var result = openFileDlg.ShowDialog();
-                if (result.ToString() != string.Empty)
+
+                //Controllo se l'utente preme Cancel/Annulla dalla finestra di scelta del percorso
+                if (result == System.Windows.Forms.DialogResult.Cancel)
                 {
+                    //Do nothing
+                }
+                else if (result.ToString() != string.Empty)
+                {
+                    //Si disabilita, togliendo, l'evento legato alla chiusura dell'applicativo --> non deve chiedere tale conferma durante il riavvio
+                    this.Closing -= Window_Closing;
                     expPath = openFileDlg.SelectedPath;
                     configurationController.addSettings("path", expPath);
                     System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
                     Application.Current.Shutdown();
                 }
+            }
+            else if (dialogResult == System.Windows.Forms.DialogResult.No)
+            {
+                //Do Nothing
+            }
+        }
+        //Evento sulla chiusura dell'applicativo tramite la "X"
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //Si chiede la conferma per la chiusura dell'applicazione
+            System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show("Si desidera chiudere Ground Control?", "Chiusura Ground Control", MessageBoxButton.YesNo);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                //Si chiude l'applicazione e si toglie il riferimento al percorso temporaneo
+                if (configurationController.containsTemppath())
+                {
+                    string key = "temppath";
+                    configurationController.remove(key);
+                }
+            }
+            else if (dialogResult == System.Windows.Forms.DialogResult.No)
+            {
+                //Blocca la chiusura dell'applicativo
+                e.Cancel = true;
+            }
+        }
+        //Evento che riavvio l'applicativo
+        private void RestartCmd_Click(object sender, RoutedEventArgs e)
+        {
+            //Si chiede la conferma per il refresh dell'applicazione
+            System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show("Si desidera riavviare Ground Control?", "Refresh Ground Control", MessageBoxButton.YesNo);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                //Si riavvia l'applicazione togliendo l'evento che domanda se si desidera chiudere l'applicativo
+                this.Closing -= Window_Closing;
+                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
             }
             else if (dialogResult == System.Windows.Forms.DialogResult.No)
             {

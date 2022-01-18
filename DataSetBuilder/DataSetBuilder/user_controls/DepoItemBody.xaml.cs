@@ -2,6 +2,7 @@
 using DataSetBuilder.model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -176,16 +177,33 @@ namespace DataSetBuilder.user_controls
         {
             myDepoData.downActualImage();
             BitmapImage bitmapImage;
-            if (myDepoData.checkOldVersion())
+            try
             {
-                bitmapImage = new BitmapImage(new Uri(path + @"\" + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
+                if (myDepoData.checkOldVersion())
+                {
+                    //Ritorna il percorso al file partendo dal path
+                    string filename = myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
+                    //Istanzia l'immagine e la carica nel controller wpf
+                    bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
+                    SetImageSource(bitmapImage);
+                }
+                else
+                {
+                    //Ritorna il percorso al file della versione vecchia partendo dal path, c'è un cartella in più da superare
+                    string filename = myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
+                    //Istanzia l'immagine e la carica nel controller wpf
+                    bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
+                    SetImageSource(bitmapImage);
+                }
+            }
+            //Cattura l'eccezione FileNotFound con lo scopo di catturare eventuali cancellazioni di immagini durante l'esecuzione dell'applicativo
+            catch (FileNotFoundException ex)
+            {
+                //Istanzia e carica l'immagine predefinita al caso
+                bitmapImage = new BitmapImage(new Uri(@"/Immagini/Image not found.jpg", UriKind.RelativeOrAbsolute));
                 SetImageSource(bitmapImage);
             }
-            else
-            {
-                bitmapImage = new BitmapImage(new Uri(path + @"\" + myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage()), UriKind.RelativeOrAbsolute));
-                SetImageSource(bitmapImage);
-            }
+            //Aggiornamento dei dati dell'interfaccia in base all'immagine caricata
             setMsLabels();
             long actualMs = long.Parse(this.ExtendActualMs.Text);
             PyroResult pyroResult = depoTabControlController.searchTemperature(actualMs, myDepoData);
@@ -272,18 +290,26 @@ namespace DataSetBuilder.user_controls
         {
             myDepoData.upActualImage();
             BitmapImage bitmapImage;
-            if (myDepoData.checkOldVersion())
+            try
             {
-                //Ritorna il percorso al file partendo dal path
-                string filename = myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
-                bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
-                SetImageSource(bitmapImage);
+                if (myDepoData.checkOldVersion())
+                {
+                    //Ritorna il percorso al file partendo dal path
+                    string filename = myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
+                    bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
+                    SetImageSource(bitmapImage);
+                }
+                else
+                {
+                    //Ritorna il percorso al file della versione vecchia partendo dal path, c'è un cartella in più da superare
+                    string filename = myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
+                    bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
+                    SetImageSource(bitmapImage);
+                }
             }
-            else
+            catch (FileNotFoundException e)
             {
-                //Ritorna il percorso al file della versione vecchia partendo dal path, c'è un cartella in più da superare
-                string filename = myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
-                bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
+                bitmapImage = new BitmapImage(new Uri(@"/Immagini/Image not found.jpg", UriKind.RelativeOrAbsolute));
                 SetImageSource(bitmapImage);
             }
 

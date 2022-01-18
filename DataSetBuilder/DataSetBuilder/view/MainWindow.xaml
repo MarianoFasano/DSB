@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:DataSetBuilder.view"
         mc:Ignorable="d"
         Title="Ground Control" MinHeight="450" MinWidth="800" AllowDrop="True"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        Closing="Window_Closing">
     <Grid x:Name="DSB_MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -22,9 +23,10 @@
         <ToolBar Grid.Row="0" Grid.ColumnSpan="4">
             <Menu IsMainMenu="True">
                 <MenuItem Header="File">
-                    <MenuItem x:Name="RefreshCmd" Header="Aggiorna/Riavvia" Click="RefreshCmd_Click"/>
+                    <MenuItem x:Name="RefreshCmd" Header="Aggiorna" Click="RefreshCmd_Click"/>
                     <MenuItem x:Name="PathCmd" Header="Percorso esperimenti" Click="PathCmd_Click"/>
                     <MenuItem x:Name="RecentExp" Header="Esperimenti recenti"/>
+                    <MenuItem x:Name="RestartCmd" Header="Riavvia" Click="RestartCmd_Click"/>
                     <MenuItem x:Name="QuitCmd" Header="Chiudi" Click="QuitCmd_Click"/>
                 </MenuItem>
             </Menu>

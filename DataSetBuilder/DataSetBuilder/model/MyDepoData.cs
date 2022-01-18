@@ -106,48 +106,51 @@ namespace DataSetBuilder.model
             }
             else
             {
-                //Se la directory non contiene files, ma cartelle,
-                //si assegna all'istanza directoryInfo una nuova istanza basata sul percorso delle immagini
-                String imagePath = directoryPath + @"\" + imagePrefix;
-                directoryInfo = new DirectoryInfo(imagePath);
+               
+                    //Se la directory non contiene files, ma cartelle,
+                    //si assegna all'istanza directoryInfo una nuova istanza basata sul percorso delle immagini
+                    String imagePath = directoryPath + @"\" + imagePrefix;
+                    directoryInfo = new DirectoryInfo(imagePath);
 
-                foreach (var file in directoryInfo.GetFiles())
-                {
-                    //Si verifica che si tratta di immagini prima di aggiungere il nome alla lista
-                    if (Path.GetExtension(file.Name).Equals(".jpeg"))
+                    foreach (var file in directoryInfo.GetFiles())
                     {
-                        nrImages++;
-                        this.images.Add(file.Name);
-                    }                   
-                }
-                //si assegna all'istanza directoryInfo una nuova istanza basata sul percorso dei files cn
-                String cnPath = directoryPath + @"\" + DeviceCN;
-                directoryInfo = new DirectoryInfo(cnPath);
-
-                foreach (var file in directoryInfo.GetFiles())
-                {
-                    //Si verifica che si tratta di un file di testo
-                    if (Path.GetExtension(file.Name).Equals(".txt"))
-                    {
-                        //CNS è una lista di lista di stringhe (i files CN possono essere più di uno)
-                        List<String> cncFileLines = File.ReadLines(cnPath  + @"\" + (file.Name)).Cast<string>().ToList();
-                        this.cns.Add(cncFileLines);
+                        //Si verifica che si tratta di immagini prima di aggiungere il nome alla lista
+                        if (Path.GetExtension(file.Name).Equals(".jpeg"))
+                        {
+                            nrImages++;
+                            this.images.Add(file.Name);
+                        }
                     }
-                }
-                //si assegna all'istanza directoryInfo una nuova istanza basata sul percorso dei files del pirometro
-                String pyrometerPath = directoryPath + @"\" + DevicePyrometer;
-                directoryInfo = new DirectoryInfo(pyrometerPath);
+                    //si assegna all'istanza directoryInfo una nuova istanza basata sul percorso dei files cn
+                    String cnPath = directoryPath + @"\" + DeviceCN;
+                    directoryInfo = new DirectoryInfo(cnPath);
 
-                foreach (var file in directoryInfo.GetFiles())
-                {
-                    //Si verifica che si tratta di un file di testo
-                    if (Path.GetExtension(file.Name).Equals(".txt"))
+                    foreach (var file in directoryInfo.GetFiles())
                     {
-                        //Si recupera la lista di stringhe e si assegna alla variabile
-                        List<String> pyrometersFileLines = File.ReadLines(pyrometerPath + @"\" + (file.Name)).Cast<string>().ToList();
-                        this.pyrometers = pyrometersFileLines;
+                        //Si verifica che si tratta di un file di testo
+                        if (Path.GetExtension(file.Name).Equals(".txt"))
+                        {
+                            //CNS è una lista di lista di stringhe (i files CN possono essere più di uno)
+                            List<String> cncFileLines = File.ReadLines(cnPath + @"\" + (file.Name)).Cast<string>().ToList();
+                            this.cns.Add(cncFileLines);
+                        }
                     }
-                }
+                    //si assegna all'istanza directoryInfo una nuova istanza basata sul percorso dei files del pirometro
+                    String pyrometerPath = directoryPath + @"\" + DevicePyrometer;
+                    directoryInfo = new DirectoryInfo(pyrometerPath);
+
+                    foreach (var file in directoryInfo.GetFiles())
+                    {
+                        //Si verifica che si tratta di un file di testo
+                        if (Path.GetExtension(file.Name).Equals(".txt"))
+                        {
+                            //Si recupera la lista di stringhe e si assegna alla variabile
+                            List<String> pyrometersFileLines = File.ReadLines(pyrometerPath + @"\" + (file.Name)).Cast<string>().ToList();
+                            this.pyrometers = pyrometersFileLines;
+                        }
+                    }
+                               
+                
             }
             
 

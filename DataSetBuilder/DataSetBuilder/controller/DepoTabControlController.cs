@@ -76,15 +76,6 @@ namespace DataSetBuilder.controller
                 }
             }
         }
-        //Inizializzazione degli eventi dei controlli dell'interfaccia grafica
-        private void initControlsAction()
-        {
-            //this.playButton.Click += PlayButton_Click;                      //Evento sul bottone di play
-            //this.pauseButton.Click += PauseButton_Click;                    //Evento sul bottone di pausa
-            //this.prevButton.Click += PrevButton_Click;                      //Evento sul bottone per l'immagine precedente
-            //this.nextButton.Click += NextButton_Click;                      //Evento sul bottone per l'immagine successiva                
-            //this.searchMs.KeyDown += SearchMs_KeyDown;                      //Evento sulla pressione del tasto enter
-        }
 
         //Funzione per la ricerca/settaggio dell'immagine --> parametri: valore cercato, istanza contenente i vari dati/riferimenti
         public string searchImage(long searchedValue, MyDepoData myDepoData)
@@ -165,17 +156,26 @@ namespace DataSetBuilder.controller
 
         internal void openDepsData(object sender, MouseButtonEventArgs e)
         {
-            ListViewItem listViewItem = sender as ListViewItem;
-            init(listViewItem);
+                ListViewItem listViewItem = sender as ListViewItem;
+                init(listViewItem);            
         }
 
         private void init(ListViewItem listViewItem)
         {
             if (allowAdding(listViewItem))
             {
-                initLists(listViewItem);                
-                //initFirstImage((string)listViewItem.Content);
-                initControlsAction();
+                try
+                {
+                    initLists(listViewItem);
+                }
+                catch (DirectoryNotFoundException e)
+                {
+                    MessageBox.Show("La deposizione non contiene file/directory nel corretto formato\n\n" + e.Message, e.ToString());
+                }
+                catch(ArgumentOutOfRangeException e)
+                {
+                    MessageBox.Show("La deposizione non contiene file/directory nel corretto formato\n\n" + e.Message, e.ToString());
+                }
             }
         }
 

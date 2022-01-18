@@ -156,5 +156,11 @@
   <ItemGroup>
     <Resource Include="Immagini\GC_addImage.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Testi\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Immagini\Image not found.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
