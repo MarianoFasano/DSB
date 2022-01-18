@@ -61,7 +61,7 @@ namespace DataSetBuilder.view
             InitializeComponent();
             ConfigurationInit();
             //Inizializza la lista degli esperimenti
-            Init();
+            Init(0);
             initTabControl();
             this.depoTabControlController = new DepoTabControlController(this.myExpTabItemModel, expPath);
             this.myExpTabControlController = new ExpTabControlController(this.tabBody.TabsControl, expPath, this.myExpTabItemModel, this.depoTabControlController);
@@ -96,7 +96,7 @@ namespace DataSetBuilder.view
             }
         }
 
-        private void Init()
+        private void Init(int number)
         {
             //Pulizia della lista dei listviewitems, altrimenti rimangono presenti i precedenti items
             ExperimentViewer.Items.Clear();
@@ -111,15 +111,37 @@ namespace DataSetBuilder.view
                     var listItem = new ListViewItem();
                     //Si estrae dal nome della folder dell'esperimento il percorso, lasciando unicamente il nome dell'esperimento
                     string folderName = expDirectories[i].Remove(0, expPath.Length + 1);
-                    //Si verifica che il nome contenga la parola "Experiment"
-                    if (folderName.Contains("Experiment"))
+
+                    //Switch per gestire l'inizializzazione iniziale e l'aggiornamento dinamica della listbox degli esperimenti digitando nella casella di ricerca
+                    switch (number)
                     {
-                        //Si assegna il nome al content del ListViewItem
-                        listItem.Content = folderName;
-                        //Alla ListViewItem si aggiunge l'evento openExpDeps (l'evento che permette di aprire la tab dell'esperimento)
-                        listItem.MouseDoubleClick += openExpDeps;
-                        //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
-                        ExperimentViewer.Items.Add(listItem);
+                        //Inizializzazione
+                        case 0:
+                            //Si verifica che il nome contenga la parola "Experiment"
+                            if (folderName.Contains("Experiment"))
+                            {
+                                //Si assegna il nome al content del ListViewItem
+                                listItem.Content = folderName;
+                                //Alla ListViewItem si aggiunge l'evento openExpDeps (l'evento che permette di aprire la tab dell'esperimento)
+                                listItem.MouseDoubleClick += openExpDeps;
+                                //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
+                                ExperimentViewer.Items.Add(listItem);
+                            }
+                            break;
+                        //Aggiornamento tramite searchbox
+                        case 1:
+                            string textsearched = ExpSearchBox.Text;
+                            //Si verifica che il nome contenga la parola "Experiment"
+                            if (folderName.Contains("Experiment") && folderName.Contains(textsearched))
+                            {
+                                //Si assegna il nome al content del ListViewItem
+                                listItem.Content = folderName;
+                                //Alla ListViewItem si aggiunge l'evento openExpDeps (l'evento che permette di aprire la tab dell'esperimento)
+                                listItem.MouseDoubleClick += openExpDeps;
+                                //Si aggiunge l'elemento della lista appena creato alla viewer degli esperimenti
+                                ExperimentViewer.Items.Add(listItem);
+                            }
+                            break;
                     }
                 }
                 checkEmptyExpList(ExperimentViewer);
@@ -535,7 +557,7 @@ namespace DataSetBuilder.view
         private void RefreshCmd_Click(object sender, RoutedEventArgs e)
         {
             //Inizializza nuovamente la lista degli esperimenti
-            Init();            
+            Init(0);            
         }
         //Comando di chiusura dell'applicazione
         private void QuitCmd_Click(object sender, RoutedEventArgs e)
@@ -639,6 +661,12 @@ namespace DataSetBuilder.view
             {
                 //Do Nothing
             }
+        }
+        //Evento che si verifica quando si modifica il testo nella searchbox degli esperimenti --> in cima alla lista
+        private void ExpSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //Aggiornamento della lista
+            Init(1);
         }
     }
 }

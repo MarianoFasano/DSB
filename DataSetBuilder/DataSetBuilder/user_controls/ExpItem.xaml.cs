@@ -42,5 +42,10 @@ namespace DataSetBuilder.user_controls
         {
             return this.depoTabItem;
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

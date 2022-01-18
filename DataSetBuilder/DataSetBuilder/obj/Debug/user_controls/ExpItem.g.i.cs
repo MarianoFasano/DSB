@@ -141,21 +141,29 @@ namespace DataSetBuilder.user_controls {
             this.DepoDockPanel = ((System.Windows.Controls.DockPanel)(target));
             return;
             case 3:
-            this.Modifica = ((System.Windows.Controls.Menu)(target));
+            
+            #line 20 "..\..\..\user_controls\ExpItem.xaml"
+            ((System.Windows.Controls.TextBox)(target)).TextChanged += new System.Windows.Controls.TextChangedEventHandler(this.TextBox_TextChanged);
+            
+            #line default
+            #line hidden
             return;
             case 4:
-            this.ViewCommentMenu = ((System.Windows.Controls.MenuItem)(target));
+            this.Modifica = ((System.Windows.Controls.Menu)(target));
             return;
             case 5:
-            this.DepoDirectoryMenu = ((System.Windows.Controls.MenuItem)(target));
+            this.ViewCommentMenu = ((System.Windows.Controls.MenuItem)(target));
             return;
             case 6:
-            this.DeleteDepoMenu = ((System.Windows.Controls.MenuItem)(target));
+            this.DepoDirectoryMenu = ((System.Windows.Controls.MenuItem)(target));
             return;
             case 7:
-            this.DepoComment = ((System.Windows.Controls.TextBox)(target));
+            this.DeleteDepoMenu = ((System.Windows.Controls.MenuItem)(target));
             return;
             case 8:
+            this.DepoComment = ((System.Windows.Controls.TextBox)(target));
+            return;
+            case 9:
             this.DepositionViewer = ((System.Windows.Controls.ListBox)(target));
             return;
             }
