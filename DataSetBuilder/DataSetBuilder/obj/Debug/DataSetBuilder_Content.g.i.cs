@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("immagini/gc_addimage.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("testi/comment%20not%20found.txt")]
 
 

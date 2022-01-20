@@ -21,9 +21,17 @@ namespace DataSetBuilder.controller
 
         //Altre variabili
         //Percorsi
-        private String depoPath;                //percorso della deposizione --> percorso base degli esperimenti + la cartella dell'esperimento
-        private String dataPath;                //percorso dei dati --> percorso base degli esperimenti + la cartella dell'esperimento + la cartella della deposizione
-        private String basePath;                //percorso base degli esperimenti
+        private string depoPath;                //percorso della deposizione --> percorso base degli esperimenti + la cartella dell'esperimento
+        private string dataPath;                //percorso dei dati --> percorso base degli esperimenti + la cartella dell'esperimento + la cartella della deposizione
+        private string basePath;                //percorso base degli esperimenti
+
+        private string errorMessage = "Possibili problemi:\n\n" +
+                                      " - la deposizione non contiene file/directory nel corretto formato\n\n" +
+                                      " - la deposizione contiene i simboli proibiti '(' o ')' nel nome";
+
+        //I caratteri "proibiti" nel nome dell'esperimento
+        private char forbiddenSymbol = '(';
+        private char forbiddenSymbol2 = ')';
 
         //Dizionari che contengono i riferimenti ai dati e alla struttura grafica dell'interfaccia che viene caricata nel tabItem dell'esperimento
         //Riferimento ai dati 
@@ -170,29 +178,35 @@ namespace DataSetBuilder.controller
                 }
                 catch (DirectoryNotFoundException e)
                 {
-                    MessageBox.Show("La deposizione non contiene file/directory nel corretto formato\n\n" + e.Message, e.ToString());
+                    MessageBox.Show(errorMessage, e.Message);
                 }
                 catch(ArgumentOutOfRangeException e)
                 {
-                    MessageBox.Show("La deposizione non contiene file/directory nel corretto formato\n\n" + e.Message, e.ToString());
+                    MessageBox.Show(errorMessage, e.Message);
                 }
             }
         }
-
-        private Boolean allowAdding(ListViewItem listViewItem)
+        //Verifica se è possibile aggiungere/aprire la deposizione
+        private bool allowAdding(ListViewItem listViewItem)
         {
+            //Indice che indica il numero di copie
             int copyindex = 0;
+            //La stringa rappresenta il contenuto testuale, il nome, dell'item della deposizione che si cerca di aprire
             string temp = (string)listViewItem.Content;
             try
             {
+                //Fintanto che il dizionario delle strutture contiene la chiave, ossia nome deposizione + eventuale postfisso a indicarne il numero aperto
                 while (this.depoStructures.ContainsKey(temp))
                 {
+                    //Si incrementa l'indice e si riassegna alla variabile temp il nome della deposizione con l'indice della copia come postfisso
                     copyindex++;
                     temp = (string)listViewItem.Content + "(" + copyindex.ToString() + ")";
                 }
+                //Necessario riassegnarlo come contenuto dell'item per la successiva inizializzazione dei dati: altrimenti il contenuto dell'item sarebbe già impiegato come chiave di riferimento
                 listViewItem.Content = temp;
                 return true;
             }
+            //Se vi fossero eccezioni di qualsiasi tipo, ritornerà false
             catch (Exception exception)
             {
                 return false;
@@ -215,17 +229,20 @@ namespace DataSetBuilder.controller
             depoStructures.Add((string)listViewItem.Content, depoItemBody);
             listViewItem.Content = extractName((string)listViewItem.Content);
         }
-
-        public String getDepoName()
+        //Rimuove le parti del percorso in modo da ritornare il nome della deposizione
+        public string getDepoName()
         {
-            String removeString = basePath + @"\" + depoPath + @"\";
+            //stringa da rimuovere
+            string removeString = basePath + @"\" + depoPath + @"\";
             int index = dataPath.IndexOf(removeString);
             string cleanPath = (index < 0) ? dataPath : dataPath.Remove(index, removeString.Length);
             return cleanPath;
         }
-        private String getExpName()
+        //Ritornare le parti del percoso in modo da ritornare il nome dell'esperimento
+        private string getExpName()
         {
-            String removeString = basePath + @"\";
+            //stringa da rimuovere
+            string removeString = basePath + @"\";
             int index = depoPath.IndexOf(removeString);
             string cleanPath = (index < 0) ? depoPath : depoPath.Remove(index, removeString.Length);
             return cleanPath;
@@ -236,8 +253,8 @@ namespace DataSetBuilder.controller
             return this.depoDatas;
         }
 
-        //Set this.tabControl based on a key value
-        public void setActualTabControl(String key)
+        //Assegna this.tabControl in base al valore della chiave passata
+        public void setActualTabControl(string key)
         {
             this.actualTabControl = this.myExpTabItemModel.getTabControl(key);
             this.actualTabControl.SelectionChanged += TabControl_SelectionChanged;
@@ -246,7 +263,7 @@ namespace DataSetBuilder.controller
             if (actualTabControl.SelectedItem is CloseableTab)
             {
                 CloseableTab tabItem = (CloseableTab)actualTabControl.SelectedItem;
-                String header = (string)tabItem.Title;
+                string header = (string)tabItem.Title;
 
                 //Mandatory check to avoid tabItem=null happened on drag&drop the tabItem
                 if (tabItem != null && header != null)
@@ -264,21 +281,14 @@ namespace DataSetBuilder.controller
             }
         }
 
-        private string extractMs(string msString)
-        {
-            string ms = msString;
-            int start = "ms".Length;
-            ms = ms.Substring(start, ms.IndexOf("_")-2);
-            return ms;
-        }
         //Estrazione del nome della deposizione/esperimento escludendo la parte di indicazione del numero di copia
         private string extractName(string header)
         {
-            //Per essere considerata una copia, la stringa deve contenere il simbolo "("
-            if (header.Contains("("))
+            //Per essere considerata una copia, la stringa deve contenere il simbolo "(" e il simbolo ")"
+            if (header.Contains(forbiddenSymbol) && header.Contains(forbiddenSymbol2))
             {
                 //In caso affermativo si estra dalla stringa tutto ciò che arriva prima della parentesi aperta
-                int endIndex = header.IndexOf("(");
+                int endIndex = header.IndexOf(forbiddenSymbol);
                 string name = header.Substring(0, endIndex);
                 return name;
             }

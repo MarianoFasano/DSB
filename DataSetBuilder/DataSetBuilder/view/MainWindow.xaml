@@ -22,7 +22,7 @@
         
         <ToolBar Grid.Row="0" Grid.ColumnSpan="4">
             <Menu IsMainMenu="True">
-                <MenuItem Header="File">
+                <MenuItem x:Name="FileMenu" Header="File">
                     <MenuItem x:Name="PathCmd" Header="Percorso esperimenti" Click="PathCmd_Click"/>
                     <MenuItem x:Name="RecentExp" Header="Esperimenti recenti"/>
                     <MenuItem x:Name="RestartCmd" Header="Riavvia" Click="RestartCmd_Click"/>

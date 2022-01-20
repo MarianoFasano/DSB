@@ -45,7 +45,7 @@ namespace DataSetBuilder.controller
         //Aggiungere esperimenti aperti di recente oppure il percorso degli esperimenti
         public void addSettings(string key, string value)
         {
-            //configuration.AppSettings.Settings[key] == null
+            //La verifica avviene sul dizionario ordinato, che rispecchia il file di configurazione per quanto concerne gli esperimenti aperti di recente
             if (!recentExperiments.Contains(key) && !key.Equals("path"))
             {
                 if(recentExperiments.Count >= size)

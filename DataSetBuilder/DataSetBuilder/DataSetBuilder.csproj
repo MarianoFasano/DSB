@@ -98,7 +98,6 @@
     <Compile Include="controller\ImageSearcher.cs" />
     <Compile Include="controller\ExpTabControlController.cs" />
     <Compile Include="controller\PyrometerSearcher.cs" />
-    <Compile Include="factories\MyExpTabItemFactory.cs" />
     <Compile Include="model\CloseableTab.cs" />
     <Compile Include="model\CncResult.cs" />
     <Compile Include="model\MyDepoData.cs" />
@@ -155,11 +154,12 @@
   <ItemGroup>
     <Resource Include="Immagini\GC_addImage.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Testi\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Immagini\Image not found.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Testi\Comment not found.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

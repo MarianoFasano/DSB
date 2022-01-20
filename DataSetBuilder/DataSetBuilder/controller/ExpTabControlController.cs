@@ -1,5 +1,4 @@
-﻿using DataSetBuilder.factories;
-using DataSetBuilder.model;
+﻿using DataSetBuilder.model;
 using DataSetBuilder.user_controls;
 using System;
 using System.Collections.Generic;
@@ -18,17 +17,19 @@ namespace DataSetBuilder.controller
     {
         private MyExpTabControlModel myTabControlModel;
         private MyExpTabItemModel myExpTabItemModel;
-        private MyExpTabItemFactory myExpTabItemFactory;
         private DepoTabControlController depoTabControlController;
         private TabControl mainTabControl;
         private string actualBasePath;
+
+        //I caratteri "proibiti" nel nome dell'esperimento
+        private char forbiddenSymbol = '(';
+        private char forbiddenSymbol2 = ')';
 
         public ExpTabControlController(TabControl tabControl, String basePath, MyExpTabItemModel myExpTabItemModel, DepoTabControlController depoTabControlController)
         {
             this.mainTabControl = tabControl;
             this.myTabControlModel = new MyExpTabControlModel(tabControl);
             this.myExpTabItemModel = myExpTabItemModel;
-            this.myExpTabItemFactory = new MyExpTabItemFactory(basePath, depoTabControlController);
             this.depoTabControlController = depoTabControlController;
             //Si aggiunge l'evento della rilevazione della tab attiva al TabControl
             this.mainTabControl.SelectionChanged += TabControl_SelectionChanged;
@@ -57,10 +58,13 @@ namespace DataSetBuilder.controller
             //Controllo di aggiunta del TabItem, prosegue se non esiste ancora
             if (!Contains(listViewItem))
             {
+                //Dichiarazione e assegnazione
+                string tabheader = (string)listViewItem.Content;
                 //Inizializzazione della struttura (user control) da aggiungere al tabItem dell'esperimento
                 ExpItem expItem = new ExpItem(depoTabControlController);
-                string tabheader = (string)listViewItem.Content;
-                CloseableTab tabItem = myExpTabItemFactory.GetTabItem(extractName(tabheader), expItem, path);
+                
+                CloseableTab tabItem = GetTabItem(extractName(tabheader), expItem, path);
+
                 addItem(listViewItem, tabItem);
                 //Creazione dell'user control che contiene il TabControl delle deposizioni (dove si aggiungeranno le tab delle varie deposizioni)
                 //L'istanza della DepoTabItem viene poi inserita nella cella della griglia corretta (riga due, colonna uno e occupa due colonne)
@@ -71,7 +75,7 @@ namespace DataSetBuilder.controller
                 //L'istanza della DepoTabItem viene aggiunta alla griglia della struttura della tabItem dell'esperimento, secondo le impostazioni sopra effettuate
                 expItem.ExpGrid.Children.Add(depodataTabItem);
                 //All'intestazione della tab si assegna il contenuto della listViewItem (il nome dell'esperimento)
-                tabItem.Title = (string)listViewItem.Content;
+                tabItem.Title = tabheader;
                 //Alla tabItem si assegna la struttura ExpItem
                 tabItem.Content = expItem;
                 //Al TabsControl si aggiunge l'item
@@ -117,12 +121,13 @@ namespace DataSetBuilder.controller
                 }
             }
         }
-        //Estrazione del nome --> si elimina la parte di copia (es (3))
+        //Estrazione del nome --> si elimina la parte di copia (es (3)) se presente
         private string extractName(string header)
         {
-            if (header.Contains("("))
+            //Per essere una copia, in base a quanto programmato, deve contenere almeno la parentesi aperta e la parentesi chiusa
+            if (header.Contains(forbiddenSymbol) && header.Contains(forbiddenSymbol2))
             {
-                int endIndex = header.IndexOf("(");
+                int endIndex = header.IndexOf(forbiddenSymbol);
                 string name = header.Substring(0, endIndex);
                 return name;
             }
@@ -130,6 +135,13 @@ namespace DataSetBuilder.controller
             {
                 return header;
             }
+        }
+        //Crea
+        public CloseableTab GetTabItem(string depoName, ExpItem expitem, string path)
+        {
+            CloseableTab tabItem = new CloseableTab { Title = depoName };
+            expitem.initDepoList(depoName, path);
+            return tabItem;
         }
     }
 }

@@ -3,6 +3,7 @@ using DataSetBuilder.model;
 using DataSetBuilder.user_controls;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
@@ -39,11 +40,10 @@ namespace DataSetBuilder.view
         private MyExpTabItemModel myExpTabItemModel = new MyExpTabItemModel();
         private DepoTabControlController depoTabControlController;
 
-        //TODO PATH:Percorso della cartella contenente gli esperimenti, anch'essi sono delle cartelle
-        //string expPath = @"J:\DTI\_DSB";    //fisso Mariano
-        //string expPath = @"D:\_DSB";      //portatile Mariano
-        //string expPath = @"J:\DTI\Experiments_Lite";
+        //Stringa del percorso root degli esperimenti
         string expPath;
+        //Percorso immagine predefinita
+        string defaultImage = @"/Immagini/GC_addImage.png";
         //Larghezza per la colonna degli esperimenti
         private double width = 0;
         //Dichiarazione della classe TabsBody, la classe di riferimento del file xaml con il medesimo nome
@@ -72,8 +72,16 @@ namespace DataSetBuilder.view
         private void ConfigurationInit()
         {
             //Configurazione percorso
-            PathFromConfig();            
+            PathFromConfig();
+            //Configurazione esperimenti recenti
+            RecentExperimentFromConfig();
         }
+        //Ripresa dei dati sugli esperimenti aperti di recente dal file di configurazione
+        private void RecentExperimentFromConfig()
+        {
+            updateRecentExpMenu();
+        }
+
         //Ripresa dei dati sul percorso dal file di configurazione
         private void PathFromConfig()
         {
@@ -219,23 +227,23 @@ namespace DataSetBuilder.view
                         }                            
                         else
                         {
-                            tmpImage = new BitmapImage(new Uri(@"/Immagini/GC_addImage.png", UriKind.RelativeOrAbsolute));
+                            tmpImage = new BitmapImage(new Uri(defaultImage, UriKind.RelativeOrAbsolute));
                         }                            
                     }
                     else
                     {
-                        tmpImage = new BitmapImage(new Uri(@"/Immagini/GC_addImage.png", UriKind.RelativeOrAbsolute));
+                        tmpImage = new BitmapImage(new Uri(defaultImage, UriKind.RelativeOrAbsolute));
                     }
                 }
                 else
                 {
-                   tmpImage = new BitmapImage(new Uri(@"/Immagini/GC_addImage.png", UriKind.RelativeOrAbsolute));
+                   tmpImage = new BitmapImage(new Uri(defaultImage, UriKind.RelativeOrAbsolute));
                 }
                 return tmpImage;
             }
             else
             {
-                BitmapImage tmpImage = new BitmapImage(new Uri(@"/Immagini/GC_addImage.png", UriKind.RelativeOrAbsolute));
+                BitmapImage tmpImage = new BitmapImage(new Uri(defaultImage, UriKind.RelativeOrAbsolute));
                 return tmpImage;
             }
         }
@@ -273,8 +281,16 @@ namespace DataSetBuilder.view
         private void openExpDeps(object sender, EventArgs e)
         {
             ListViewItem listViewItem = sender as ListViewItem;
-            //La funzione della classe DSB_Controller ritorna un oggetto TabsBody
+            //La funzione della classe ExpTabControlController ritorna un oggetto TabsBody
             tabBody = myExpTabControlController.createTabItem(tabBody, listViewItem, expPath);
+
+            //Parte relativa all'aggiunta del esperimento appena aperto all'elenco degli esperimenti aperti di recente --> chiave: nome esperimento, valore: percorso esperimento
+            string expname = (string)listViewItem.Content;
+            string singleExpPath = expPath + @"\" + expname;
+            //Aggiunta di chiave-valore al file di configurazione
+            configurationController.addSettings(expname, singleExpPath);
+            //Aggiornamento degli esperimenti recenti
+            updateRecentExpMenu();
         }
         //Visibilità della colonna della lista degli esperimenti
         //Gestione della larghezza della colonna della lista degli esperimenti
@@ -346,9 +362,29 @@ namespace DataSetBuilder.view
         //Funzione per recuperare il percorso del commento dell'esperimento
         private string getExpCommentPath()
         {
+            //TODO: questa parte non mi aggrada troppo...
+            //Percorso commento predefinito
+            string defaultComment = "";
+
+            try
+            {
+                //Si ottiene il percorso corrente di esecuzione, ma è nella cartella /bin/Debug e non nella "root" del progetto
+                string temppath = Directory.GetCurrentDirectory();           
+                //perciò taglio il percorso alla corrispondenza di /bin in modo da essere nella directory con la folder "Testi" e le altre cartelle del progetto
+                int endindex = temppath.IndexOf(@"\bin");
+                defaultComment = temppath.Substring(0, endindex) + @"/Testi/Comment not found.txt";
+            }
+            catch(Exception exception)
+            {
+                //In caso di eccezioni si visualizza un messaggio e 
+                MessageBox.Show(exception.Message);
+            }
+            
+
             //Controllo se l'item selezionato dalla lista sia effettivamente un listviewitem
             if (checkItemType())
             {
+
                 string commentPath;
                 ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;    //Si recupare l'item selezionato
 
@@ -356,6 +392,7 @@ namespace DataSetBuilder.view
                 //Se così non fosse si apre la directory degli esperimenti
                 if (listViewItem != null)
                 {
+
                     string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
                     string path = expPath + @"\" + itemName;
                     string[] files = Directory.GetFiles(path);                              //Si ottengono i files presenti nella cartella sottoforma di array di stringhe
@@ -364,20 +401,20 @@ namespace DataSetBuilder.view
                     {
                         //Si estraggono in una lista le stringhe che contengono la parola Experiment e che sono dei file txt
                         List<string> fileNames = files.Where(e => e.Contains("Experiment")).Where(e => e.Contains(".txt")).ToList();
-                        //Si verifica che la lista contenga degli elementi
+                        //Si verifica che la lista contenga degli elementi e si assegna il primo alla stringa relativa al percorso del commento, altrimenti si assegna il percorso al commento predefinito
                         if (fileNames.Count > 0)
                             commentPath = fileNames[0];
                         else
-                            commentPath = "";
+                            commentPath = defaultComment;
                     }
                     else
                     {
-                        commentPath = "";
+                        commentPath = defaultComment;
                     }
                 }
                 else
                 {
-                    commentPath = "";
+                    commentPath = defaultComment;
                 }
                 return commentPath;
             }
@@ -416,7 +453,7 @@ namespace DataSetBuilder.view
                 }                
             }
         }
-
+        //Funzione di salvataggio dell'immagine di Provino dell'esperimento
         private void SaveImage(BitmapImage tmpImage)
         {
             //Variabili necessarie per il salvataggio dell'immagine
@@ -445,7 +482,7 @@ namespace DataSetBuilder.view
             image.Save(imagepath, imageCodecInfo, encoderParameters);
 
         }
-
+        //Convertitore di BitmapImage in Bitmap
         private Bitmap convertToBitmap(BitmapImage tmpImage)
         {
             // BitmapImage bitmapImage = new BitmapImage(new Uri("../Images/test.png", UriKind.Relative));
@@ -460,7 +497,7 @@ namespace DataSetBuilder.view
                 return new Bitmap(bitmap);
             }
         }
-
+        //Funzione copiata da https://docs.microsoft.com/en-us/dotnet/api/system.drawing.image.save?view=dotnet-plat-ext-6.0
         private ImageCodecInfo GetEncoderInfo(String mimeType)
         {
             int j;
@@ -667,6 +704,85 @@ namespace DataSetBuilder.view
         {
             //Aggiornamento della lista
             Init(1);
+        }
+        //Creazione/aggiornamento della lista degli esperimenti aperti di recente
+        private void updateRecentExpMenu()
+        {
+            OrderedDictionary recentExperiments = configurationController.getRecenteExperiments();
+            //Controllo della lunghezza del dizionario, altrimenti non si svolgono operazioni
+            if (recentExperiments.Count > 0)
+            {
+                //Recupero delle chiavi in una lista
+                string[] keys = new string[recentExperiments.Count];
+                recentExperiments.Keys.CopyTo(keys, 0);
+                //Si cicla sul dizionario tramite la lista di chiavi
+                foreach(string key in keys)
+                {
+                    //Recupero del valore dal dizionario
+                    string value = (string)recentExperiments[key];
+                    //Creazione del menuitem da associare al menuitem
+                    MenuItem recentExp = new MenuItem();
+                    //Si assegna il valore all'header del menuitem
+                    recentExp.Header = value;
+                    //Colorazione rossa del carattere nel caso il percorso base non combaciasse (vedi nel caso si cambiasse percorso)
+                    if (!value.Contains(expPath))
+                    {
+                        //Testo rosso
+                        recentExp.Foreground = System.Windows.Media.Brushes.Red;
+                    }
+                    else
+                    {
+                        //Testo nero
+                        recentExp.Foreground = System.Windows.Media.Brushes.Black;
+                    }
+                    //Aggiunta dell'evento legato al menuitem con il nome dell'esperimento recente
+                    recentExp.Click += RecentExp_Click;
+
+                    //Reset degli items del menu e aggiunta del menuitem dell'esperimento recente
+                    RecentExp.Items.Clear();
+                    RecentExp.Items.Add(recentExp);
+                }
+            }
+        }
+
+        private void RecentExp_Click(object sender, RoutedEventArgs e)
+        {
+            //L'oggetto mittente è un menuitem
+            MenuItem recentExp = sender as MenuItem;
+            string content = (string)recentExp.Header;
+            if (content.Contains(expPath))
+            {                
+                //Estrazione del nome dell'esperimento
+                content = getExpName(content);
+                //Creazione di un ListviewItem unicamente per il metodo di createTabItem che lo richiede come parametro
+                ListViewItem listViewItem = new ListViewItem();
+                listViewItem.Content = content;
+
+                //La funzione della classe ExpTabControlController ritorna un oggetto TabsBody
+                tabBody = myExpTabControlController.createTabItem(tabBody, listViewItem, expPath);
+
+                //Parte relativa all'aggiunta del esperimento appena aperto all'elenco degli esperimenti aperti di recente --> chiave: nome esperimento, valore: percorso esperimento
+                string expname = content;
+                string singleExpPath = expPath + @"\" + expname;
+                //Aggiunta di chiave-valore al file di configurazione
+                configurationController.addSettings(expname, singleExpPath);
+                //Aggiornamento degli esperimenti recenti
+                updateRecentExpMenu();
+            }
+            else
+            {
+                MessageBox.Show("L'esperimento selezionato non fa parte del percorso in analisi. Pertanto non è possibile aprirlo", "Questo esperimento non può essere aperto.");
+            }
+            
+        }
+        //Ritornare le parti del percoso in modo da ritornare il nome dell'esperimento
+        private string getExpName(string actualpath)
+        {
+            //stringa da rimuovere
+            string removeString = expPath + @"\";
+            int index = actualpath.IndexOf(removeString);
+            string cleanPath = (index < 0) ? actualpath : actualpath.Remove(index, removeString.Length);
+            return cleanPath;
         }
     }
 }

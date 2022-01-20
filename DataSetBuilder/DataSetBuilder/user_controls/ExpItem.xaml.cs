@@ -66,47 +66,62 @@ namespace DataSetBuilder.user_controls
             DepositionViewer.Items.Clear();
             //Si ottiene la stringa della deposizione --> percorso base + nome della deposizione
             string depoPath = basePath + @"\" + depoName;
-            //Si ottengono le cartelle nella directory in formato stringa indicata al metodo statico
-            string[] depoDirectories = Directory.GetDirectories(depoPath);
-            
-            //Controllo se la lista di cartelle ne contiene, contenere cartelle significa che ci sono delle deposizioni
-            if (isEmpty(depoDirectories.Length))
+            try
             {
-                //Se l'array risulta vuoto si aggiunge il messaggio che indica all'utente che non sono presenti deposizioni per l'esperimento aperto
-                DepositionViewer.Items.Add(emptyMessage());
-            }
-            else
-            {
-                //In caso di presenza di deposizioni, si cicla su di esse andando a creare un item per la lista e gli si aggiunge l'evento di apertura della deposizione gestita nella classe DepoTabControlController
-                for (int i = 0; i < depoDirectories.Length; i++)
+                //Si ottengono le cartelle nella directory in formato stringa indicata al metodo statico
+                string[] depoDirectories = Directory.GetDirectories(depoPath);
+                //Controllo se la lista di cartelle ne contiene, contenere cartelle significa che ci sono delle deposizioni
+                if (isEmpty(depoDirectories.Length))
                 {
-                    var listItem = new ListViewItem();
-                    string depoName = depoDirectories[i].Remove(0, depoPath.Length + 1);
-
-                    //Istruzione switch che discerne fra la ricarica completa della lista e la ricarica dovuta alla ricerca dinamica di una deposizione
-                    switch (number)
+                    //Se l'array risulta vuoto si aggiunge il messaggio che indica all'utente che non sono presenti deposizioni per l'esperimento aperto
+                    DepositionViewer.Items.Add(emptyMessage());
+                }
+                else
+                {
+                    //In caso di presenza di deposizioni, si cicla su di esse andando a creare un item per la lista e gli si aggiunge l'evento di apertura della deposizione gestita nella classe DepoTabControlController
+                    for (int i = 0; i < depoDirectories.Length; i++)
                     {
-                        //Caso associato all'inizializzazione
-                        case 0:
-                            if (depoName.Contains("Deposition"))
-                            {
-                                listItem.Content = depoName;
-                                listItem.MouseDoubleClick += depoTabControlController.openDepsData;
-                                DepositionViewer.Items.Add(listItem);
-                            }
-                            break;
-                        //Caso associato all'aggiornamento della lista dovuto alla ricerca nel campo di testo
-                        case 1:
-                            if (depoName.Contains("Deposition") && depoName.Contains(DepoSearchBox.Text))
-                            {
-                                listItem.Content = depoName;
-                                listItem.MouseDoubleClick += depoTabControlController.openDepsData;
-                                DepositionViewer.Items.Add(listItem);
-                            }
-                            break;
+                        var listItem = new ListViewItem();
+                        string depoName = depoDirectories[i].Remove(0, depoPath.Length + 1);
+
+                        //Istruzione switch che discerne fra la ricarica completa della lista e la ricarica dovuta alla ricerca dinamica di una deposizione
+                        switch (number)
+                        {
+                            //Caso associato all'inizializzazione
+                            case 0:
+                                if (depoName.Contains("Deposition"))
+                                {
+                                    listItem.Content = depoName;
+                                    listItem.MouseDoubleClick += depoTabControlController.openDepsData;
+                                    DepositionViewer.Items.Add(listItem);
+                                }
+                                break;
+                            //Caso associato all'aggiornamento della lista dovuto alla ricerca nel campo di testo
+                            case 1:
+                                if (depoName.Contains("Deposition") && depoName.Contains(DepoSearchBox.Text))
+                                {
+                                    listItem.Content = depoName;
+                                    listItem.MouseDoubleClick += depoTabControlController.openDepsData;
+                                    DepositionViewer.Items.Add(listItem);
+                                }
+                                break;
+                        }
                     }
                 }
-            }            
+            }
+            catch (DirectoryNotFoundException directoryNotFound)
+            {
+                //Nel caso l'eccezione fosse causata da una directory non trovata si ricorda all'utente che il nome dell'esperimento non può contenere la parentesi aperta '('
+                MessageBox.Show("Attenzione, nome non valido: il nome dell'esperimento non può contentere il simbolo '(' !", directoryNotFound.Message);
+            }
+            catch(Exception e)
+            {
+                //Nel caso fosse qualsiasi altra eccezione, la si mostra come messaggio
+                MessageBox.Show(e.Message);
+            }
+            
+            
+              
         }
         //Controllo booleano se l'array contiene o meno elementi --> vuoto se lungo zero
         private bool isEmpty(int length)
