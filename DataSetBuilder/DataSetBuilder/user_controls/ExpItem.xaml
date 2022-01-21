@@ -37,7 +37,8 @@
             <ListBox x:Name="DepositionViewer" Height="auto" SelectionChanged="DepositionViewer_SelectionChanged">
             </ListBox>
         </DockPanel>
-        
+        <ListBox x:Name="LiveStatus" Grid.Row="0" Grid.Column="1">            
+        </ListBox>
         <GridSplitter Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="2" Background="DarkGray"/>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="2" Background="DarkGray"/>
     </Grid>

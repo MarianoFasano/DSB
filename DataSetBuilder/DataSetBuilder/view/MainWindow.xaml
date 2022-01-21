@@ -51,7 +51,7 @@
                     </MenuItem>
                     <MenuItem x:Name="RefreshCmd" Header="Aggiorna" Click="RefreshCmd_Click"/>
                     <MenuItem x:Name="CompressCmd" Header="Comprimi" Click="CompressCmd_Click"/>
-                    <MenuItem x:Name="DeleteExpMenu" Header="(Cancella esperimento)"/>
+                    <MenuItem x:Name="DeleteExpMenu" Header="Cancella esperimento" Click="DeleteExpMenu_Click"/>
                     <MenuItem Header="(Nuovo esperimento)">
                         <MenuItem x:Name="NewEmtpyExpMenu" Header="(Esperimento vuoto)"/>
                         <MenuItem x:Name="NewLoadExpMenu" Header="(Carica da esistente)"/>

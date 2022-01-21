@@ -81,6 +81,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="user_controls\OnlineStatus.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="user_controls\TabsBody.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -116,6 +120,9 @@
     </Compile>
     <Compile Include="user_controls\ExpItem.xaml.cs">
       <DependentUpon>ExpItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="user_controls\OnlineStatus.xaml.cs">
+      <DependentUpon>OnlineStatus.xaml</DependentUpon>
     </Compile>
     <Compile Include="user_controls\TabsBody.xaml.cs">
       <DependentUpon>TabsBody.xaml</DependentUpon>

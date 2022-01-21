@@ -62,7 +62,8 @@ namespace DataSetBuilder.controller
                 string tabheader = (string)listViewItem.Content;
                 //Inizializzazione della struttura (user control) da aggiungere al tabItem dell'esperimento
                 ExpItem expItem = new ExpItem(depoTabControlController);
-                
+                expItem.LiveStatus = initLiveStatus(expItem.LiveStatus);
+
                 CloseableTab tabItem = GetTabItem(extractName(tabheader), expItem, path);
 
                 addItem(listViewItem, tabItem);
@@ -81,7 +82,9 @@ namespace DataSetBuilder.controller
                 //Al TabsControl si aggiunge l'item
                 tabBody.TabsControl.Items.Add(tabItem);
                 //Si aggiunge il TabControl delle deposizioni al dizionario di controllo con la rispettiva chiave (il nome dell'esperimento)
-                this.myExpTabItemModel.addToDict((string)listViewItem.Content, depodataTabItem.DepoTabControl);
+                this.myExpTabItemModel.addTabControlToDict((string)listViewItem.Content, depodataTabItem.DepoTabControl);
+                //Si aggiunge lo StackPanel delle deposizioni al dizionario di controllo con la rispettiva chiave (il nome dell'esperimento)
+                this.myExpTabItemModel.addDeviceSetupToDict((string)listViewItem.Content, expItem.LiveStatus);
                 //Si resetta il listviewitem, siccome è un riferimento
                 listViewItem.Content = extractName((string)listViewItem.Content);
                 //Si ritorna l'istanza tabBody debitamente aggiornata
@@ -92,6 +95,17 @@ namespace DataSetBuilder.controller
                 //Se la tabItem esiste già, si restituisce l'argomento così come è stato passato
                 return tabBody;
             }
+        }
+
+        private ListBox initLiveStatus(ListBox liveStatus)
+        {
+            //Todo example
+            for(int i = 0; i < 8; i++)
+            {
+                OnlineStatus onlineStatusExample = new OnlineStatus();
+                liveStatus.Items.Add(onlineStatusExample);
+            }
+            return liveStatus;
         }
 
         //Funzione che rileva il cambiamento di selezione di tab

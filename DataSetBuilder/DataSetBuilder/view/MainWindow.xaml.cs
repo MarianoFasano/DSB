@@ -865,5 +865,39 @@ namespace DataSetBuilder.view
                 }
             }
         }
+        //Cancellazione dell'esperimento
+        private void DeleteExpMenu_Click(object sender, RoutedEventArgs e)
+        {
+
+            //Si chiede la conferma per l'eliminazione della directory dell'esperimento
+            System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show("Si desidera eliminare l'esperimento selezionato?", "Eliminazione esperimento", MessageBoxButton.YesNo);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                try
+                {
+                    //Si recupera l'item selezionato dalla lista
+                    ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;
+                    //Se ne recupera il nome
+                    string itemname = (string)listViewItem.Content;
+                    //Si istanzia la stringa del percorso: percorso base degli esperimenti + il nome dell'item selezionato
+                    string folderpath = expPath + @"\" + itemname;
+                    //Creazione della variabile relativa alla directory da cancellare
+                    var dir = new DirectoryInfo(folderpath);
+                    dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
+                    //Si cancella la variabile, l'esperimento
+                    dir.Delete(true);
+                    //Aggiornamento della lista degli esperimenti
+                    Init(0);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else if (dialogResult == System.Windows.Forms.DialogResult.No)
+            {
+                //Do Nothing
+            }
+        }
     }
 }

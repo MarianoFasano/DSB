@@ -12,10 +12,12 @@ namespace DataSetBuilder.model
     public class MyExpTabItemModel
     {
         //Dizionario con chiave: nome esperimento, valore:TabControl
-        private IDictionary<String, TabControl> dataItems = new Dictionary<String, TabControl>();
+        private IDictionary<string, TabControl> dataItems = new Dictionary<string, TabControl>();
+        //Dizionario con chiave: nome esperimento, valore:stackpanel con la lista dei device
+        private IDictionary<string, ListBox> onlineDeviceList = new Dictionary<string, ListBox>();
 
-        //Funzione che aggiunge la coppia chiave-valore al dizionario, se non esiste
-        public void addToDict(String key, TabControl value)
+        //Funzione che aggiunge la coppia chiave-valore al dizionario dei TabControl, se non esiste
+        public void addTabControlToDict(string key, TabControl value)
         {
             if (!this.dataItems.ContainsKey(key))
             {
@@ -24,11 +26,30 @@ namespace DataSetBuilder.model
         }
 
         //Funzione che ritorna il TabControl in base alla chiave passata
-        public TabControl getTabControl(String key)
+        public TabControl getTabControl(string key)
         {
             if (dataItems.ContainsKey(key))
             {
                 return this.dataItems[key];
+            }
+            return null;
+        }
+
+        //Funzione che aggiunge la coppia chiave-valore al dizionario dei device online, se non esiste
+        public void addDeviceSetupToDict(string key, ListBox value)
+        {
+            if (!this.onlineDeviceList.ContainsKey(key))
+            {
+                this.onlineDeviceList.Add(key, value);
+            }
+        }
+
+        //Funzione che ritorna lo Stackpanel con la lista dei setup dei device in base alla chiave passata
+        public ListBox getDeviceSetupList(string key)
+        {
+            if (onlineDeviceList.ContainsKey(key))
+            {
+                return this.onlineDeviceList[key];
             }
             return null;
         }
