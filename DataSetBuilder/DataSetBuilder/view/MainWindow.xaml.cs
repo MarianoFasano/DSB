@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -185,12 +186,12 @@ namespace DataSetBuilder.view
                 experimentViewer.Items.Add(label);
             }
         }
-        //Funzione che carica il commento dell'esperimento nel DocumentViewer
+        //Funzione che carica i dettagli negli appositi controlli a ogni selezione dell'item
         private void ExperimentViewer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListViewItem listViewItem = sender as ListViewItem;
 
-            //TODO: gestire eccezione di file non trovato --> Si scrive nel textbox il contenuto di testo del file txt, letto dalla funzione File.ReadAllText
+            //Recupero dei dati necessari, file di testo, immagine e aggiornamento dei dettagli
             string fileName = getExpCommentPath();
             Provino.Source = getProvinoImage();
             updateDetails(fileName);
@@ -218,7 +219,7 @@ namespace DataSetBuilder.view
                     if (files.Length > 0)
                     {
                         //Si estraggono in una lista le stringhe che contengono la parola Experiment e che sono dei file txt
-                        List<string> fileNames = files.Where(e => e.Contains("Experiment")).Where(e => e.Contains(".jpeg")).ToList();
+                        List<string> fileNames = files.Where(e => e.Contains("Experiment")).Where(e => e.Contains(".jpeg")).Where(e => e.Contains("Provino")).ToList();
                         //Si verifica che la lista contenga degli elementi
                         if (fileNames.Count > 0)
                         {
@@ -326,8 +327,7 @@ namespace DataSetBuilder.view
         //Evento legato al click del mouse sul menuitem del commento dell'esperimento
         private void ViewExpCommentMenu_Click(object sender, RoutedEventArgs e)
         {
-            String fileName =getExpCommentPath();
-            //TODO: dopo aver commentato il dsb_controller
+            string fileName =getExpCommentPath();
             ExpDetails.Visibility = viewComment();
             ViewCommentMenu.Header = commentText();
             updateDetails(fileName);
@@ -362,7 +362,6 @@ namespace DataSetBuilder.view
         //Funzione per recuperare il percorso del commento dell'esperimento
         private string getExpCommentPath()
         {
-            //TODO: questa parte non mi aggrada troppo...
             //Percorso commento predefinito
             string defaultComment = "";
 
@@ -485,8 +484,6 @@ namespace DataSetBuilder.view
         //Convertitore di BitmapImage in Bitmap
         private Bitmap convertToBitmap(BitmapImage tmpImage)
         {
-            // BitmapImage bitmapImage = new BitmapImage(new Uri("../Images/test.png", UriKind.Relative));
-
             using (MemoryStream outStream = new MemoryStream())
             {
                 BitmapEncoder enc = new BmpBitmapEncoder();
@@ -511,7 +508,7 @@ namespace DataSetBuilder.view
             return null;
         }
 
-        //TODO: capire esattamente perché sia qui questa funzione
+        //Image Drag_Enter
         private void Provino_DragEnter(object sender, DragEventArgs e)
         {
             {
@@ -712,11 +709,13 @@ namespace DataSetBuilder.view
             //Controllo della lunghezza del dizionario, altrimenti non si svolgono operazioni
             if (recentExperiments.Count > 0)
             {
-                //Recupero delle chiavi in una lista
+                //Recupero delle chiavi in un array
                 string[] keys = new string[recentExperiments.Count];
                 recentExperiments.Keys.CopyTo(keys, 0);
+                //Reset degli items del menu
+                RecentExp.Items.Clear();
                 //Si cicla sul dizionario tramite la lista di chiavi
-                foreach(string key in keys)
+                foreach (string key in keys)
                 {
                     //Recupero del valore dal dizionario
                     string value = (string)recentExperiments[key];
@@ -738,8 +737,7 @@ namespace DataSetBuilder.view
                     //Aggiunta dell'evento legato al menuitem con il nome dell'esperimento recente
                     recentExp.Click += RecentExp_Click;
 
-                    //Reset degli items del menu e aggiunta del menuitem dell'esperimento recente
-                    RecentExp.Items.Clear();
+                    //Aggiunta del menuitem dell'esperimento recente
                     RecentExp.Items.Add(recentExp);
                 }
             }
@@ -747,32 +745,40 @@ namespace DataSetBuilder.view
 
         private void RecentExp_Click(object sender, RoutedEventArgs e)
         {
-            //L'oggetto mittente è un menuitem
-            MenuItem recentExp = sender as MenuItem;
-            string content = (string)recentExp.Header;
-            if (content.Contains(expPath))
-            {                
-                //Estrazione del nome dell'esperimento
-                content = getExpName(content);
-                //Creazione di un ListviewItem unicamente per il metodo di createTabItem che lo richiede come parametro
-                ListViewItem listViewItem = new ListViewItem();
-                listViewItem.Content = content;
-
-                //La funzione della classe ExpTabControlController ritorna un oggetto TabsBody
-                tabBody = myExpTabControlController.createTabItem(tabBody, listViewItem, expPath);
-
-                //Parte relativa all'aggiunta del esperimento appena aperto all'elenco degli esperimenti aperti di recente --> chiave: nome esperimento, valore: percorso esperimento
-                string expname = content;
-                string singleExpPath = expPath + @"\" + expname;
-                //Aggiunta di chiave-valore al file di configurazione
-                configurationController.addSettings(expname, singleExpPath);
-                //Aggiornamento degli esperimenti recenti
-                updateRecentExpMenu();
-            }
-            else
+            try
             {
-                MessageBox.Show("L'esperimento selezionato non fa parte del percorso in analisi. Pertanto non è possibile aprirlo", "Questo esperimento non può essere aperto.");
+                //L'oggetto mittente è un menuitem
+                MenuItem recentExp = sender as MenuItem;
+                string content = (string)recentExp.Header;
+                if (content.Contains(expPath))
+                {
+                    //Estrazione del nome dell'esperimento
+                    content = getExpName(content);
+                    //Creazione di un ListviewItem unicamente per il metodo di createTabItem che lo richiede come parametro
+                    ListViewItem listViewItem = new ListViewItem();
+                    listViewItem.Content = content;
+
+                    //La funzione della classe ExpTabControlController ritorna un oggetto TabsBody
+                    tabBody = myExpTabControlController.createTabItem(tabBody, listViewItem, expPath);
+
+                    //Parte relativa all'aggiunta del esperimento appena aperto all'elenco degli esperimenti aperti di recente --> chiave: nome esperimento, valore: percorso esperimento
+                    string expname = content;
+                    string singleExpPath = expPath + @"\" + expname;
+                    //Aggiunta di chiave-valore al file di configurazione
+                    configurationController.addSettings(expname, singleExpPath);
+                    //Aggiornamento degli esperimenti recenti
+                    updateRecentExpMenu();
+                }
+                else
+                {
+                    MessageBox.Show("L'esperimento selezionato non fa parte del percorso in analisi. Pertanto non è possibile aprirlo", "Questo esperimento non può essere aperto.");
+                }
             }
+            catch(Exception exception)
+            {
+                MessageBox.Show("Errore nell'apertura dell'esperimento recente", exception.Message);
+            }
+            
             
         }
         //Ritornare le parti del percoso in modo da ritornare il nome dell'esperimento
@@ -783,6 +789,81 @@ namespace DataSetBuilder.view
             int index = actualpath.IndexOf(removeString);
             string cleanPath = (index < 0) ? actualpath : actualpath.Remove(index, removeString.Length);
             return cleanPath;
+        }
+        //Compressione dell'esperimento selezionato
+        private void CompressCmd_Click(object sender, RoutedEventArgs e)
+        {
+            if (checkItemType())
+            {
+                string foldername;
+                ListViewItem listViewItem = (ListViewItem)ExperimentViewer.SelectedItem;    //Si recupare l'item selezionato
+
+                //Verifica che sia effettivamente selezionato un item della lista
+                //Se così fosse si comprime la cartella dell'esperimento selezionato
+                if (listViewItem != null)
+                {
+                    string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
+                    foldername = expPath + @"\" + itemName;
+                    string compressfile = foldername + ".zip";
+                    try
+                    {
+                        //Si crea il file compresso
+                        ZipFile.CreateFromDirectory(foldername, compressfile);
+                        MessageBox.Show(itemName + " è stato compresso!", "Risultato compressione in .zip");
+                    }
+                    catch (ArgumentNullException nullargs)
+                    {
+                        MessageBox.Show("Possibili cause del problema:\n\n" +
+                                        "La cartella da comprimere o il file compresso sono Null\n",
+                                        nullargs.Message);
+                    }
+                    catch (ArgumentException args)
+                    {
+                        MessageBox.Show("Possibili cause del problema:\n\n" +
+                                        "La cartella da comprimere o il file compresso è vuoto\n" +
+                                        "La cartella da comprimere o il file compresso contiene unicamente spazi bianchi\n" +
+                                        "La cartella da comprimere o il file compresso contiene almeno un carattere invalido\n",
+                                        args.Message);
+                    }
+                    catch (DirectoryNotFoundException directorynotfound)
+                    {
+                        MessageBox.Show("Possibili cause del problema:\n\n" +
+                                        "La cartella che si sta comprimendo non è valida o non esiste.\n",
+                                        directorynotfound.Message);
+                    }
+                    catch (PathTooLongException pathTolong)
+                    {
+                        MessageBox.Show("Possibili cause del problema:\n\n" +
+                                        "I nomi indicati eccedono la lunghezza.\n",
+                                        pathTolong.Message);
+                    }
+                    catch (UnauthorizedAccessException notaccess)
+                    {
+                        MessageBox.Show("Possibili cause del problema:\n\n" +
+                                        "Il secondo parametro indica una directory\n" +
+                                        "Non si possiedono le credenziali per l'accesso.\n",
+                                        notaccess.Message);
+                    }
+                    catch (NotSupportedException notSupException)
+                    {
+                        MessageBox.Show("Possibili cause del problema:\n\n" +
+                                        "La cartella da comprimere o il file compresso contiene un formato non valido.\n",
+                                        notSupException.Message);
+                    }
+                    catch (IOException ioexception)
+                    {
+                        MessageBox.Show("Possibili cause del problema:\n\n" +
+                                        "Il file compresso esiste già\n" +
+                                        "Un file dell'esperimento non può essere aperto\n" +
+                                        "Si sta aprendo un file mentre viene compresso\n",
+                                        ioexception.Message);
+                    }
+                }
+                else
+                {
+                    //Do nothing
+                }
+            }
         }
     }
 }

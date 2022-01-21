@@ -94,8 +94,9 @@ namespace DataSetBuilder.controller
         //Funzione che rimuove il valore più "vecchio" dal file di configurazione sfruttando il dizionario ordinato
         private void removeLast()
         {
-            //Crea la lista delle chiavi, necessaria per la chiave del file di configurazione
-            List<string> keys = (List<string>)recentExperiments.Keys;
+            //Recupero delle chiavi in un array
+            string[] keys = new string[recentExperiments.Count];
+            recentExperiments.Keys.CopyTo(keys, 0);
             //Si rimuove dal dizionario il primo elemento
             recentExperiments.RemoveAt(0);
             //Dal file di configurazione si rimuove l'elemento con la chiave più vecchia, ricavata dalla lista di chiavi (la posizione 0 è la più vecchia)

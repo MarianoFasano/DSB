@@ -50,6 +50,7 @@
                         <MenuItem x:Name="ExpDir" Click="ExpDir_Click" Header="Esperimento selezionato"/>
                     </MenuItem>
                     <MenuItem x:Name="RefreshCmd" Header="Aggiorna" Click="RefreshCmd_Click"/>
+                    <MenuItem x:Name="CompressCmd" Header="Comprimi" Click="CompressCmd_Click"/>
                     <MenuItem x:Name="DeleteExpMenu" Header="(Cancella esperimento)"/>
                     <MenuItem Header="(Nuovo esperimento)">
                         <MenuItem x:Name="NewEmtpyExpMenu" Header="(Esperimento vuoto)"/>
