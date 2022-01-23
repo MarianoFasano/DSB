@@ -88,7 +88,6 @@ namespace DataSetBuilder.model
         }
         // Button Close Click - Remove the Tab - (or raise
         // an event indicating a "CloseTab" event has occurred)
-        //TODO: gestire la rimozione della tab, sia esperimento sia essa deposizione --> es. un dispatcher (o qualche pattern)
         void button_close_Click(object sender, RoutedEventArgs e)
         {
             ((TabControl)this.Parent).Items.Remove(this);

@@ -51,7 +51,7 @@ namespace DataSetBuilder.controller
                 if(recentExperiments.Count >= size)
                 {
                     //Dapprima rimuovo il valore più vecchio
-                    removeLast();
+                    removeOldestKeyValuePair();
                     add(key, value);
                 }
                 else
@@ -71,13 +71,13 @@ namespace DataSetBuilder.controller
                     if (dialogResult == System.Windows.Forms.DialogResult.Yes)
                     {
                         //Si cambia il percorso predefinito nel file di configurazione
-                        remove(key);
+                        removeKeyValue(key);
                         add(key, value);
                         //Se si cambia il percorso predefinito allora si toglie l'eventuale percorso non predefinito ancora salvato, onde evitare di riavviare l'applicativo su di esso
                         if (containsTemppath())
                         {
                             string tempkey = "temppath";
-                            remove(tempkey);
+                            removeKeyValue(tempkey);
                         }
                     }
                     //Altrimenti si cambia il percorso temporaneo
@@ -85,14 +85,14 @@ namespace DataSetBuilder.controller
                     {
                         //Impostazione del percorso temporaneo
                         string temp = "temppath";
-                        remove(temp);
+                        removeKeyValue(temp);
                         add(temp, value);
                     }
                 }
             }
         }
         //Funzione che rimuove il valore più "vecchio" dal file di configurazione sfruttando il dizionario ordinato
-        private void removeLast()
+        private void removeOldestKeyValuePair()
         {
             //Recupero delle chiavi in un array
             string[] keys = new string[recentExperiments.Count];
@@ -105,7 +105,7 @@ namespace DataSetBuilder.controller
             configuration.Save(ConfigurationSaveMode.Minimal);
         }
         //Funzione che rimuove l'elemento dal file di configurazione con la chiave passata come parametro
-        public void remove(string key)
+        private void removeKeyValue(string key)
         {
             //Si rimuove l'elemento e si salva la configurazione
             configuration.AppSettings.Settings.Remove(key);
@@ -162,6 +162,23 @@ namespace DataSetBuilder.controller
             else
             {
                 return false;
+            }
+        }
+
+        //Rimuove gli esperimenti aperti di recente, se si elimina la directory dell'esperimento, oppure il percorso temporaneo degli esperimenti
+        public void removeSettings(string key)
+        {
+            //La verifica avviene sul dizionario ordinato, che rispecchia il file di configurazione per quanto concerne gli esperimenti aperti di recente
+            if (recentExperiments.Contains(key) && !key.Equals("path"))
+            {
+                //Se la chiave è contenuta nel dizionario si toglie sia dal dizionario sia dal file di configurazione
+                recentExperiments.Remove(key);
+                removeKeyValue(key);
+            }
+            else
+            {
+                //Si sta rimuovendo il percorso temporaneo, quindi si rimuove unicamente dal file di configurazione
+                removeKeyValue(key);
             }
         }
     }

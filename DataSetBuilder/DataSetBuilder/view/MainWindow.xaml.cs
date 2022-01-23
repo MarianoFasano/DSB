@@ -38,7 +38,7 @@ namespace DataSetBuilder.view
         //Variabili
         ConfigurationController configurationController = new ConfigurationController();
         private ExpTabControlController myExpTabControlController;
-        private MyExpTabItemModel myExpTabItemModel = new MyExpTabItemModel();
+        private ExpTabControlModel myExpTabItemModel = new ExpTabControlModel();
         private DepoTabControlController depoTabControlController;
 
         //Stringa del percorso root degli esperimenti
@@ -73,18 +73,18 @@ namespace DataSetBuilder.view
         private void ConfigurationInit()
         {
             //Configurazione percorso
-            PathFromConfig();
+            GetPathFromConfig();
             //Configurazione esperimenti recenti
-            RecentExperimentFromConfig();
+            GetRecentExperimentFromConfig();
         }
         //Ripresa dei dati sugli esperimenti aperti di recente dal file di configurazione
-        private void RecentExperimentFromConfig()
+        private void GetRecentExperimentFromConfig()
         {
             updateRecentExpMenu();
         }
 
         //Ripresa dei dati sul percorso dal file di configurazione
-        private void PathFromConfig()
+        private void GetPathFromConfig()
         {
             //Verifica se il file di configurazione contiene un percorso segnato come temporaneo
             if (configurationController.containsTemppath())
@@ -153,19 +153,21 @@ namespace DataSetBuilder.view
                             break;
                     }
                 }
-                checkEmptyExpList(ExperimentViewer);
+                defaultInitIfExpListIsEmpty(ExperimentViewer);
             }
             catch(DirectoryNotFoundException dirEx)
             {
+                //Se si verificasse la citata eccezione si chiederebbe all'utente di cambiare il percorso
                 changeExpPath();
             }
             catch (ArgumentException argEx)
             {
+                //Se si verificasse la citata eccezione si chiederebbe all'utente di cambiare il percorso
                 changeExpPath();
             }
         }
         //Controllo se la lista degli esperimenti contiene elementi --> se no, inserisce la label di comunicazione
-        private void checkEmptyExpList(ListBox experimentViewer)
+        private void defaultInitIfExpListIsEmpty(ListBox experimentViewer)
         {
             bool hasElement;
             //Controllo se la cartella indicata contiene cartelle relative agli esperimenti
@@ -194,10 +196,10 @@ namespace DataSetBuilder.view
             //Recupero dei dati necessari, file di testo, immagine e aggiornamento dei dettagli
             string fileName = getExpCommentPath();
             Provino.Source = getProvinoImage();
-            updateDetails(fileName);
-            updateSize();
+            updateDetailsValues(fileName);
+            updateDetailsSize();
         }
-
+        //Funzione che ritorna l'immagine di Provino, se presente, oppure mostra quella predefinita
         private ImageSource getProvinoImage()
         {
             //Controllo se l'item selezionato dalla lista sia effettivamente un listviewitem
@@ -215,11 +217,21 @@ namespace DataSetBuilder.view
                     string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
                     string path = expPath + @"\" + itemName;
                     string[] files = Directory.GetFiles(path);                              //Si ottengono i files presenti nella cartella sottoforma di array di stringhe
-                                                                                            //Si verifica che la lista contenga degli elementi
+                    List<string> fileNames = new List<string>();
+
+                    //Si verifica che la lista contenga degli elementi
                     if (files.Length > 0)
                     {
-                        //Si estraggono in una lista le stringhe che contengono la parola Experiment e che sono dei file txt
-                        List<string> fileNames = files.Where(e => e.Contains("Experiment")).Where(e => e.Contains(".jpeg")).Where(e => e.Contains("Provino")).ToList();
+                        //Si estraggono in una lista le stringhe che contengono la parola Experiment, Provino e che sono dei file jpeg
+                        for (int i = 0; i < files.Length; i++)
+                        {
+                            //Si controlla che il nome del file sia quello auspicato e in caso affermativo si aggiunge il percorso alla lista dei risultati corretti, che ci aspettiamo sia uno o il primo
+                            string filename = getExpName(files[i]);
+                            if (filename.Contains(".jpeg") && filename.Contains("Experiment") && filename.Contains("Provino"))
+                            {
+                                fileNames.Add(files[i]);
+                            }
+                        }
                         //Si verifica che la lista contenga degli elementi
                         if (fileNames.Count > 0)
                         {
@@ -250,14 +262,14 @@ namespace DataSetBuilder.view
         }
 
         //Adattamento delle dimensioni dell'area dei dettagli dell'esperimento
-        private void updateSize()
+        private void updateDetailsSize()
         {
             ExpDetails.Height = this.ActualHeight / 2;
             Provino.Height = ExpDetails.ActualHeight / 2;
             ExpComment.Height = ExpDetails.ActualHeight / 2;
         }
         //Aggiornamento dei dettagli dell'esperimento
-        private void updateDetails(string filepath)
+        private void updateDetailsValues(string filepath)
         {
             //Aggiornamento del commento in formato txt
             if (Path.GetExtension(filepath).Equals(".txt"))
@@ -298,7 +310,7 @@ namespace DataSetBuilder.view
         //La colonna assume in maniera predefinita la larghezza del contenuto (lunghezza della stringa)
         //Se la larghezza è 0 assume la larghezza iniziale, e viceversa
         //Si istanzia quindi un oggetto GridLength che va a impostare la larghezza della colonna dell'interfaccia
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void HideExp_Click(object sender, RoutedEventArgs e)
         {
             //Ridimensionamento della colonna contenente la lista degli esperimenti (se visibile la nasconde, e viceversa; anche se non avviene tramite la proprietà Visibility, ma con numeri)
             //Variabile locale che assume il valore dell'attributo "width"
@@ -329,12 +341,12 @@ namespace DataSetBuilder.view
         {
             string fileName =getExpCommentPath();
             ExpDetails.Visibility = viewComment();
-            ViewCommentMenu.Header = commentText();
-            updateDetails(fileName);
-            updateSize();
+            ViewCommentMenu.Header = ChangeExpDetailsMenuText();
+            updateDetailsValues(fileName);
+            updateDetailsSize();
         }
         //Cambia il testo del menuitem legato al commento in base al fatto che sia attualmente visibile o meno
-        private object commentText()
+        private object ChangeExpDetailsMenuText()
         {
             if (ExpDetails.Visibility.Equals(System.Windows.Visibility.Collapsed))
             {
@@ -346,8 +358,8 @@ namespace DataSetBuilder.view
 
             }
         }
-            //Gestione della visibilità del commento sulla base del click del mouse sul menu dedicato
-            private Visibility viewComment()
+        //Gestione della visibilità del commento sulla base del click del mouse sul menu dedicato
+        private Visibility viewComment()
         {
             if (ExpDetails.Visibility.Equals(System.Windows.Visibility.Collapsed))
             {
@@ -395,11 +407,22 @@ namespace DataSetBuilder.view
                     string itemName = (string)listViewItem.Content;                         //Si recupera il nome dell'item selezionato (nome della cartella dell'esperimento)
                     string path = expPath + @"\" + itemName;
                     string[] files = Directory.GetFiles(path);                              //Si ottengono i files presenti nella cartella sottoforma di array di stringhe
-                                                                                            //Si verifica che la lista contenga degli elementi
+                    List<string> fileNames = new List<string>();
+                    //Si verifica che la lista contenga degli elementi
                     if (files.Length > 0)
                     {
                         //Si estraggono in una lista le stringhe che contengono la parola Experiment e che sono dei file txt
-                        List<string> fileNames = files.Where(e => e.Contains("Experiment")).Where(e => e.Contains(".txt")).ToList();
+                        for (int i = 0; i < files.Length; i++)
+                        {
+                            //Si recupera unicamente il nome del file e si verifica che sia un txt con Experiment nel nome
+                            string filename = getExpName(files[i]);
+                            if (filename.Contains(".txt") && filename.Contains("Experiment"))
+                            {
+                                //In caso affermativo, quel percoso è aggiunta alla lista
+                                fileNames.Add(files[i]);
+                            }
+                        }
+
                         //Si verifica che la lista contenga degli elementi e si assegna il primo alla stringa relativa al percorso del commento, altrimenti si assegna il percorso al commento predefinito
                         if (fileNames.Count > 0)
                             commentPath = fileNames[0];
@@ -456,7 +479,7 @@ namespace DataSetBuilder.view
         private void SaveImage(BitmapImage tmpImage)
         {
             //Variabili necessarie per il salvataggio dell'immagine
-            Bitmap bitmap = convertToBitmap(tmpImage);
+            Bitmap bitmap = convertBitmapImageToBitmap(tmpImage);
             ImageCodecInfo imageCodecInfo;
             Encoder encoder;
             EncoderParameter encoderParameter;
@@ -476,13 +499,13 @@ namespace DataSetBuilder.view
 
             encoderParameter = new EncoderParameter(encoder, 100L);
             encoderParameters.Param[0] = encoderParameter;
-            Bitmap image = convertToBitmap(tmpImage);
+            Bitmap image = convertBitmapImageToBitmap(tmpImage);
 
             image.Save(imagepath, imageCodecInfo, encoderParameters);
 
         }
         //Convertitore di BitmapImage in Bitmap
-        private Bitmap convertToBitmap(BitmapImage tmpImage)
+        private Bitmap convertBitmapImageToBitmap(BitmapImage tmpImage)
         {
             using (MemoryStream outStream = new MemoryStream())
             {
@@ -507,7 +530,6 @@ namespace DataSetBuilder.view
             }
             return null;
         }
-
         //Image Drag_Enter
         private void Provino_DragEnter(object sender, DragEventArgs e)
         {
@@ -531,13 +553,13 @@ namespace DataSetBuilder.view
             }
         }
         //Evento legato al click dell'apertura della directory degli esperimenti
-        private void ExpsDir_Click(object sender, RoutedEventArgs e)
+        private void ShowExpsDir_Click(object sender, RoutedEventArgs e)
         {
             string path = expPath;
             openFolder(path);
         }
         //Evento legato al click dell'apertura della directory dell'esperimento selezionato
-        private void ExpDir_Click(object sender, RoutedEventArgs e)
+        private void ShowExpDir_Click(object sender, RoutedEventArgs e)
         {
             if (checkItemType())
             {
@@ -604,7 +626,7 @@ namespace DataSetBuilder.view
                 if (configurationController.containsTemppath())
                 {
                     string key = "temppath";
-                    configurationController.remove(key);
+                    configurationController.removeSettings(key);
                 }
                 System.Windows.Application.Current.Shutdown();
             }
@@ -670,7 +692,7 @@ namespace DataSetBuilder.view
                 if (configurationController.containsTemppath())
                 {
                     string key = "temppath";
-                    configurationController.remove(key);
+                    configurationController.removeSettings(key);
                 }
             }
             else if (dialogResult == System.Windows.Forms.DialogResult.No)
@@ -699,7 +721,7 @@ namespace DataSetBuilder.view
         //Evento che si verifica quando si modifica il testo nella searchbox degli esperimenti --> in cima alla lista
         private void ExpSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //Aggiornamento della lista
+            //Aggiornamento della lista filtrando anche tramite il testo scritto nella casella di ricerca
             Init(1);
         }
         //Creazione/aggiornamento della lista degli esperimenti aperti di recente
@@ -742,7 +764,6 @@ namespace DataSetBuilder.view
                 }
             }
         }
-
         private void RecentExp_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -886,6 +907,8 @@ namespace DataSetBuilder.view
                     dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
                     //Si cancella la variabile, l'esperimento
                     dir.Delete(true);
+                    //Si cancella l'esperimento dal file di configurazione, se presente
+                    configurationController.removeSettings(itemname);
                     //Aggiornamento della lista degli esperimenti
                     Init(0);
                 }

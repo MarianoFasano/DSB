@@ -15,8 +15,8 @@ namespace DataSetBuilder.controller
 {
     class ExpTabControlController
     {
-        private MyExpTabControlModel myTabControlModel;
-        private MyExpTabItemModel myExpTabItemModel;
+        private ExpTabItemModel myTabControlModel;
+        private ExpTabControlModel myExpTabItemModel;
         private DepoTabControlController depoTabControlController;
         private TabControl mainTabControl;
         private string actualBasePath;
@@ -25,10 +25,10 @@ namespace DataSetBuilder.controller
         private char forbiddenSymbol = '(';
         private char forbiddenSymbol2 = ')';
 
-        public ExpTabControlController(TabControl tabControl, String basePath, MyExpTabItemModel myExpTabItemModel, DepoTabControlController depoTabControlController)
+        public ExpTabControlController(TabControl tabControl, String basePath, ExpTabControlModel myExpTabItemModel, DepoTabControlController depoTabControlController)
         {
             this.mainTabControl = tabControl;
-            this.myTabControlModel = new MyExpTabControlModel(tabControl);
+            this.myTabControlModel = new ExpTabItemModel(tabControl);
             this.myExpTabItemModel = myExpTabItemModel;
             this.depoTabControlController = depoTabControlController;
             //Si aggiunge l'evento della rilevazione della tab attiva al TabControl

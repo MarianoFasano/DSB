@@ -32,7 +32,7 @@
         </ToolBar>
         
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan ="2">
-            <Button Click="Button_Click" Width="80" Content="Experiments" HorizontalAlignment="Left" Margin="0.7" Background="WhiteSmoke" ToolTip="Apri e chiudi la lista degli esperimenti">
+            <Button Click="HideExp_Click" Width="80" Content="Experiments" HorizontalAlignment="Left" Margin="0.7" Background="WhiteSmoke" ToolTip="Apri e chiudi la lista degli esperimenti">
                 <Button.LayoutTransform>
                     <RotateTransform Angle="90"></RotateTransform>
                 </Button.LayoutTransform>
@@ -46,8 +46,8 @@
                     <MenuItem x:Name="ViewCommentMenu" Click="ViewExpCommentMenu_Click" Header="Vedi dettagli"/>
                     <MenuItem x:Name="EditComment" Click="EditComment_Click" Header="Modifica commento"/>
                     <MenuItem x:Name="ExpDirectoryMenu" Header="Directory">
-                        <MenuItem x:Name="ExpsDir" Click="ExpsDir_Click" Header="Esperimenti"/>
-                        <MenuItem x:Name="ExpDir" Click="ExpDir_Click" Header="Esperimento selezionato"/>
+                        <MenuItem x:Name="ExpsDir" Click="ShowExpsDir_Click" Header="Esperimenti"/>
+                        <MenuItem x:Name="ExpDir" Click="ShowExpDir_Click" Header="Esperimento selezionato"/>
                     </MenuItem>
                     <MenuItem x:Name="RefreshCmd" Header="Aggiorna" Click="RefreshCmd_Click"/>
                     <MenuItem x:Name="CompressCmd" Header="Comprimi" Click="CompressCmd_Click"/>

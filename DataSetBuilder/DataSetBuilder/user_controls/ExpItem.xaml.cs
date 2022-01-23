@@ -80,7 +80,7 @@ namespace DataSetBuilder.user_controls
                 if (isEmpty(depoDirectories.Length))
                 {
                     //Se l'array risulta vuoto si aggiunge il messaggio che indica all'utente che non sono presenti deposizioni per l'esperimento aperto
-                    DepositionViewer.Items.Add(emptyMessage());
+                    DepositionViewer.Items.Add(CreateEmptyMessage());
                 }
                 else
                 {
@@ -142,7 +142,7 @@ namespace DataSetBuilder.user_controls
             }
         }
         //Costruzione della label contenente il messaggio vuoto
-        private Label emptyMessage()
+        private Label CreateEmptyMessage()
         {
             var label = new Label();
             label.Content = "Nessuna deposizione trovata";
@@ -165,12 +165,12 @@ namespace DataSetBuilder.user_controls
         {
             string fileName = getDepoCommentPath();
             DepoDetails.Visibility = viewComment();
-            ViewDetailsMenu.Header = commentText();
-            updateDetails(fileName);
-            updateSize();
+            ViewDetailsMenu.Header = ChangeExpDetailsMenuText();
+            updateDetailsValues(fileName);
+            updateDetailsSize();
         }
         //Cambia il testo del menuitem legato al commento in base al fatto che sia attualmente visibile o meno
-        private object commentText()
+        private object ChangeExpDetailsMenuText()
         {
             if (DepoDetails.Visibility.Equals(System.Windows.Visibility.Collapsed))
             {
@@ -203,12 +203,12 @@ namespace DataSetBuilder.user_controls
             //Recupero dei dati necessari, file di testo, immagine e aggiornamento dei dettagli
             string fileName = getDepoCommentPath();
             Provino.Source = getProvinoImage();
-            updateDetails(fileName);
-            updateSize();
+            updateDetailsValues(fileName);
+            updateDetailsSize();
         }
 
         //Adattamento delle dimensioni dell'area dei dettagli della deposizione
-        private void updateSize()
+        private void updateDetailsSize()
         {
             DepoDetails.Height = DepoDockPanel.ActualHeight * 0.75;
             Provino.Height = DepoDetails.ActualHeight / 2;
@@ -216,7 +216,7 @@ namespace DataSetBuilder.user_controls
         }
 
         //Aggiornamento dei dettagli della deposizione
-        private void updateDetails(string filepath)
+        private void updateDetailsValues(string filepath)
         {
             //Aggiornamento del commento in formato txt
             if (System.IO.Path.GetExtension(filepath).Equals(".txt"))
@@ -227,7 +227,7 @@ namespace DataSetBuilder.user_controls
                 DepoComment.Document = document;
             }
         }
-
+        //Ottiene l'immagine di Provino salvata oppure quella predefinita
         private ImageSource getProvinoImage()
         {
             //Controllo se l'item selezionato dalla lista sia effettivamente un listviewitem
@@ -347,12 +347,15 @@ namespace DataSetBuilder.user_controls
                         //Si estraggono in una lista le stringhe che contengono la parola Deposition e che sono dei file txt
                         for(int i = 0; i < files.Length; i++)
                         {
+                            //Si recupera unicamente il nome del file e si verifica che sia un txt con Deposition nel nome
                             string filename = getDepoName(files[i]);
                             if(filename.Contains(".txt") && filename.Contains("Deposition"))
                             {
-                                fileNames.Add(filename);
+                                //In caso affermativo, quel percoso è aggiunta alla lista
+                                fileNames.Add(files[i]);
                             }                                
                         }
+
                         //Si verifica che la lista contenga degli elementi e si assegna il primo alla stringa relativa al percorso del commento, altrimenti si assegna il percorso al commento predefinito
                         if (fileNames.Count > 0)
                             commentPath = fileNames[0];
@@ -375,8 +378,6 @@ namespace DataSetBuilder.user_controls
                 return defaultComment;
             }
         }
-
-
         //Funzione di drag&drop per l'immagine
         private void Provino_Drop(object sender, DragEventArgs e)
         {
@@ -411,7 +412,7 @@ namespace DataSetBuilder.user_controls
         private void SaveImage(BitmapImage tmpImage)
         {
             //Variabili necessarie per il salvataggio dell'immagine
-            Bitmap bitmap = convertToBitmap(tmpImage);
+            Bitmap bitmap = convertBitmapImageToBitmap(tmpImage);
             ImageCodecInfo imageCodecInfo;
             System.Drawing.Imaging.Encoder encoder;
             EncoderParameter encoderParameter;
@@ -432,13 +433,13 @@ namespace DataSetBuilder.user_controls
 
             encoderParameter = new EncoderParameter(encoder, 100L);
             encoderParameters.Param[0] = encoderParameter;
-            Bitmap image = convertToBitmap(tmpImage);
+            Bitmap image = convertBitmapImageToBitmap(tmpImage);
 
             image.Save(imagepath, imageCodecInfo, encoderParameters);
 
         }
         //Convertitore di BitmapImage in Bitmap
-        private Bitmap convertToBitmap(BitmapImage tmpImage)
+        private Bitmap convertBitmapImageToBitmap(BitmapImage tmpImage)
         {
             using (MemoryStream outStream = new MemoryStream())
             {
@@ -585,6 +586,42 @@ namespace DataSetBuilder.user_controls
             int index = actualpath.IndexOf(removeString);
             string cleanPath = (index < 0) ? actualpath : actualpath.Remove(index, removeString.Length);
             return cleanPath;
+        }
+        //Funzione per cancellare la cartella della deposizione selezionata
+        private void DeleteDepoMenu_Click(object sender, RoutedEventArgs e)
+        {
+            string foldername;
+
+            //Si chiede la conferma per l'eliminazione della directory della deposizione
+            System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show("Si desidera eliminare la deposizione selezionata?", "Eliminazione deposizione", MessageBoxButton.YesNo);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                try
+                {
+                    //Si recupera l'item selezionato dalla lista
+                    ListViewItem listViewItem = (ListViewItem)DepositionViewer.SelectedItem;
+                    //Se ne recupera il nome
+                    string itemname = (string)listViewItem.Content;
+                    //Si istanzia la stringa del percorso: percorso base degli esperimenti + il nome della cartella dell'esperimento padre della deposizione selezionata + il nome dell'item selezionato
+                    string depoPath = basePath + @"\" + depoName;
+                    foldername = depoPath + @"\" + itemname;
+                    //Creazione della variabile relativa alla directory da cancellare
+                    var dir = new DirectoryInfo(foldername);
+                    dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
+                    //Si cancella la variabile, la deposizione
+                    dir.Delete(true);
+                    //Aggiornamento della lista delle deposizioni
+                    Init(0);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else if (dialogResult == System.Windows.Forms.DialogResult.No)
+            {
+                //Do Nothing
+            }
         }
     }
 }

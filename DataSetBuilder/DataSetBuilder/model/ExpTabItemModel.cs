@@ -10,13 +10,13 @@ using System.Windows.Controls;
 namespace DataSetBuilder.model
 {
     //Classe di controllo usata per verificare che il TabItem sia o meno esistente prima di aggiungerlo al TabControl di riferimento
-    class MyExpTabControlModel
+    class ExpTabItemModel
     {
         private TabControl tabControl;
         private IDictionary items = new Dictionary<string, TabItem>();
 
         //TODO: costruttore probabilmente da rivedere poiché l'attributo TabControl non è utilizzato
-        public MyExpTabControlModel(TabControl tabControl)
+        public ExpTabItemModel(TabControl tabControl)
         {
             this.tabControl = tabControl;
         }

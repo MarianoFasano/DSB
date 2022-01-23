@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataSetBuilder.model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,9 +34,12 @@ namespace DataSetBuilder.user_controls
         //Le prossime due funzioni servono per poter muovere di ordine i tab e mostrare la preview di dove finirà la tab in movimento
         //https://stackoverflow.com/questions/10738161/is-it-possible-to-rearrange-tab-items-in-tab-control-in-wpf
         //Prese Ctrl+C Ctrl+V
+        //Con i CloseableTab non sembrano funzionare
         private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (!(e.Source is TabItem tabItem))
+            //CloseableTab tabItem = sender as CloseableTab;
+
+            if (!(e.Source is CloseableTab tabItem))
             {
                 return;
             }
@@ -48,8 +52,10 @@ namespace DataSetBuilder.user_controls
 
         private void TabItem_Drop(object sender, DragEventArgs e)
         {
-            if (e.Source is TabItem tabItemTarget &&
-                e.Data.GetData(typeof(TabItem)) is TabItem tabItemSource &&
+            //CloseableTab closeableTab = sender as CloseableTab;
+
+            if (e.Source is CloseableTab tabItemTarget &&
+                e.Data.GetData(typeof(CloseableTab)) is CloseableTab tabItemSource &&
                 !tabItemTarget.Equals(tabItemSource) &&
                 tabItemTarget.Parent is TabControl tabControl)
             {

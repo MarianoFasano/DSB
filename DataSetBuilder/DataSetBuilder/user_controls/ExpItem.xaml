@@ -24,7 +24,7 @@
                     <MenuItem x:Name="EditComment" Header="Modifica Commento" Click="EditComment_Click"/>
                     <MenuItem x:Name="UpdateDepoView" Header="Aggiorna" Click="UpdateDepoView_Click"/>
                     <MenuItem x:Name="CompressDepo" Header="Comprimi" Click="CompressDepo_Click"/>
-                    <MenuItem x:Name="DeleteDepoMenu" Header="(Cancella deposizione)"/>
+                    <MenuItem x:Name="DeleteDepoMenu" Header="Cancella deposizione" Click="DeleteDepoMenu_Click"/>
                 </MenuItem>
             </Menu>
 

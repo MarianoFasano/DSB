@@ -106,8 +106,8 @@
     <Compile Include="model\CloseableTab.cs" />
     <Compile Include="model\CncResult.cs" />
     <Compile Include="model\MyDepoData.cs" />
-    <Compile Include="model\MyExpTabControlModel.cs" />
-    <Compile Include="model\MyExpTabItemModel.cs" />
+    <Compile Include="model\ExpTabItemModel.cs" />
+    <Compile Include="model\ExpTabControlModel.cs" />
     <Compile Include="model\PyroResult.cs" />
     <Compile Include="user_controls\CloseableHeader.xaml.cs">
       <DependentUpon>CloseableHeader.xaml</DependentUpon>

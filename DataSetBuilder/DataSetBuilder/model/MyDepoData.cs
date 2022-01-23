@@ -66,8 +66,8 @@ namespace DataSetBuilder.model
             //Istanza della classe directoryInfo che permette in seguito di recuperare le cartelle e i file all'interno della cartella specificata dall'argomento
             DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath);
 
-            //Se la cartella contiene files, si tratta della vecchia versione del file system
-            if (directoryInfo.GetFiles().Length > 0)
+            //Se la cartella contiene più di un file (il commento della deposizione), si tratta della vecchia versione del file system
+            if (directoryInfo.GetFiles().Length > 1)
             {
                 //Valore booleano che conferma che si tratta della vecchia versione messo a true
                 this.isOldVersion = true;
