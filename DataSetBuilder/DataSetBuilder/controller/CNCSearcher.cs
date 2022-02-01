@@ -71,7 +71,7 @@ namespace DataSetBuilder.controller
                     //TODO: Ricorsione --> dopo varie prove l'offset è stato moltiplicato per un fattore 7, ma rimane da verificare il come mai si presenta questa necessità
                     return cncLongBS(cNCLines, searchedMs + (offset * 7), 0, cNCLines.Count() - 1, minMsValue);
                 }
-                return cncLongBS(cNCLines, searchedMs + (offset * 7), 0, cNCLines.Count() - 1, minMsValue);
+                return cncLongBS(cNCLines, searchedMs + offset, 0, cNCLines.Count() - 1, minMsValue);
             }
 
             int middle = (left + right) / 2;

@@ -67,7 +67,7 @@ namespace DataSetBuilder.model
             DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath);
 
             //Se la cartella contiene più di un file (il commento della deposizione), si tratta della vecchia versione del file system
-            if (directoryInfo.GetFiles().Length > 1)
+            if (AmICheckAnOldVersion(directoryInfo))
             {
                 //Valore booleano che conferma che si tratta della vecchia versione messo a true
                 this.isOldVersion = true;
@@ -75,8 +75,8 @@ namespace DataSetBuilder.model
                 //Si cicla su ogni file ritornato dal metodo GetFiles() --> array di FileInfo!
                 foreach (var file in directoryInfo.GetFiles())
                 {
-                    //Se l'estensione è jpeg il nome del file è aggiunto alla lista di stringhe dei nomi
-                    if (Path.GetExtension(file.Name).Equals(".jpeg"))
+                    //Se l'estensione è jpeg il nome del file è aggiunto alla lista di stringhe dei nomi, verificando che non sia un'immagine di provino
+                    if (Path.GetExtension(file.Name).Equals(".jpeg") && !(file.Name.Contains("Provino") || file.Name.Contains("Deposition")))
                     {
                         //Si aumenta il conteggio delle immagini e si aggiunge il nome del file alla lista dedicata (lista di stringhe)
                         nrImages++;
@@ -115,7 +115,7 @@ namespace DataSetBuilder.model
                     foreach (var file in directoryInfo.GetFiles())
                     {
                         //Si verifica che si tratta di immagini prima di aggiungere il nome alla lista
-                        if (Path.GetExtension(file.Name).Equals(".jpeg"))
+                        if (Path.GetExtension(file.Name).Equals(".jpeg") && !(file.Name.Contains("Provino") || file.Name.Contains("Deposition")))
                         {
                             nrImages++;
                             this.images.Add(file.Name);
@@ -220,6 +220,23 @@ namespace DataSetBuilder.model
         public uint getMaxNrImage()
         {
             return this.nrImages;
+        }
+        //Decide se si tratta della vecchia o nuova versione
+        private bool AmICheckAnOldVersion(DirectoryInfo directoryInfo)
+        {
+            //Varibili locali di check
+            bool overTwoFiles = false;                  //se contiene più di due file, immagine provino e commento, è probabile sia una vecchia versione
+
+            //Inizio dei controlli
+
+            //Numero di files
+            if(directoryInfo.GetFiles().Length > 2)
+            {
+                overTwoFiles = true;
+            }
+
+            //Ritorno la combinazione dei check ...&&...%%... ecc
+            return overTwoFiles;
         }
     }
 }

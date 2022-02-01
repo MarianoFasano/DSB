@@ -60,6 +60,13 @@ namespace DataSetBuilder.controller
                     add(key, value);
                 }
             }
+            else if (recentExperiments.Contains(key) && !key.Equals("path"))
+            {
+                //Dapprima rimuovo il valore contenuto
+                removeSettings(key);
+                add(key, value);
+
+            }
             else
             {
                 //Controllo se sto configurando il percorso, anche temporaneo
@@ -103,6 +110,7 @@ namespace DataSetBuilder.controller
             configuration.AppSettings.Settings.Remove(keys[0]);
             //Si salva il file di configurazione
             configuration.Save(ConfigurationSaveMode.Minimal);
+            MessageBox.Show("Hello");
         }
         //Funzione che rimuove l'elemento dal file di configurazione con la chiave passata come parametro
         private void removeKeyValue(string key)

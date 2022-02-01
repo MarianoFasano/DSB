@@ -46,6 +46,7 @@ namespace DataSetBuilder.user_controls
             //L'interfaccia grafica, view, riceve il suo modello di riferimento
             this.myDepoData = myDepoData;
             this.path = path;
+            //Nel webbrowser viene caricato il percorso come sorgente, affinché sia mostrato il contenuto del percorso come fosse un file explorer
             this.FileBrowser.Source = new Uri(path);
 
             initFirstImage(path);
@@ -76,24 +77,31 @@ namespace DataSetBuilder.user_controls
 
         private void initMsLabels(MyDepoData myDepoData)
         {
-            string maxMs = myDepoData.getImages()[myDepoData.getImages().Count - 1];
-            string actualMs = myDepoData.getImages()[(int)myDepoData.getActualImage()];
-            string minMs = myDepoData.getImages()[0];
+            try
+            {
+                string maxMs = myDepoData.getImages()[myDepoData.getImages().Count - 1];
+                string actualMs = myDepoData.getImages()[(int)myDepoData.getActualImage()];
+                string minMs = myDepoData.getImages()[0];
 
-            string maxString = extractMs(maxMs);
-            string actualString = extractMs(actualMs);
-            string minString = extractMs(minMs);
+                string maxString = extractMs(maxMs);
+                string actualString = extractMs(actualMs);
+                string minString = extractMs(minMs);
 
-            long max = long.Parse(maxString);
-            long actual = long.Parse(extractMs(actualMs));
-            long min = long.Parse(minString);
+                long max = long.Parse(maxString);
+                long actual = long.Parse(extractMs(actualMs));
+                long min = long.Parse(minString);
 
 
-            SetMaxLabel(maxString);                                            //settaggio del testo dell'etichetta extMaxMs con la stringa dei ms massimi estratti dall'ultima immagine
-            SetMinLabel(minString);                                            //settaggio del testo dell'etichetta extMinMs con la stringa dei ms minimi estratti dalla prima immagine
-            SetActualMs(actual.ToString());                               //settaggio del testo dell'etichetta extActualMs con la stringa dei ms attuali estratti dall'attuale immagine
-            SetSliderMax(long.Parse(maxString));                               //settaggio del valore massimo dello slider con la stringa dei ms massimi estratti dall'ultima immagine "castati" come long              
-            SetSliderMin(min);                                                 //settaggio del valore minimo dello slider con la stringa dei ms minimi estratti dalla prima immagine "castati" come long
+                SetMaxLabel(maxString);                                            //settaggio del testo dell'etichetta extMaxMs con la stringa dei ms massimi estratti dall'ultima immagine
+                SetMinLabel(minString);                                            //settaggio del testo dell'etichetta extMinMs con la stringa dei ms minimi estratti dalla prima immagine
+                SetActualMs(actual.ToString());                               //settaggio del testo dell'etichetta extActualMs con la stringa dei ms attuali estratti dall'attuale immagine
+                SetSliderMax(long.Parse(maxString));                               //settaggio del valore massimo dello slider con la stringa dei ms massimi estratti dall'ultima immagine "castati" come long              
+                SetSliderMin(min);                                                 //settaggio del valore minimo dello slider con la stringa dei ms minimi estratti dalla prima immagine "castati" come long
+            }
+            catch (FormatException exception)
+            {
+                MessageBox.Show("La cartella della deposizione è considerata una nuova versione, ma contiene troppi files.\n Ground Control si aspetta un file di testo per il commento e un jpeg come immagine provino.", exception.Message);
+            }
         }
         private string extractMs(string msString)
         {
@@ -175,40 +183,7 @@ namespace DataSetBuilder.user_controls
 
         private void PrevImage_Click(object sender, RoutedEventArgs e)
         {
-            myDepoData.downActualImage();
-            BitmapImage bitmapImage;
-            try
-            {
-                if (myDepoData.checkOldVersion())
-                {
-                    //Ritorna il percorso al file partendo dal path
-                    string filename = myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
-                    //Istanzia l'immagine e la carica nel controller wpf
-                    bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
-                    SetImageSource(bitmapImage);
-                }
-                else
-                {
-                    //Ritorna il percorso al file della versione vecchia partendo dal path, c'è un cartella in più da superare
-                    string filename = myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
-                    //Istanzia l'immagine e la carica nel controller wpf
-                    bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
-                    SetImageSource(bitmapImage);
-                }
-            }
-            //Cattura l'eccezione FileNotFound con lo scopo di catturare eventuali cancellazioni di immagini durante l'esecuzione dell'applicativo
-            catch (FileNotFoundException ex)
-            {
-                //Istanzia e carica l'immagine predefinita al caso
-                bitmapImage = new BitmapImage(new Uri(@"/Immagini/Image not found.jpg", UriKind.RelativeOrAbsolute));
-                SetImageSource(bitmapImage);
-            }
-            //Aggiornamento dei dati dell'interfaccia in base all'immagine caricata
-            setMsLabels();
-            long actualMs = long.Parse(this.ExtendActualMs.Text);
-            PyroResult pyroResult = depoTabControlController.searchTemperature(actualMs, myDepoData);
-            CncResult cncResult = depoTabControlController.searchCncDatas(actualMs, myDepoData);
-            updateDatas(pyroResult, cncResult);
+            previuosImage();
         }
 
         private void NextImage_Click(object sender, RoutedEventArgs e)
@@ -316,6 +291,43 @@ namespace DataSetBuilder.user_controls
             setMsLabels();
             long actualMs = long.Parse(this.ExtendActualMs.Text);
             PyroResult pyroResult =depoTabControlController.searchTemperature(actualMs, myDepoData);
+            CncResult cncResult = depoTabControlController.searchCncDatas(actualMs, myDepoData);
+            updateDatas(pyroResult, cncResult);
+        }
+        private void previuosImage()
+        {
+            myDepoData.downActualImage();
+            BitmapImage bitmapImage;
+            try
+            {
+                if (myDepoData.checkOldVersion())
+                {
+                    //Ritorna il percorso al file partendo dal path
+                    string filename = myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
+                    //Istanzia l'immagine e la carica nel controller wpf
+                    bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
+                    SetImageSource(bitmapImage);
+                }
+                else
+                {
+                    //Ritorna il percorso al file della versione vecchia partendo dal path, c'è un cartella in più da superare
+                    string filename = myDepoData.getImageDirectory() + myDepoData.getImages().ElementAt((int)myDepoData.getActualImage());
+                    //Istanzia l'immagine e la carica nel controller wpf
+                    bitmapImage = new BitmapImage(new Uri(path + @"\" + filename, UriKind.RelativeOrAbsolute));
+                    SetImageSource(bitmapImage);
+                }
+            }
+            //Cattura l'eccezione FileNotFound con lo scopo di catturare eventuali cancellazioni di immagini durante l'esecuzione dell'applicativo
+            catch (FileNotFoundException ex)
+            {
+                //Istanzia e carica l'immagine predefinita al caso
+                bitmapImage = new BitmapImage(new Uri(@"/Immagini/Image not found.jpg", UriKind.RelativeOrAbsolute));
+                SetImageSource(bitmapImage);
+            }
+            //Aggiornamento dei dati dell'interfaccia in base all'immagine caricata
+            setMsLabels();
+            long actualMs = long.Parse(this.ExtendActualMs.Text);
+            PyroResult pyroResult = depoTabControlController.searchTemperature(actualMs, myDepoData);
             CncResult cncResult = depoTabControlController.searchCncDatas(actualMs, myDepoData);
             updateDatas(pyroResult, cncResult);
         }

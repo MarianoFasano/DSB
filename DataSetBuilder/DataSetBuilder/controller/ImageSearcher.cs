@@ -58,7 +58,7 @@ namespace DataSetBuilder.controller
                     resetLRCount();
                     return longBinarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
                 }
-                return longBinarySearch(imagesList, searchedMs + (offset * 7), 0, imagesList.Count() - 1);
+                return longBinarySearch(imagesList, searchedMs + offset, 0, imagesList.Count() - 1);
             }
 
             int middle = (left + right) / 2;

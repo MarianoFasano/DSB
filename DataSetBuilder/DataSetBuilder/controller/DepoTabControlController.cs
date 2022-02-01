@@ -215,29 +215,35 @@ namespace DataSetBuilder.controller
         //Inizializza i dizionari
         private void initLists(ListViewItem listViewItem)
         {
-            //Ritorna il TabControl corretto
-            TabControl tabControl = myExpTabItemModel.getTabControl(getExpName());
-            //Si assegna il percorso
-            string depofolder = extractName((string)listViewItem.Content);
-            this.dataPath = basePath + @"\" + depoPath + @"\" + depofolder;
-            MessageBox.Show(depofolder);
-            //Si inizializzano i dati passando il percorso in cui sono memorizzati
-            MyDepoData myDepoData = new MyDepoData(dataPath);
-            //Si aggiunge il modello dati al dizionario
-            depoDatas.Add((string)listViewItem.Content, myDepoData);
-            //Si crea un Tab chiudibile, cui si assegna lo stesso nome dell'item della lista che ha scaturito l'evento iniziale
-            CloseableTab tabItem = new CloseableTab();
-            tabItem.Title = (string)listViewItem.Content;
-            //Si crea la struttura grafica che contiene i valori passati dal modello dati
-            DepoItemBody depoItemBody = new DepoItemBody(this, myDepoData, dataPath);
-            //La struttura grafica è assegnata alla tab chiudibile creata in precedenza
-            tabItem.Content = depoItemBody;
-            //Si aggiunge la tab al tabcontrol
-            this.actualTabControl.Items.Add(tabItem);
-            //Si aggiunge la struttura grafica al dizionario dedicato
-            depoStructures.Add((string)listViewItem.Content, depoItemBody);
-            //L'item selezionato riprende il nome originale, senza postfissi dovuti alla copia
-            listViewItem.Content = extractName((string)listViewItem.Content);
+            try
+            {
+                //Ritorna il TabControl corretto
+                TabControl tabControl = myExpTabItemModel.getTabControl(getExpName());
+                //Si assegna il percorso
+                string depofolder = extractName((string)listViewItem.Content);
+                this.dataPath = basePath + @"\" + depoPath + @"\" + depofolder;
+                //Si inizializzano i dati passando il percorso in cui sono memorizzati
+                MyDepoData myDepoData = new MyDepoData(dataPath);
+                //Si aggiunge il modello dati al dizionario
+                depoDatas.Add((string)listViewItem.Content, myDepoData);
+                //Si crea un Tab chiudibile, cui si assegna lo stesso nome dell'item della lista che ha scaturito l'evento iniziale
+                CloseableTab tabItem = new CloseableTab();
+                tabItem.Title = (string)listViewItem.Content;
+                //Si crea la struttura grafica che contiene i valori passati dal modello dati
+                DepoItemBody depoItemBody = new DepoItemBody(this, myDepoData, dataPath);
+                //La struttura grafica è assegnata alla tab chiudibile creata in precedenza
+                tabItem.Content = depoItemBody;
+                //Si aggiunge la tab al tabcontrol
+                this.actualTabControl.Items.Add(tabItem);
+                //Si aggiunge la struttura grafica al dizionario dedicato
+                depoStructures.Add((string)listViewItem.Content, depoItemBody);
+                //L'item selezionato riprende il nome originale, senza postfissi dovuti alla copia
+                listViewItem.Content = extractName((string)listViewItem.Content);
+            }
+            catch (ArgumentException exception)
+            {
+                MessageBox.Show("Sono presenti alcuni errori: controllare il contenuto della deposizione che si sta aprendo.\nVerificare il numero di immagini provino presenti, Ground Control se ne aspetta una!", exception.Message);
+            }
         }
         //Rimuove le parti del percorso in modo da ritornare il nome della deposizione
         public string getDepoName()
