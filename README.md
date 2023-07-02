@@ -8,3 +8,5 @@ In online mode, the operator must be able to create and associate to each experi
 # Delivered project
 After many changes the delivered project handles only the "offline" datas. That mean that the software manages the datas which are saved in a text file by the sensors. The main reason that bring us to that solution is that the database was also growning and changing during the whole development of the software.
 Anyway the team that commission this project was very enthusiatic about the final work that I give them, because the software help them with the data management.
+
+The documentation language is italian.
