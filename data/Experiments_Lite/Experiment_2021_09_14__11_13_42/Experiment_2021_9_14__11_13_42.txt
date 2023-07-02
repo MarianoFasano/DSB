@@ -1,0 +1,21 @@
+This Experiment setup is identical to 
+D:\_GC_DataSetBuilder\DBItems\gc_0_4_7_prod_gcmp\Experiments\Experiment_2021_9_3__13_44_16
+which was not pre-heated
+This current experiment is pre-heated
+
+
+Everytime CN com has reported an error, that needed to restart the CN com, a new CN file has been created
+
+No problems during these depositions:
+D:\_GC_DataSetBuilder\DBItems\gc_0_4_7_prod_gcmp\Experiments\Experiment_2021_9_14__11_13_42\Deposition_2021_09_14__11_37_42
+D:\_GC_DataSetBuilder\DBItems\gc_0_4_7_prod_gcmp\Experiments\Experiment_2021_9_14__11_13_42\Deposition_2021_09_14__13_16_07
+D:\_GC_DataSetBuilder\DBItems\gc_0_4_7_prod_gcmp\Experiments\Experiment_2021_9_14__11_13_42\Deposition_2021_09_14__15_04_09
+
+Following depositions had multiple CN com errors
+D:\_GC_DataSetBuilder\DBItems\gc_0_4_7_prod_gcmp\Experiments\Experiment_2021_9_14__11_13_42\Deposition_2021_09_14__16_18_16 happened 16 times
+D:\_GC_DataSetBuilder\DBItems\gc_0_4_7_prod_gcmp\Experiments\Experiment_2021_9_14__11_13_42\Deposition_2021_09_14__17_43_01 happened 5 times
+D:\_GC_DataSetBuilder\DBItems\gc_0_4_7_prod_gcmp\Experiments\Experiment_2021_9_14__11_13_42\Deposition_2021_09_14__18_43_13 happened 11 times
+
+Remark: 
+CNCom File name reports a time stamp which is slightly different from the milliseconds content of its first item (some seconds after the first item),
+since recording is performed online, while persistence is performed on internal DSB demand (buffer is full), and occurs later

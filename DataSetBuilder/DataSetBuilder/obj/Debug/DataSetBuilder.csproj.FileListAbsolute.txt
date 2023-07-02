@@ -1,0 +1,52 @@
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe.config
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.pdb
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.AssemblyReference.cache
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\App.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.cache
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.lref
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.g.resources
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.Properties.Resources.resources
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.GenerateResource.cache
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.CoreCompileInputs.cache
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.exe
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.pdb
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe.config
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.exe
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\bin\Debug\DataSetBuilder.pdb
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\view\MainWindow.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\App.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.cache
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder_MarkupCompile.lref
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\view\MainWindow.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.g.resources
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.Properties.Resources.resources
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.GenerateResource.cache
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.CoreCompileInputs.cache
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.exe
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.pdb
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\view\MainWindow.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\view\MainWindow.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\DataSetBuilder.csproj.AssemblyReference.cache
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoItemBody.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoTabItem.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\TabsBody.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoItemBody.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoTabItem.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\TabsBody.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoItemBody.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoTabItem.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\TabsBody.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoItemBody.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\DepoTabItem.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\ExpItem.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\TabsBody.baml
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\CloseableHeader.g.cs
+C:\Users\maria\Documents\DTI\Quarto Anno\Primo semestre\Progetto Semestre\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\CloseableHeader.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\CloseableHeader.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\CloseableHeader.baml
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\OnlineStatus.g.cs
+J:\ProgettiScuola\DataSetBuilder\DSB\DataSetBuilder\DataSetBuilder\obj\Debug\user_controls\OnlineStatus.baml

@@ -1,0 +1,81 @@
+﻿<Window x:Class="DataSetBuilder.view.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DataSetBuilder.view"
+        mc:Ignorable="d"
+        Title="Ground Control" MinHeight="450" MinWidth="800" AllowDrop="True"
+        SizeToContent="WidthAndHeight"
+        Closing="Window_Closing">
+    <Grid x:Name="DSB_MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition x:Name="TabRow" Height="*"/>
+            <RowDefinition Height="19"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="19" MaxWidth="19"/>
+            <ColumnDefinition Width="Auto" x:Name="Column"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <ToolBar Grid.Row="0" Grid.ColumnSpan="4">
+            <Menu IsMainMenu="True">
+                <MenuItem x:Name="FileMenu" Header="File">
+                    <MenuItem x:Name="PathCmd" Header="Percorso esperimenti" Click="PathCmd_Click"/>
+                    <MenuItem x:Name="RecentExp" Header="Esperimenti recenti"/>
+                    <MenuItem x:Name="RestartCmd" Header="Riavvia" Click="RestartCmd_Click"/>
+                    <MenuItem x:Name="QuitCmd" Header="Chiudi" Click="QuitCmd_Click"/>
+                </MenuItem>
+            </Menu>
+        </ToolBar>
+        
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan ="2">
+            <Button Click="HideExp_Click" Width="80" Content="Experiments" HorizontalAlignment="Left" Margin="0.7" Background="WhiteSmoke" ToolTip="Apri e chiudi la lista degli esperimenti">
+                <Button.LayoutTransform>
+                    <RotateTransform Angle="90"></RotateTransform>
+                </Button.LayoutTransform>
+            </Button>
+        </StackPanel>
+
+        <DockPanel x:Name="ExpDockPanel" Grid.Row="1" Grid.Column="1" MinWidth="0" LastChildFill="True" DragDrop.Drop="Provino_Drop" DragDrop.DragEnter="Provino_DragEnter">
+            <TextBox DockPanel.Dock="Top" x:Name="ExpSearchBox" TextChanged="ExpSearchBox_TextChanged" Height="20" TextWrapping="Wrap"/>
+            <Menu DockPanel.Dock="Bottom" Name="Modifica">
+                <MenuItem Header="Opzioni" Width="{Binding ElementName=Modifica,Path=ActualWidth}">
+                    <MenuItem x:Name="ViewCommentMenu" Click="ViewExpCommentMenu_Click" Header="Vedi dettagli"/>
+                    <MenuItem x:Name="EditComment" Click="EditComment_Click" Header="Modifica commento"/>
+                    <MenuItem x:Name="ExpDirectoryMenu" Header="Directory">
+                        <MenuItem x:Name="ExpsDir" Click="ShowExpsDir_Click" Header="Esperimenti"/>
+                        <MenuItem x:Name="ExpDir" Click="ShowExpDir_Click" Header="Esperimento selezionato"/>
+                    </MenuItem>
+                    <MenuItem x:Name="RefreshCmd" Header="Aggiorna" Click="RefreshCmd_Click"/>
+                    <MenuItem x:Name="CompressCmd" Header="Comprimi" Click="CompressCmd_Click"/>
+                    <MenuItem x:Name="DeleteExpMenu" Header="Cancella esperimento" Click="DeleteExpMenu_Click"/>
+                    <MenuItem Header="(Nuovo esperimento)">
+                        <MenuItem x:Name="NewEmtpyExpMenu" Header="(Esperimento vuoto)"/>
+                        <MenuItem x:Name="NewLoadExpMenu" Header="(Carica da esistente)"/>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+            <StackPanel x:Name="ExpDetails" DockPanel.Dock="Bottom" Visibility="Collapsed">
+                <Border BorderThickness="1" BorderBrush="DarkSlateGray" >
+                    <Image x:Name="Provino" Stretch="Fill"/>
+                </Border>                
+                <FlowDocumentReader x:Name="ExpComment"/>
+            </StackPanel>
+
+            <ListBox x:Name="ExperimentViewer" Height="auto" SelectionChanged="ExperimentViewer_SelectionChanged">
+            </ListBox>
+        </DockPanel>
+        
+        <GridSplitter x:Name="ExpGridSplitter" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="2" HorizontalAlignment="Right" Background="Black"></GridSplitter>
+        
+
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
+            <Button ToolTip="Qui andranno le eventuali informazioni che si vogliono mostrare">Ev. informazioni varie</Button>
+        </StackPanel>
+
+    </Grid>
+
+</Window>
